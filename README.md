@@ -1,2 +1,11 @@
-# James
-James project for CS capstone 2020-2021
+# Capstone Project
+
+## Front End
+
+- react
+- readme TODO
+
+## Back End
+
+- FLASK
+- readme TODO
