@@ -48,7 +48,7 @@ class topicWord:
 
 class docResults:
 	def __init__(self,title,topics):
-		self.docTitle = ""
+		self.docTitle = title
 		self.docTopics = []
 		for topic in topics:
 			self.docTopics.append(docTopic(topic))
