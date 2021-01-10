@@ -8,6 +8,7 @@ def process(corpus):
 	topicModel = buildTopicModel(corpus)
 	sentimentModel = loadSentimentModel()
 	results = getResults(topicModel,corpus)
+	results.addStemDic(corpus.stemDic)
 	for doc in corpus.docs:
 		docResult = docResults(doc.title,getTopics(doc.bow,topicModel))
 		for sentence in doc.sentences:

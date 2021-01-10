@@ -1,6 +1,7 @@
 class jamesResults:
 	def __init__(self,topicOutput):
 		self.topicResults = []
+		self.stemDic = {}
 		self.documentResults = []
 		i = 1
 		for result in topicOutput:
@@ -8,17 +9,19 @@ class jamesResults:
 			i += 1
 	def addDocResults(self,docResults):
 		self.documentResults.append(docResults)
+	def addStemDic(self,stemDic):
+		self.stemDic = stemDic
 	def getNumberOfTopics(self):
 		return len(self.topicResults)
 	def output(self):
 		topicsOut = []
 		documentsOut = []
 		for topic in self.topicResults:
-			topicsOut.append(topic.output())
+			topicsOut.append(topic.output(self.stemDic))
 		for document in self.documentResults:
 			documentsOut.append(document.output())
 		return {"topics":topicsOut,
-					"sentiments":documentsOut}
+				"sentiments":documentsOut}
 
 class topicResults:
 	def __init__(self,num,result):
@@ -27,10 +30,10 @@ class topicResults:
 		self.topicWords = []
 		for word in result[0]:
 			self.topicWords.append(topicWord(word))
-	def output(self):
+	def output(self,stemDic):
 		wordsOut = []
 		for word in self.topicWords:
-			wordsOut.append(word.output())
+			wordsOut.append(word.output(stemDic))
 		return {"topicnum":self.topicNum,
 				"coherence":str(self.coherence),
 				"topicwords":wordsOut}
@@ -39,8 +42,8 @@ class topicWord:
 	def __init__(self,word):
 		self.word = word[1]
 		self.weight = word[0]
-	def output(self):
-		return {"word":self.word,
+	def output(self,stemDic):
+		return {"word":stemDic[self.word],
 				"weight":str(self.weight)}
 
 class docResults:
@@ -78,12 +81,10 @@ class docTopic:
 				"sentiment":str(self.sentiment)}
 
 class jamesCorpus:
-	def __init__(self):
-		self.docs = []
-		self.dic = {}
-	def __init__(self,docs,dic):
+	def __init__(self,docs,dic,stemDic):
 		self.docs = docs
 		self.dic = dic
+		self.stemDic = stemDic
 	def addDoc(self,title,doc):
 		self.docs.append(corpusDoc(title,doc))
 	def getBoW(self):

@@ -10,29 +10,35 @@ from jamesClasses import jamesCorpus
 def preProcess(corpus):
 	docs = corpus.docs
 	lemmatizedList = []
+	stemDic = {}
 	for doc in docs:
 		doc.addSentences(separateSentences(doc.text))
 		lemmatized = preLemmatize(doc.text)
-		doc.addLemmatized(lemmatized)
-		lemmatizedList.append(lemmatized)
+		doc.addLemmatized(lemmatized["stems"])
+		lemmatizedList.append(lemmatized["stems"])
+		stemDic.update(lemmatized["stemDic"])
 	dic = Dictionary(lemmatizedList)
 	for doc in docs:
 		doc.addBoW(dic.doc2bow(doc.lemmatized))
-	return jamesCorpus(docs,dic)
+	return jamesCorpus(docs,dic,stemDic)
 
 def preProcessSentence(text,dic):
-	return dic.doc2bow(preLemmatize(text))
+	return dic.doc2bow(preLemmatize(text)["stems"])
 
 def preStemming(text):
 	stemmer = PorterStemmer()
 	return stemmer.stem(WordNetLemmatizer().lemmatize(text, pos='v'))
 
 def preLemmatize(text):
-    result = []
-    for token in simple_preprocess(text):
-        if token not in STOPWORDS and len(token) > 3:
-            result.append(preStemming(token))
-    return result
+	stems = []
+	stemDic = {}
+	for token in simple_preprocess(text):
+		if token not in STOPWORDS and len(token) > 3:
+			stem = preStemming(token)
+			stems.append(stem)
+			if stem not in stemDic:
+				stemDic[stem] = token
+	return {"stems":stems,"stemDic":stemDic}
 
 #This section separates and cleans sentences for iteration
 def separateSentences(data):
