@@ -1,11 +1,12 @@
 from jamesClasses import jamesCorpus, jamesResults
+from jamesConfig import jamesChunkSize, jamesPasses, jamesIterations, jamesEvalEvery
 from gensim.models import ldamodel
 
 def buildTopicModel(corpus,topicNum):
-	chunksize = 2000
-	passes = 1
-	iterations = 50
-	eval_every = None
+	chunksize = jamesChunkSize()
+	passes = jamesPasses()
+	iterations = jamesIterations()
+	eval_every = jamesEvalEvery()
 	ldaModel = ldamodel.LdaModel(corpus = corpus.getBoW(),
 								  num_topics=topicNum,
 								  id2word=corpus.dic,
