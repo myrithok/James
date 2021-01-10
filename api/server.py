@@ -9,17 +9,15 @@ cors = CORS(app)
 @app.route('/upload', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        if 'file' not in request.files:
-            return 'No file attached in request'
-        else:
-            corpus = inputCorpus()
-            corpus.addDoc(request.files.get("file").read())
-            corpus.addDoc(request.files.get("file").read())
-            results = process(corpus)
-            response = {
-                "results": results
-            }
-            return response, 200
+        for x in range(int(request.form["fileCount"])):
+            if 'file' + str(x) not in request.files:
+                return 'Error with attached files'
+        # This is just dummy code
+        # This will also need to be a loop like above
+        raw_data = request.files.get("file0").read()
+        response = {
+            "file0": str(raw_data)}
+        return response, 200
 
 if __name__ == '__main__':
     app.run(debug=True)
