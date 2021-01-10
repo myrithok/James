@@ -33,6 +33,6 @@ def testProcess(a,b):
 	return process(data)
 
 file1 = "netflix_chips.txt"
-file2 = "gettier.txt"
+file2 = "macro_micro.txt"
 testResults = testProcess(file1,file2)
 print(testResults)
