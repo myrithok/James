@@ -38,4 +38,4 @@ def loadSentimentModel():
 def getSentenceSentiment(text, model):
 	custom_tokens = saPreProcess(text)
 	results = model.prob_classify(dict([token, True] for token in custom_tokens))
-	return (results.prob('Positive') * 2) - 1
+	return results.prob('Positive')

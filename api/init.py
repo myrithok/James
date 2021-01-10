@@ -5,7 +5,7 @@ from jamesSA import buildSentimentModel
 import jamesConfig
 
 def init():
-	np.random.seed(2020)
+	np.random.seed(2018)
 	nltk.download('wordnet')
 	nltk.download('twitter_samples')
 	nltk.download('punkt')

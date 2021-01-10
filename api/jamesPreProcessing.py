@@ -1,18 +1,27 @@
-from jamesClasses import BoW
 from gensim.corpora import Dictionary
 from gensim.utils import simple_preprocess
 from gensim.parsing.preprocessing import STOPWORDS
 from nltk.stem import WordNetLemmatizer, SnowballStemmer, PorterStemmer
 from nltk.tag import pos_tag
 import re, string
+from jamesClasses import jamesCorpus
 
 #This section prepares the input for topic modeling
-def preProcess(data):
-	lemmatized = preLemmatize(data)
-	dictionary = Dictionary([lemmatized])
-	bow = [dictionary.doc2bow(lemmatized)]
-	result = BoW(bow,dictionary)
-	return result
+def preProcess(corpus):
+	docs = corpus.docs
+	lemmatizedList = []
+	for doc in docs:
+		doc.addSentences(separateSentences(doc.text))
+		lemmatized = preLemmatize(doc.text)
+		doc.addLemmatized(lemmatized)
+		lemmatizedList.append(lemmatized)
+	dic = Dictionary(lemmatizedList)
+	for doc in docs:
+		doc.addBoW(dic.doc2bow(doc.lemmatized))
+	return jamesCorpus(docs,dic)
+
+def preProcessSentence(text,dic):
+	return dic.doc2bow(preLemmatize(text))
 
 def preStemming(text):
 	stemmer = PorterStemmer()

@@ -1,29 +1,38 @@
-from jamesClasses import resultTopicWord, resultTopic, jamesResults, topicModel
-from jamesPreProcessing import preProcess, separateSentences
-from jamesLDA import buildTopicModel, getSentenceTopics, getResults
+from jamesClasses import jamesCorpus, jamesResults, docResults, inputCorpus
+from jamesPreProcessing import preProcess, preProcessSentence
+from jamesLDA import buildTopicModel, getTopics, getResults
 from jamesSA import loadSentimentModel, getSentenceSentiment
 
-def process(data):
-	processed = preProcess(data)
-	sentences = separateSentences(data)
-	topicModel = buildTopicModel(processed)
+def process(corpus):
+	corpus = preProcess(corpus)
+	topicModel = buildTopicModel(corpus)
 	sentimentModel = loadSentimentModel()
-	results = getResults(topicModel)
-	for sentence in sentences:
-		processedSentence = preProcess(sentence)
-		sentenceTopics = getSentenceTopics(processedSentence,topicModel)
-		sentenceSentiment = getSentenceSentiment(sentence,sentimentModel)
-		print(sentenceTopics)
-		print(sentenceSentiment)
-		for topic in sentenceTopics:
-			results.addSentiment(topic[0],topic[1]*sentenceSentiment)
+	results = getResults(topicModel,corpus)
+	for doc in corpus.docs:
+		docResult = docResults(doc.title,getTopics(doc.bow,topicModel))
+		for sentence in doc.sentences:
+			processedSentence = preProcessSentence(sentence,corpus.dic)
+			sentenceTopics = getTopics(processedSentence,topicModel)
+			sentenceSentiment = getSentenceSentiment(sentence,sentimentModel)
+			for topic in sentenceTopics:
+				docResult.addSentiment(topic[0],topic[1]*sentenceSentiment)
+		docResult.averageSentiments()
+		results.addDocResults(docResult)
 	return results.output()
 
-def testProcess(filename):
-	f = open(filename,"r")
-	data = f.read()
+def testProcess(a,b):
+	f1 = open(a,"r")
+	x = f1.read()
+	f1.close()
+	f2 = open(b,"r")
+	y = f2.read()
+	f2.close()
+	data = inputCorpus()
+	data.addDoc(a,x)
+	data.addDoc(b,y)
 	return process(data)
 
-testFile = "canadian-covid_economy.txt"
-testResults = testProcess(testFile)
+file1 = "netflix_chips.txt"
+file2 = "gettier.txt"
+testResults = testProcess(file1,file2)
 print(testResults)

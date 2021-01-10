@@ -1,27 +1,27 @@
-from jamesClasses import BoW, topicModel, resultTopicWord, resultTopic, jamesResults
+from jamesClasses import jamesCorpus, jamesResults
 from gensim.models import ldamodel
 
-def buildTopicModel(document,topicNum=2):
+def buildTopicModel(corpus,topicNum=5):
 	chunksize = 2000
-	passes = 20
-	iterations = 400
+	passes = 1
+	iterations = 50
 	eval_every = None
-	ldaModel = ldamodel.LdaModel(corpus = document.bow,
+	ldaModel = ldamodel.LdaModel(corpus = corpus.getBoW(),
 								  num_topics=topicNum,
-								  id2word=document.dic,
+								  id2word=corpus.dic,
 								  chunksize=chunksize,
 								  alpha='auto',
 								  eta='auto',
 								  iterations=iterations,
 								  passes=passes,
 								  eval_every=eval_every)
-	return topicModel(ldaModel,document)
+	return ldaModel
 
-def getResults(topicModel):
-	return jamesResults(topicModel.model.top_topics(topicModel.document.bow))
+def getResults(topicModel,corpus):
+	return jamesResults(topicModel.top_topics(corpus.getBoW()))
 
-def getSentenceTopics(sentence, topicModel):
-	return topicModel.model.get_document_topics(sentence.bow,0.0)[0]
+def getTopics(bow, topicModel):
+	return topicModel.get_document_topics(bow,0.0)
 
 #TODO: Used up to here
 
