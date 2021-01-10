@@ -1,11 +1,14 @@
 from jamesClasses import jamesCorpus, jamesResults, docResults, inputCorpus
 from jamesPreProcessing import preProcess, preProcessSentence
-from jamesLDA import buildTopicModel, getTopics, getResults
+from jamesLDA import buildBestCoherenceTopicModel, buildTopicModel, getTopics, getResults
 from jamesSA import loadSentimentModel, getSentenceSentiment
 
-def process(corpus):
+def process(corpus,topicNum=None):
 	corpus = preProcess(corpus)
-	topicModel = buildTopicModel(corpus)
+	if topicNum == None:
+		topicModel = buildBestCoherenceTopicModel(corpus)
+	else:
+		topicModel = buildTopicModel(corpus,topicNum)
 	sentimentModel = loadSentimentModel()
 	results = getResults(topicModel,corpus)
 	results.addStemDic(corpus.stemDic)

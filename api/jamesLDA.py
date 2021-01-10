@@ -1,7 +1,7 @@
 from jamesClasses import jamesCorpus, jamesResults
 from gensim.models import ldamodel
 
-def buildTopicModel(corpus,topicNum=5):
+def buildTopicModel(corpus,topicNum):
 	chunksize = 2000
 	passes = 1
 	iterations = 50
@@ -23,19 +23,18 @@ def getResults(topicModel,corpus):
 def getTopics(bow, topicModel):
 	return topicModel.get_document_topics(bow,0.0)
 
-#TODO: Used up to here
+def buildBestCoherenceTopicModel(corpus,maximum=20):
+	topicNum = bestCoherence(corpus,maximum)
+	return buildTopicModel(corpus,topicNum)
 
-def topicModelBestCoherence(processed,maximum):
-	topicNum = bestCoherence(processed,maximum)
-	return topicModel(processed,topicNum)
-
-def bestCoherence(processed,maximum):
+def bestCoherence(corpus,maximum):
 	scores = []
-	for n in range(2,maximum):
-		m = topicModel(processed,n)
-		s = averageCoherence(m,processed)
+	for n in range(2,maximum+1):
+		m = buildTopicModel(corpus,n)
+		s = averageCoherence(m,corpus)
 		scores.append(s)
 	return scores.index(max(scores)) + 2
 
-def averageCoherence(model,processed):
-	return (sum([t[1] for t in model.top_topics(processed.bow)]) / len(model.top_topics(processed.bow)))
+def averageCoherence(model,corpus):
+	results = model.top_topics(corpus.getBoW())
+	return (sum([t[1] for t in results]) / len(results))

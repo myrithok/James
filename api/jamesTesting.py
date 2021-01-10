@@ -14,7 +14,7 @@ def testProcess(a,b):
 	data = inputCorpus()
 	data.addDoc(a,x)
 	data.addDoc(b,y)
-	return process(data)
+	return process(data,3)
 
 file1 = "netflix_chips.txt"
 file2 = "macro_micro.txt"

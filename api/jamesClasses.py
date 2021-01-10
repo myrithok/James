@@ -66,7 +66,7 @@ class docResults:
 
 class docTopic:
 	def __init__(self,topic):
-		self.topicNum = topic[0]
+		self.topicNum = topic[0] + 1
 		self.weight = topic[1]
 		self.sentiment = 0.0
 		self.sentences = 0
