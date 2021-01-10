@@ -19,20 +19,3 @@ def process(corpus):
 		docResult.averageSentiments()
 		results.addDocResults(docResult)
 	return results.output()
-
-def testProcess(a,b):
-	f1 = open(a,"r")
-	x = f1.read()
-	f1.close()
-	f2 = open(b,"r")
-	y = f2.read()
-	f2.close()
-	data = inputCorpus()
-	data.addDoc(a,x)
-	data.addDoc(b,y)
-	return process(data)
-
-file1 = "netflix_chips.txt"
-file2 = "macro_micro.txt"
-testResults = testProcess(file1,file2)
-print(testResults)
