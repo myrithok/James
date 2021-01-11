@@ -1,12 +1,12 @@
-#library imports
+#Library imports
 from flask import Flask, request
 from flask_cors import CORS
 import json
-#project imports
+#Project imports
 from jamesMain import process
 from jamesClasses import inputCorpus
 
-#flask backend setup
+#Flask backend setup
 app = Flask(__name__)
 cors = CORS(app)
 
@@ -35,6 +35,6 @@ def index():
         response = json.dumps(results)
         return response, 200
 
-#backend main
+#Backend main
 if __name__ == '__main__':
     app.run(debug=True)
