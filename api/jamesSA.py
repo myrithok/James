@@ -1,4 +1,4 @@
-from jamesPreProcessing import saPreProcess
+from jamesPreProcessing import jamesLemmatize
 from nltk.tag import pos_tag
 from nltk.corpus import twitter_samples
 from nltk import classify, NaiveBayesClassifier
@@ -16,9 +16,9 @@ def buildSentimentModel():
 	positive_cleaned_tokens_list = []
 	negative_cleaned_tokens_list = []
 	for tokens in positive_tweet_tokens:
-	    positive_cleaned_tokens_list.append(saPreProcess(tokens))
+	    positive_cleaned_tokens_list.append(jamesLemmatize(tokens,minTokenLen=1,isTokenized=True,doStem=False,doStemDic=False))
 	for tokens in negative_tweet_tokens:
-	    negative_cleaned_tokens_list.append(saPreProcess(tokens))
+	    negative_cleaned_tokens_list.append(jamesLemmatize(tokens,minTokenLen=1,isTokenized=True,doStem=False,doStemDic=False))
 	positive_tokens_for_model = get_tweets_for_model(positive_cleaned_tokens_list)
 	negative_tokens_for_model = get_tweets_for_model(negative_cleaned_tokens_list)
 	positive_dataset = [(tweet_dict, "Positive") for tweet_dict in positive_tokens_for_model]
@@ -36,6 +36,6 @@ def loadSentimentModel():
 	return sentimentModel
 
 def getSentenceSentiment(text, model):
-	custom_tokens = saPreProcess(text)
+	custom_tokens = jamesLemmatize(text,minTokenLen=1,isTokenized=False,doStem=False,doStemDic=False)
 	results = model.prob_classify(dict([token, True] for token in custom_tokens))
 	return results.prob('Positive')

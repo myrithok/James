@@ -6,6 +6,8 @@ from jamesSA import loadSentimentModel, getSentenceSentiment
 
 #Main method called by server.py to handle processing of input corpus
 #Optional argument topicNum allows user to specify a number of topics for topic model if desired
+#Input: an inputCorpus object (imported from jamesClasses) and an integer
+#Output: a dictionary containing nested dictionaries, to be easily converted to a json object
 def process(inputCorpus,topicNum=None):
 	#Pre process input corpus using preProcess method imported from jamesPreProcessing
 	#Input is inputCorpus object, imported from jamesClasses
