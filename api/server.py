@@ -15,8 +15,9 @@ def index():
             file = 'file' + str(x)
             if file not in request.files:
                 return 'Error with attached files'
-            contents = request,fukes,get(file).read()
-            corpus.addDoc(file,contents)
+            contents = request.files.get(file).read().decode("utf-8")
+            title = request.files.get(file).filename.split(".")[0]
+            corpus.addDoc(title,contents)
         results = process(corpus)
         response = json.dumps(results)
         return response, 200
