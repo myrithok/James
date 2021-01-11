@@ -1,0 +1,10 @@
+def sentimentFilename():
+	return "jamesSentimentModel.pickle"
+def jamesChunkSize():
+	return 2000
+def jamesPasses():
+	return 1
+def jamesIterations():
+	return 50
+def jamesEvalEvery():
+	return None
