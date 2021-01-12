@@ -47,7 +47,7 @@ const App = () => {
       url: "http://localhost:5000/upload",
       method: "POST",
       data: formData,
-    }).then((response) => setResults(testResponse));
+    }).then((response) => setResults(response));
   };
 
   return (
@@ -71,12 +71,31 @@ const App = () => {
         </Dropzone>
       </div>
       {/*
-        Results are outputted here, once received
+        Results are outputted here in JSON, once received
       */}
       {results ? (
-        <div>These are the results: {`${results}`}</div>
+        <div className="results-container">
+          These are the results:
+          <pre>{`${JSON.stringify(results, null, 3)}`}</pre>
+          <Button
+              variant="contained"
+              color="primary"
+              onClick={() =>  window.location.reload(false)}
+          >
+            Start Over
+          </Button>
+        </div>
       ) : (
         <div className="controls-container">
+
+            {/*
+             Optional input field to input number of topics
+          */}
+            <label >(Optional) Number of Topics: </label>
+            {numTopicsInput}
+
+          <br/>
+
           {files &&
             files.map((file, index) => (
               //  Custom component for each uploaded file
@@ -90,21 +109,13 @@ const App = () => {
             ))}
 
           {/*
-             Optional input field to input number of topics
-          */}
-          <label >(Optional) Number of Topics: </label>
-          {numTopicsInput}
-
-          <br/>
-
-          {/*
               Button to submit files and send REST request to backend
           */}
           <Button
-            variant="contained"
-            color="primary"
-            disabled={isEmpty(files)}
-            onClick={() => handleSubmit()}
+              variant="contained"
+              color="primary"
+              disabled={isEmpty(files)}
+              onClick={() => handleSubmit()}
           >
             Calculate
           </Button>
