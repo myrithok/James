@@ -53,11 +53,11 @@ def process(inputCorpus,topicNum=None):
 			#	document results docResults object, weighted by the sentence's topic
 			#	distribution
 			for topic in sentenceTopics:
-				docResult.addSentiment(topic[0],topic[1]*sentenceSentiment)
+				docResult.addSentiment(topic[0],topic[1],sentenceSentiment)
 		#Calculate the average sentiment for each topic in the current document
 		docResult.averageSentiments()
 		#Add the docResults object to the jamesResults result set
 		results.addDocResults(docResult)
-	#Use the jamesResults output method to output results as nested dictionaries,
-	#	which can be converted to a json object
+	#Use the jamesResults output method to output results as nested dictionaries
+	#	and lists, which can be converted to a json object
 	return results.output()
