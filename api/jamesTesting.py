@@ -1,3 +1,4 @@
+#This file is used exclusively for internally testing project methods
 from jamesMain import process
 from jamesClasses import jamesCorpus, jamesResults, docResults, inputCorpus
 from jamesPreProcessing import preProcess, preProcessSentence
