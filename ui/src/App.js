@@ -2,7 +2,7 @@ import "./App.scss";
 import Dropzone from "react-dropzone";
 import { useState } from "react";
 import UploadedFile from "./components/UploadedFile";
-import { Button } from "@material-ui/core";
+import { Button, Input } from "@material-ui/core";
 import { isEmpty } from "lodash";
 import Axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,12 +13,22 @@ const App = () => {
   const [files, setFiles] = useState();
   const [results, setResults] = useState();
 
+
+  function useInput({ type }) {
+    const [value, setValue] = useState("");
+    const input = <Input name={"Number of Topics"} inputMode={"numeric"} value={value} onChange={e => setValue(e.target.value)} type={type} placeholder="Leave blank for default"/>;
+    return [value, input];
+  }
+
+  const [numTopics, numTopicsInput] = useInput({type: "text", pattern:"[0-9]*"})
+
   const handleSubmit = () => {
     let formData = new FormData();
     formData.append("fileCount", files.length);
     files.forEach((file, index) => {
       formData.append(`file${index}`, file);
     });
+    formData.append("numTopics", numTopics);
     Axios({
       url: "http://localhost:5000/upload",
       method: "POST",
@@ -36,7 +46,7 @@ const App = () => {
               <input {...getInputProps()} />
               <FontAwesomeIcon icon={faCloudDownloadAlt} size="3x" />
               <p className="file-drop-instructions">
-                Drop file or click here to select a file from your drive
+                Drop files or click here to select files from your drive
               </p>
             </div>
           )}
@@ -56,6 +66,11 @@ const App = () => {
                 }
               />
             ))}
+
+          <label >(Optional) Number of Topics: </label>
+          {numTopicsInput}
+
+          <br/>
 
           <Button
             variant="contained"
