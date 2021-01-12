@@ -5,10 +5,9 @@
 #Library imports
 import nltk
 import numpy as np
-import pickle
 #Project imports
-from jamesSA import buildSentimentModel
-import jamesConfig
+from jamesSA import saveSentimentModel
+from jamesConfig import sentimentFilename
 
 #The init method performs all necessary initialization
 def init():
@@ -18,12 +17,9 @@ def init():
 	nltk.download('twitter_samples')
 	nltk.download('punkt')
 	nltk.download('averaged_perceptron_tagger')
-	#Build the sentiment model using buildSentimentModel, imported from jamesSA
-	sentimentModel = buildSentimentModel()
-	#Save the sentiment model using pickle, to a filename imported from jamesConfig
-	f = open(jamesConfig.sentimentFilename(),"wb")
-	pickle.dump(sentimentModel,f)
-	f.close()
+	#Build the sentiment model, and save it to a filename imported from jamesConfig,
+	#	imported from jamesSA
+	saveSentimentModel(sentimentFilename())
 	
 #Run init
 init()

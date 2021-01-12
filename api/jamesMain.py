@@ -3,6 +3,7 @@ from jamesClasses import jamesCorpus, jamesResults, docResults, inputCorpus
 from jamesPreProcessing import preProcess, preProcessSentence
 from jamesLDA import buildBestCoherenceTopicModel, buildTopicModel, getTopics, getResults
 from jamesSA import loadSentimentModel, getSentenceSentiment
+from jamesConfig import sentimentFilename
 
 #Main method called by server.py to handle processing of input corpus
 #Optional argument topicNum allows user to specify a number of topics for topic model if desired
@@ -24,7 +25,7 @@ def process(inputCorpus,topicNum=None):
 	else:
 		topicModel = buildTopicModel(corpus,topicNum)
 	#Load the sentiment model using loadSentimentModel, imported from jamesSA
-	sentimentModel = loadSentimentModel()
+	sentimentModel = loadSentimentModel(sentimentFilename())
 	#Produce a jamesResults object, imported from jamesClasses, containing the topic
 	#	model information using getResults, imported from jamesLDA
 	results = getResults(topicModel,corpus)

@@ -14,3 +14,8 @@ def jamesIterations():
 	return 50
 def jamesEvalEvery():
 	return None
+#jamesTrainingData provides the training data source for the sentiment analysis model
+def jamesTrainingData():
+	from nltk.corpus import twitter_samples
+	return {"Positive":twitter_samples.tokenized('positive_tweets.json'),
+			"Negative":twitter_samples.tokenized('negative_tweets.json')}
