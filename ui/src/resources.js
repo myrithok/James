@@ -1,3 +1,5 @@
+//Contains the format of the response from the backend server
+
 export const testResponse = {
   results: {
     topics: [

@@ -9,26 +9,40 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudDownloadAlt } from "@fortawesome/free-solid-svg-icons";
 import { fillerText, testResponse } from "./resources";
 
+/*
+  App contains the code for the main page of the application, using the custom component UploadedFile
+  Using React Hooks to manage state:
+    files: Contains all of the text files uploaded
+    results: Contains the results obtained from running the ML model on the input files
+    numTopics: An optional numeric value, allowing user to specify how many topics there are in the input files. Default value of "".
+*/
+
 const App = () => {
+  //State Variables
   const [files, setFiles] = useState();
   const [results, setResults] = useState();
+  const [numTopics, numTopicsInput] = useInput({type: "text", placeholder: "Leave blank for default"})
 
-
-  function useInput({ type }) {
+  //Reusable function to handle input from user in a text box
+  function useInput({ type, placeholder }) {
     const [value, setValue] = useState("");
-    const input = <Input name={"Number of Topics"} inputMode={"numeric"} value={value} onChange={e => setValue(e.target.value)} type={type} placeholder="Leave blank for default"/>;
+    const input = <Input inputMode={"numeric"} value={value} onChange={e => setValue(e.target.value)} type={type} placeholder={placeholder}/>;
     return [value, input];
   }
-
-  const [numTopics, numTopicsInput] = useInput({type: "text", pattern:"[0-9]*"})
+/*
+  Function to handle the submission, accessed by the "Calculate" button
+  Data is submitted as a FormData object, as a POST request to the Flask backend server, hosted at http://localhost:5000/upload
+  formData contains the number of files, the number of topics, and each file labeled by its index
+  The response is the results from running the topic modeling and sentiment analysis algorithms on the input files
+*/
 
   const handleSubmit = () => {
     let formData = new FormData();
     formData.append("fileCount", files.length);
+    formData.append("numTopics", numTopics);
     files.forEach((file, index) => {
       formData.append(`file${index}`, file);
     });
-    formData.append("numTopics", numTopics);
     Axios({
       url: "http://localhost:5000/upload",
       method: "POST",
@@ -40,6 +54,10 @@ const App = () => {
     <div className="App">
       <h1>James</h1>
       <div className="main-content">
+        {/*
+          Dropzone is used to allow the user to "drop" text files into the area, or select them from their drive
+          Once received, the files are added to the state variable "files"
+        */}
         <Dropzone onDrop={(acceptedFiles) => setFiles(acceptedFiles)} multiple>
           {({ getRootProps, getInputProps }) => (
             <div className="drop-zone" {...getRootProps()}>
@@ -52,12 +70,16 @@ const App = () => {
           )}
         </Dropzone>
       </div>
+      {/*
+        Results are outputted here, once received
+      */}
       {results ? (
         <div>These are the results: {`${results}`}</div>
       ) : (
         <div className="controls-container">
           {files &&
             files.map((file, index) => (
+              //  Custom component for each uploaded file
               <UploadedFile
                 id={index}
                 file={file}
@@ -67,11 +89,17 @@ const App = () => {
               />
             ))}
 
+          {/*
+             Optional input field to input number of topics
+          */}
           <label >(Optional) Number of Topics: </label>
           {numTopicsInput}
 
           <br/>
 
+          {/*
+              Button to submit files and send REST request to backend
+          */}
           <Button
             variant="contained"
             color="primary"
