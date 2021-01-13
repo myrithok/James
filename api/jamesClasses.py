@@ -1,4 +1,3 @@
-
 class jamesResults:
     '''
     The jamesResults class is used to represent the result set of this application
