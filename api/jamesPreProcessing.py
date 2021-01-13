@@ -55,7 +55,7 @@ def preProcess(corpus):
 def preProcessSentence(text, dic):
     # Lemmatize and stem the sentence using jamesLemmatize (found below),
     #	convert the stem results to a bag of word stem ids, and return it
-    return dic.doc2bow(jamesLemmatize(text, minTokenLen=4, isTokenized=False, doStem=True, doStemDic=False))
+    return dic.doc2bow(jamesLemmatize(text, minTokenLen=4, doStem=True, doStemDic=False)["lemmatized"])
 
 
 # This method is used to lemmatize and stem text for both topic modeling and sentiment analysis
@@ -113,8 +113,8 @@ def jamesLemmatize(tokens, minTokenLen, isTokenized, doStem, doStemDic):
     # If a stem dictionary is required, return a dictionary containing the stems list and stem dictionary
     if doStemDic:
         return {"lemmatized": lemmatized, "stemDic": stemDic}
-    # Otherwise, return the lemmatized list on its own
-    return lemmatized
+    # Otherwise, return a dictionary with only the lemmatized list
+    return {"lemmatized": lemmatized}
 
 
 # This method is used to separate a document into a clean list of sentences
