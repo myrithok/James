@@ -2,6 +2,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 import json
+
 # Project imports
 from jamesMain import process
 from jamesClasses import inputCorpus
@@ -9,7 +10,6 @@ from jamesClasses import inputCorpus
 # Flask backend setup
 app = Flask(__name__)
 cors = CORS(app)
-
 
 # POST request handling for uploaded files
 @app.route('/upload', methods=['GET', 'POST'])
@@ -45,7 +45,6 @@ def index():
     if request.method == 'GET':
         response = RESPONSE if ("RESPONSE" in globals()) else "No files received"
         return response, 200
-
 
 # Backend main
 if __name__ == '__main__':

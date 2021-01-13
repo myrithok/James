@@ -5,14 +5,27 @@ from gensim.parsing.preprocessing import STOPWORDS
 from nltk.stem import WordNetLemmatizer, SnowballStemmer
 from nltk.tag import pos_tag
 import re, string
+
 # Project imports
 from jamesClasses import jamesCorpus, inputCorpus, corpusDoc
 
-
-# This method handles all preprocessing for the input corpus to prepare it for analysis
-# Input: an inputCorpus object (imported from jamesClasses)
-# Output: a jamesCorpus object (imported from jamesClasses)
 def preProcess(corpus):
+    '''
+    This method handles all preprocessing for the input corpus to prepare it for analysis
+    It is used by jamesMain
+
+    Parameters
+    ----------
+            corpus: inputCorpus
+                    the corpus to be preprocessed, as an inputCorpus object (imported
+                    from jamesClasses)
+
+    Output
+    ------
+            jamesCorpus
+                    the processed corpus, as a jamesCorpus object (imported from
+                    jamesClasses)
+    '''
     # Get the corpusDoc list from the inputCorpus (both imported from jamesClasses)
     docs = corpus.docs
     # Initialize objects to hold a list of lemmatized document and a stem dictionary
@@ -21,17 +34,17 @@ def preProcess(corpus):
     # Iterate through each corpusDoc (imported from jamesClasses) for preprocessing
     for doc in docs:
         # Separate the document into a list of sentences using the separateSentences method
-        #	(found below), and add this list to the corpusDoc object (imported from jamesClasses)
+        #   (found below), and add this list to the corpusDoc object (imported from jamesClasses)
         # This list will be used to iterate through each sentence for topic modeling and sentiment
-        #	analysis later
+        #   analysis later
         doc.addSentences(separateSentences(doc.text))
         # Lemmatize the document using jamesLemmatize (found below)
-        lemmatized = jamesLemmatize(doc.text, minTokenLen=4, isTokenized=False, doStem=True, doStemDic=True)
+        lemmatized = jamesLemmatize(doc.text, minTokenLen=4, doStem=True, doStemDic=True)
         # Add the lemmatized document stem list to the corpusDoc (imported from jamesClasses),
-        #	to be used to generate the document's word id bag of words
+        #   to be used to generate the document's word id bag of words
         doc.addLemmatized(lemmatized["lemmatized"])
         # Also add the lemmatized document stem list to the lemmatized list, to be used
-        #	to construct the stem id dictionary
+        #   to construct the stem id dictionary
         lemmatizedList.append(lemmatized["lemmatized"])
         # Update the stem dictionary with the lemmatized document stem dictionary
         stemDic.update(lemmatized["stemDic"])
@@ -39,35 +52,68 @@ def preProcess(corpus):
     # Dictionary, imprted from gensim.corpora
     dic = Dictionary(lemmatizedList)
     # Iterate through each document to generate a bag of word ids using the lemmatized
-    #	document and the word stem id dictionary, and add that bag of word ids to
-    #	the corpusDoc object(imported from jamesClasses)
+    #   document and the word stem id dictionary, and add that bag of word ids to
+    #   the corpusDoc object(imported from jamesClasses)
     for doc in docs:
         doc.addBoW(dic.doc2bow(doc.lemmatized))
     # Construct a jamesCorpus object (imported from jamesClasses) with the list of
-    #	corpusDoc objects, the word stem id dictionary, and the stem word dictionary,
-    #	and return it
+    #   corpusDoc objects, the word stem id dictionary, and the stem word dictionary,
+    #   and return it
     return jamesCorpus(docs, dic, stemDic)
 
-
-# This method is used to preprocess individual sentences for topic modeling
-# Input: the sentence as a string and a word stem id dictionary
-# Output: a bag of word stem ids
 def preProcessSentence(text, dic):
+    '''
+    This method is used to preprocess individual sentences for topic modeling
+
+    Parameters
+    ----------
+            text: str
+                    the sentenced to be processed, as a string
+
+            dic: gensim.corpora.Dictionary
+                    a dicitionary mapping word stem ids to word stems
+
+    Output
+    ------
+            list
+                    the sentence represented as a list of (word id, index) pairs,
+                    where word id and index are both ints
+    '''
     # Lemmatize and stem the sentence using jamesLemmatize (found below),
-    #	convert the stem results to a bag of word stem ids, and return it
+    #   convert the stem results to a bag of word stem ids, and return it
     return dic.doc2bow(jamesLemmatize(text, minTokenLen=4, doStem=True, doStemDic=False)["lemmatized"])
 
+def jamesLemmatize(tokens, minTokenLen, doStem, doStemDic):
+    '''
+    This method is used to lemmatize and stem text for both topic modeling and sentiment analysis
+    It is used by preProcess and preProcessSentence above, as well as jamesSA
 
-# This method is used to lemmatize and stem text for both topic modeling and sentiment analysis
-# It is used by preProcess and preProcessSentence above, as well as jamesSA
-# Input: the string to be lemmatized and stemmed, an integer setting the minimum acceptable word length,
-#	a boolean denoting whether or not the input is already tokenized, a boolean denoting whether or not
-#	the words need to be stemmed, and a boolean denoting whether or not the method should produce a
-#	stem to word dictionary in addition to the lemmatized list
-# Output: if doStemDic is True: a dictionary containing the lemmatized input as a list of strings
-#	with the key "lemmatized", and a stem to word dictionary with the key "stemDic"
-#	Otherwise, the lemmmatized input as a list of strings
-def jamesLemmatize(tokens, minTokenLen, isTokenized, doStem, doStemDic):
+    Parameters
+    ----------
+            tokens: list or str
+                    the input to be lemmatized and stemmed
+                    either a string that has not yet been tokenized, or a list representing an
+                    already tokenized string
+
+            minTokenLen: int
+                    the minimum allowable token length when lemmatizing the input
+
+            doStem: bool
+                    a setting for whether or not the input should also be stemmed
+
+            doStemDic: bool
+                    a setting for whether or not a word stem to word dictionary should be
+                    constructed during lemmatization and returned with the results
+
+    Output
+    ------
+            dict
+                    a dictionary containing the results of lemmatization
+                    if doStem and doStemDic are both true, the dictionary will have two keys:
+                    "lemmatized" which has a list representing the lemmatized input as a value,
+                    and "stemDic" which has the word stem to word dictionary as a value
+                    otherwise, the dictionary will have only have the lemmatized key and value
+    '''
     # Initialize the objects to be returned, if needed
     lemmatized = []
     if doStemDic:
@@ -78,7 +124,7 @@ def jamesLemmatize(tokens, minTokenLen, isTokenized, doStem, doStemDic):
     if doStem:
         stemmer = SnowballStemmer('english')
     # Tokenize the text using simple_preprocess, imported from gensim.utils, if needed
-    if not isTokenized:
+    if type(tokens) == str:
         tokens = simple_preprocess(tokens)
     # Tag each word using pos_tag, imported from nltk.tag, and iterate through each token and tag
     for token, tag in pos_tag(tokens):
@@ -94,7 +140,7 @@ def jamesLemmatize(tokens, minTokenLen, isTokenized, doStem, doStemDic):
         else:
             pos = 'a'
         # Filter out each token that is punctuation, in STOPWORDS (imported from
-        #	gensim.parsing.preprocessing), or is shorter than the minimum acceptable token length
+        #   gensim.parsing.preprocessing), or is shorter than the minimum acceptable token length
         if token not in STOPWORDS and token not in string.punctuation and len(token) >= minTokenLen:
             # Lemmatize the token using WordNetLemmatizer
             lemma = lemmatizer.lemmatize(token, pos)
@@ -102,8 +148,8 @@ def jamesLemmatize(tokens, minTokenLen, isTokenized, doStem, doStemDic):
             if doStem:
                 lemma = stemmer.stem(lemma)
                 # Add the the stem to the stem dictionary as a key with a value of the lemma which produced
-                #	the stem if the stem is not already in the stem dictionary, and if a stem dictionary
-                #	is needed
+                #   the stem if the stem is not already in the stem dictionary, and if a stem dictionary
+                #   is needed
                 if doStemDic:
                     if lemma not in stemDic:
                         stemDic[lemma] = token
@@ -116,32 +162,49 @@ def jamesLemmatize(tokens, minTokenLen, isTokenized, doStem, doStemDic):
     # Otherwise, return a dictionary with only the lemmatized list
     return {"lemmatized": lemmatized}
 
-
-# This method is used to separate a document into a clean list of sentences
-# Input: the document to split as a string
-# Output: a list of strings, where each string is a sentence from the document
 def separateSentences(text):
+    '''
+    This method is used to separate a document into a clean list of sentences
+
+    Parameters
+    ----------
+            text: str
+                    the document to be separated
+
+    Output
+    ------
+            list
+                    a list of strings, where each string is a sentence from the document
+    '''
     # Add a newline after every period, exclamation point, and question mark
     text = text.replace(".", ".\n")
     text = text.replace("!", "!\n")
     text = text.replace("?", "?\n")
     # Split the text into a list of strings on every newline
     # This should include newlines in the original text, as well as newlines
-    #	that were added after every period, exclamation point, and question mark
+    #   that were added after every period, exclamation point, and question mark
     sentences = text.split("\n")
     # Strip leading and trailing whitespace from every sentence in the list, and filter
-    #	the resulting sentences using sentenceFilter found below
+    #   the resulting sentences using sentenceFilter found below
     cleaned = filter(sentenceFilter, [sentence.strip() for sentence in sentences])
     # Convert the results back to a list, and return them
     return list(cleaned)
 
-
-# This method is used as a filter for the filter method used in separateSentences above
-#	using a regular expression search imported from re
-# This will filter out every string that does not contain any letters
-# Input: a string
-# Output: a boolean; true of the sentence contains at least one letter, false otherwise
 def sentenceFilter(sentence):
+    '''
+    This method is used as a filter for the filter method used in separateSentences above,
+    using a regular expression search imported from re
+
+    Parameters
+    ----------
+            sentence: str
+                    the sentence as a string
+
+    Output
+    ------
+            bool
+                    true if the sentence contains at least one letter, false otherwise
+    '''
     if re.search('[a-zA-Z]', sentence):
         return True
     return False
