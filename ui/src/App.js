@@ -21,7 +21,7 @@ const App = () => {
   //State Variables
   const [files, setFiles] = useState();
   const [results, setResults] = useState();
-  const [numTopics, numTopicsInput] = useInput({type: "text", placeholder: "Leave blank for default"})
+  const [numTopics, numTopicsInput] = useInput({type: "number", placeholder: "Leave blank for default"})
 
   //Reusable function to handle input from user in a text box
   function useInput({ type, placeholder }) {
@@ -88,11 +88,11 @@ const App = () => {
       ) : (
         <div className="controls-container">
 
-            {/*
+          {/*
              Optional input field to input number of topics
           */}
-            <label >(Optional) Number of Topics: </label>
-            {numTopicsInput}
+          <label className="numTopicsPrompt">(Optional) Number of Topics: </label>
+          {numTopicsInput}
 
           <br/>
 
