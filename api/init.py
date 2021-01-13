@@ -1,14 +1,14 @@
 # This script is used to prepare everything necessary for the James backend to run
 # The intention is that this script is run only once on setup, and then again
-#	only if something loaded by this file needs to change
+#   only if something loaded by this file needs to change
 
 # Library imports
 import nltk
 import numpy as np
+
 # Project imports
 from jamesSA import saveSentimentModel
-from jamesConfig import sentimentFilename
-
+from jamesConfig import sentimentFilename, jamesTrainingData
 
 # The init method performs all necessary initialization
 def init():
@@ -19,9 +19,8 @@ def init():
     nltk.download('punkt')
     nltk.download('averaged_perceptron_tagger')
     # Build the sentiment model, and save it to a filename imported from jamesConfig,
-    #	imported from jamesSA
-    saveSentimentModel(sentimentFilename())
-
+    #   imported from jamesSA
+    saveSentimentModel(sentimentFilename(),jamesTrainingData())
 
 # Run init
 init()
