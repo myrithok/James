@@ -2,6 +2,14 @@ import { Button } from "@material-ui/core";
 import React from "react";
 import "./styles.scss";
 
+/*
+  UploadedFile Component to handle each uploaded file
+  State:
+    file: Contains the text file uploaded
+    removeFile: Contains a function to remove the file from the uploads
+    id: Index of the file
+ */
+
 const UploadedFile = ({ file = {}, removeFile, id }) => (
   <div className="uploaded-file-container">
     {file.name ? (
