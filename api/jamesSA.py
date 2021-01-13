@@ -4,10 +4,10 @@ import random
 
 from nltk import NaiveBayesClassifier
 
-from jamesConfig import jamesTrainingData
 # Project imports
 from jamesPreProcessing import jamesLemmatize
 
+def buildSentimentModel(data):
 
 # This method is used to build the sentiment analsysis model
 # This is called only by saveSentimentModel, found below; the sentiment analysis model can be built and saved,
@@ -17,6 +17,7 @@ def buildSentimentModel():
     # Load the jamesTrainingData from jamesConfig, then prepare it for the classifier
     #	using prepareTrainingData, found below
     trainingData = prepareTrainingData(jamesTrainingData())
+    trainingData = prepareTrainingData(data)
     # Train a NaiveBayesClassifier, imported from nltk, on the prepared training data
     classifier = NaiveBayesClassifier.train(trainingData)
     # Return the trained NaiveBayesClassifier
@@ -61,6 +62,7 @@ def getTokenDic(tokenList):
     for tokens in tokenList:
         yield dict([token, True] for token in tokens)
 
+def saveSentimentModel(filename,trainingData):
 
 # This method builds a sentiment model, and saves it to a specified filename
 # It is called only by init, as the sentiment model only needs to be built and
@@ -69,11 +71,13 @@ def getTokenDic(tokenList):
 def saveSentimentModel(filename):
     # Build the sentiment model using the buildSentimentModel method above
     sentimentModel = buildSentimentModel()
+    sentimentModel = buildSentimentModel(trainingData)
     # Save the sentiment model using pickle, to the specified filename
     f = open(filename, "wb")
     pickle.dump(sentimentModel, f)
     f.close()
     return
+def loadSentimentModel(filename):
 
 
 # This method loads a saved sentiment model and returns it

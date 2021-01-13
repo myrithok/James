@@ -20,7 +20,7 @@ def init():
     nltk.download('averaged_perceptron_tagger')
     # Build the sentiment model, and save it to a filename imported from jamesConfig,
     #	imported from jamesSA
-    saveSentimentModel(sentimentFilename())
+    saveSentimentModel(sentimentFilename(),jamesTrainingData())
 
 
 # Run init
