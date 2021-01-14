@@ -465,7 +465,7 @@ class jamesCorpus:
 class corpusDoc:
     '''
     The corpusDoc class is used to represent a single document within a corpus
-    The docs propety of the inputCorpus class and the docs propety of the jamesCorpus
+    The docs property of the inputCorpus class and the docs property of the jamesCorpus
     class are both lists of these
 
     Attributes
