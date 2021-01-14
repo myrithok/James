@@ -8,7 +8,7 @@ from jamesPreProcessing import jamesLemmatize
 
 def buildSentimentModel(data):
     '''
-    This method is used to build the sentiment analsysis model
+    This method is used to build the sentiment analysis model
     This is called only by saveSentimentModel, found below; the sentiment analysis model can be built and saved,
     then loaded whenever it is needed, rather than built new each time
 
