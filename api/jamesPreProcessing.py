@@ -49,7 +49,7 @@ def preProcess(corpus):
         # Update the stem dictionary with the lemmatized document stem dictionary
         stemDic.update(lemmatized["stemDic"])
     # Construct a word stem id dictionary from the list of lemmatized documents using
-    # Dictionary, imprted from gensim.corpora
+    # Dictionary, imported from gensim.corpora
     dic = Dictionary(lemmatizedList)
     # Iterate through each document to generate a bag of word ids using the lemmatized
     #   document and the word stem id dictionary, and add that bag of word ids to
