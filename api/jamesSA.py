@@ -154,8 +154,8 @@ def getSentenceSentiment(text, model):
                     the probability that the given sentence is positive, as a float
     '''
     # Lemmatize the given sentence using jamesLemmatize, imported from jamesPreProcessing
-    tokens = jamesLemmatize(text, minTokenLen=1, doStem=False, doStemDic=False)
+    tokens = jamesLemmatize(text, minTokenLen=1, doStem=False, doStemDic=False)['lemmatized']
     # Use the given NaiveBayesClassifier to classify the sentence
     results = model.prob_classify(dict([token, True] for token in tokens))
     # Return the probability that the sentence was positive
-    return results.prob('Positive')
+    return (results.prob('Positive') * 2) - 1
