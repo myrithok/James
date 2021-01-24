@@ -33,16 +33,8 @@ def process(inputCorpus, topicNum=None):
     # Input is inputCorpus object, imported from jamesClasses
     # Output is jamesCorpus object, imported from jamesClasses
     corpus = preProcess(inputCorpus)
-    # If a specific number of topics is not specified, build a topic model for the
-    #   preprocessed corpus using buildBestCoherenceTopicModel, imported from jamesLDA
-    # This method finds a number of topics that produces the best average coherence
-    #   score, and returns this topic model
-    if topicNum == None:
-        topicModel = buildBestCoherenceTopicModel(corpus)
-    # If a number of topics is specified, simply build a topic model for the input corpus
-    #   with the specified number of topics using buildTopicModel, imported from jamesLDA
-    else:
-        topicModel = buildTopicModel(corpus, topicNum)
+    ### buildBestCoherenceModel is encapsulated in buildTopicModel and run whenever topicNum == None
+    topicModel = buildTopicModel(corpus, topicNum)
     # Load the sentiment model using loadSentimentModel, imported from jamesSA
     sentimentModel = loadSentimentModel(sentimentFilename())
     # Produce a jamesResults object, imported from jamesClasses, containing the topic
