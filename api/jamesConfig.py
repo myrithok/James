@@ -1,4 +1,7 @@
-# This file is meant to gather hard-coded names or values in one place
+# Library imports
+import os
+
+# This file is meant to gather hard-coded names or values, as well as file paths, in one place
 
 def sentimentFilename():
     '''
@@ -10,24 +13,7 @@ def sentimentFilename():
             str
                     the filename to save and load the sentiment analysis model
     '''
-    return "jamesSentimentModel.pickle"
-
-def jamesTMSettings():
-    '''
-    jamesTMSettings provides a dictionary of settings for the LDA topic model
-    It is used by jamesLDA
-
-    Output
-    ------
-            dict
-                    a dictionary containing the LDA topic model settings
-    '''
-    return {'chunkSize': 2000,
-            'alpha': 'auto',
-            'eta': 'auto',
-            'passes': 1,
-            'iterations': 50,
-            'evalEvery': None}
+    return os.path.join(os.path.dirname(__file__),'model','jamesSentimentModel.pickle')
 
 def jamesTopicMaximum():
     '''
