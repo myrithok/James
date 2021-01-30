@@ -43,3 +43,28 @@ def jamesTrainingData():
     from nltk.corpus import twitter_samples
     return {"Positive": twitter_samples.tokenized('positive_tweets.json'),
             "Negative": twitter_samples.tokenized('negative_tweets.json')}
+
+def malletPath():
+    '''
+    malletPath provides the path to the mallet model folder
+    It is used by jamesLDA
+
+    Output
+    ------
+            str
+                    the path to the mallet folder
+    '''
+    return os.path.join(os.path.dirname(__file__),'mallet')
+
+def malletFile():
+    '''
+    malletFile provides the path to the mallet file within the mallet folder
+    It is used by jamesLDA
+
+    Output
+    ------
+            str
+                    the path to the mallet file
+    '''
+    return os.path.join(malletPath(),'bin','mallet')
+

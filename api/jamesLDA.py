@@ -1,12 +1,10 @@
 # Library imports
-from gensim.models import ldamodel, wrappers, coherencemodel
+from gensim.models import wrappers, coherencemodel
+import os
 
 # Project imports
 from jamesClasses import jamesResults
-from jamesConfig import jamesTMSettings, jamesTopicMaximum
-
-# mallet-2.0.8 is installed and run by a gensim wrapper function
-mallet_path = 'E:/software/mallet-2.0.8/bin/mallet'  # update this path
+from jamesConfig import jamesTopicMaximum, malletFile, malletPath
 
 def buildTopicModel(corpus, topicNum):
     '''
@@ -28,11 +26,13 @@ def buildTopicModel(corpus, topicNum):
             gensim.models.ldamodel
                     the topic model generated from the input corpus
     '''
+    #Add the path to mallet, imported from jamesConfig, to the environment
+    os.environ['MALLET_HOME'] = malletPath()
     ### if input 'topicNum' is None then get best coherence model
     if topicNum == None:
         ldaMallet = buildBestCoherenceTopicModel(corpus)
     else:
-        ldaMallet = wrappers.LdaMallet(mallet_path, corpus=corpus.getBoW(), num_topics=topicNum, id2word=corpus.dic,
+        ldaMallet = wrappers.LdaMallet(malletFile(), corpus=corpus.getBoW(), num_topics=topicNum, id2word=corpus.dic,
                                        random_seed=1)
     # convert the ldaMallet model to an ldaModel
     ldaModel = wrappers.ldamallet.malletmodel2ldamodel(ldaMallet, gamma_threshold=0.001, iterations=50)
@@ -67,10 +67,8 @@ def buildBestCoherenceTopicModel(corpus):
     # Iterate through each number of topics to try, between 2 and the maximum (inclusive)
     for n in range(2, maximum + 1):
         # Build the topic model for the current number of topics using buildTopicModel found above
-
-        #####  mallet_path = 'E:/software/mallet-2.0.8/bin/mallet'  ### specified at the top
         ### run mallet for each n
-        currentModel = wrappers.LdaMallet(mallet_path, corpus=corpus.getBoW(), num_topics=n, id2word=corpus.dic,
+        currentModel = wrappers.LdaMallet(malletFile(), corpus=corpus.getBoW(), num_topics=n, id2word=corpus.dic,
                                           random_seed=1)
 
         ### run CoherenceModel for each new Mallet Model. Requires getLemmatized() which was added method
