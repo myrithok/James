@@ -1,16 +1,14 @@
 # Library imports
-from gensim.models import wrappers, coherencemodel
-import os
+from gensim.models import ldamodel
 
 # Project imports
 from jamesClasses import jamesResults
-from jamesConfig import jamesTopicMaximum, malletFile, malletPath
+from jamesConfig import jamesTMSettings, jamesTopicMaximum
 
 def buildTopicModel(corpus, topicNum):
     '''
     This method is used to build a gensim topic model of the given number of
-    topics for a given corpus. If a number is not specified, then the
-    buildBestCoherenceTopicModel function is called.
+    topics for a given corpus
 
     Parameters
     ----------
@@ -26,16 +24,19 @@ def buildTopicModel(corpus, topicNum):
             gensim.models.ldamodel
                     the topic model generated from the input corpus
     '''
-    #Add the path to mallet, imported from jamesConfig, to the environment
-    os.environ['MALLET_HOME'] = malletPath()
-    ### if input 'topicNum' is None then get best coherence model
-    if topicNum == None:
-        ldaMallet = buildBestCoherenceTopicModel(corpus)
-    else:
-        ldaMallet = wrappers.LdaMallet(malletFile(), corpus=corpus.getBoW(), num_topics=topicNum, id2word=corpus.dic,
-                                       random_seed=1)
-    # convert the ldaMallet model to an ldaModel
-    ldaModel = wrappers.ldamallet.malletmodel2ldamodel(ldaMallet, gamma_threshold=0.001, iterations=50)
+    # Import the topic model settings from jamesConfig
+    settings = jamesTMSettings()
+    # Build the topic model using the given corpus, the given number
+    #   of topics, and the given settings
+    ldaModel = ldamodel.LdaModel(corpus=corpus.getBoW(),
+                                 num_topics=topicNum,
+                                 id2word=corpus.dic,
+                                 chunksize=settings['chunkSize'],
+                                 alpha=settings['alpha'],
+                                 eta=settings['eta'],
+                                 iterations=settings['iterations'],
+                                 passes=settings['passes'],
+                                 eval_every=settings['evalEvery'])
     # Return the topic model
     return ldaModel
 
@@ -55,38 +56,27 @@ def buildBestCoherenceTopicModel(corpus):
 
     Output
     ------
-            gensim.models.wrappers.LdaMallet
+            gensim.models.ldamodel
                     the topic model generated from the input corpus
     '''
     # Import the maximum number of topics to try from jamesConfig
     maximum = jamesTopicMaximum()
     # Initialize each variable to test the max
     topScore = topModel = currentModel = currentResults = currentScore = None
-    # save the results coherence scores to a list for verification
-    scores = []
     # Iterate through each number of topics to try, between 2 and the maximum (inclusive)
     for n in range(2, maximum + 1):
         # Build the topic model for the current number of topics using buildTopicModel found above
-        ### run mallet for each n
-        currentModel = wrappers.LdaMallet(malletFile(), corpus=corpus.getBoW(), num_topics=n, id2word=corpus.dic,
-                                          random_seed=1)
-
-        ### run CoherenceModel for each new Mallet Model. Requires getLemmatized() which was added method
-        ### using coherence method "c_v" allows for results between (0,1) where greater number is better score
-        currentCoherence = coherencemodel.CoherenceModel(model=currentModel, texts=corpus.getLemmatized(),
-                                                         dictionary=corpus.dic, corpus=corpus.getBoW(),
-                                                         coherence="c_v")
-        currentScore = currentCoherence.get_coherence()
-        scores.append(currentScore)
+        currentModel = buildTopicModel(corpus, n)
+        # Get the topic results for the built topic model
+        currentResults = currentModel.top_topics(corpus.getBoW())
+        # Find the average coherence score for the topics in the current model
+        currentScore = (sum([t[1] for t in currentResults]) / len(currentResults))
         # If this model has a higher average coherence score than the current best,
         #   or it is the first model generated, store this model and score as the
         #   top model and score
         if topScore == None or currentScore > topScore:
             topScore = currentScore
             topModel = currentModel
-
-    ###### print out the score results, ldaMallet much better than ldaModel
-    #####  print(str(scores))
     # Return the top model that was found
     return topModel
 
