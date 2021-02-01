@@ -1,0 +1,2 @@
+[submodule "api/mallet"]
+	url = https://github.com/mimno/Mallet.git
