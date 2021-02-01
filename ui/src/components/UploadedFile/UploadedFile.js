@@ -11,10 +11,7 @@ import "./styles.scss";
  */
 
 const UploadedFile = ({ file = {}, removeFile, id }) => (
-  <div
-    className="uploaded-file-container"
-    data-testid={`uploaded-file-container-${id}`}
-  >
+  <div className="uploaded-file-container">
     {file.name ? (
       <>
         <div className="file-name">{`File ${id}: ${file.name} [${(
@@ -25,7 +22,6 @@ const UploadedFile = ({ file = {}, removeFile, id }) => (
           color="secondary"
           onClick={() => removeFile()}
           className="remove-btn"
-          data-testid={`remove-btn-${id}`}
         >
           Remove
         </Button>
