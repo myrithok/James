@@ -5,10 +5,11 @@
 # Library imports
 import nltk
 import numpy as np
+import os
 
 # Project imports
 from jamesSA import saveSentimentModel
-from jamesConfig import sentimentFilename, jamesTrainingData
+from jamesConfig import sentimentFilename, jamesTrainingData, antPath
 
 # The init method performs all necessary initialization
 def init():
@@ -21,6 +22,10 @@ def init():
     # Build the sentiment model, and save it to a filename imported from jamesConfig,
     #   imported from jamesSA
     saveSentimentModel(sentimentFilename(),jamesTrainingData())
+ 
+    os.environ['ANT_HOME'] = antPath()
+    os.environ['PATH'] += os.pathsep + os.path.join(antPath(),'bin')
+    os.system('cd mallet && ant')
 
 # Run init
 init()

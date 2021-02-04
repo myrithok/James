@@ -68,3 +68,6 @@ def malletFile():
     '''
     return os.path.join(malletPath(),'bin','mallet')
 
+def antPath():
+
+    return os.path.join(os.path.dirname(__file__),'ant')
