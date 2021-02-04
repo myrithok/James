@@ -4,10 +4,12 @@ import "./styles.scss";
 
 const Topics = ({ topics }) => {
   return (
-    <div className="topic-container">
-      <h2 className="topics-title">Topics</h2>
-      {topics.map((topic) => (
-        <Topic data={topic} />
+    <div className="topic-container" data-testid="topic-container">
+      <h2 className="topics-title" data-testid="topic-title">
+        Topics
+      </h2>
+      {topics.map((topic, index) => (
+        <Topic data={topic} id={index} />
       ))}
     </div>
   );
