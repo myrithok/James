@@ -13,7 +13,7 @@ import stat
 
 # Project imports
 from jamesSA import saveSentimentModel
-from jamesConfig import sentimentFilename, jamesTrainingData, tempPath, malletPath, apiPath
+from jamesConfig import sentimentFilename, jamesTrainingData, tempPath, malletPath, apiPath, sentimentPath
 
 # The init method performs all necessary initialization
 def init():
@@ -25,6 +25,8 @@ def init():
     nltk.download('averaged_perceptron_tagger')
     # Build the sentiment model, and save it to a filename imported from jamesConfig,
     #   imported from jamesSA
+    if not os.path.exists(sentimentPath()):
+        os.mkdir(sentimentPath())
     saveSentimentModel(sentimentFilename(),jamesTrainingData())
     if not os.path.exists(malletPath()):
         git.Git(apiPath()).clone("https://github.com/mimno/Mallet.git")

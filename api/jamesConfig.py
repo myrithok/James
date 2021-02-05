@@ -44,6 +44,8 @@ def jamesTrainingData():
     return {"Positive": twitter_samples.tokenized('positive_tweets.json'),
             "Negative": twitter_samples.tokenized('negative_tweets.json')}
 
+
+
 def malletPath():
     '''
     malletPath provides the path to the mallet model folder
@@ -80,3 +82,6 @@ def tempPath(dir = None):
 def apiPath():
 
     return os.path.dirname(__file__)
+
+def sentimentPath():
+    return os.path.join(os.path.dirname(__file__),'model')
