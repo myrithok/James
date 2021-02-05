@@ -1,4 +1,7 @@
-# This file is meant to gather hard-coded names or values in one place
+# Library imports
+import os
+
+# This file is meant to gather hard-coded names or values, as well as file paths, in one place
 
 def sentimentFilename():
     '''
@@ -10,24 +13,7 @@ def sentimentFilename():
             str
                     the filename to save and load the sentiment analysis model
     '''
-    return "jamesSentimentModel.pickle"
-
-def jamesTMSettings():
-    '''
-    jamesTMSettings provides a dictionary of settings for the LDA topic model
-    It is used by jamesLDA
-
-    Output
-    ------
-            dict
-                    a dictionary containing the LDA topic model settings
-    '''
-    return {'chunkSize': 2000,
-            'alpha': 'auto',
-            'eta': 'auto',
-            'passes': 1,
-            'iterations': 50,
-            'evalEvery': None}
+    return os.path.join(os.path.dirname(__file__),'model','jamesSentimentModel.pickle')
 
 def jamesTopicMaximum():
     '''
@@ -57,3 +43,31 @@ def jamesTrainingData():
     from nltk.corpus import twitter_samples
     return {"Positive": twitter_samples.tokenized('positive_tweets.json'),
             "Negative": twitter_samples.tokenized('negative_tweets.json')}
+
+def malletPath():
+    '''
+    malletPath provides the path to the mallet model folder
+    It is used by jamesLDA
+
+    Output
+    ------
+            str
+                    the path to the mallet folder
+    '''
+    return os.path.join(os.path.dirname(__file__),'mallet')
+
+def malletFile():
+    '''
+    malletFile provides the path to the mallet file within the mallet folder
+    It is used by jamesLDA
+
+    Output
+    ------
+            str
+                    the path to the mallet file
+    '''
+    return os.path.join(malletPath(),'bin','mallet')
+
+def antPath():
+
+    return os.path.join(os.path.dirname(__file__),'ant')
