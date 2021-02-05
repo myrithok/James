@@ -4,3 +4,5 @@ api/__pycache__/
 api/Mallet/
 
 api/model/
+
+api/tmp/
