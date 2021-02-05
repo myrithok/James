@@ -76,6 +76,8 @@ def tempPath(dir = None):
         return os.path.join(os.path.dirname(__file__),'tmp')
     if dir == "ant":
         return os.path.join(os.path.dirname(__file__),'tmp',"ant","dist")
+    if dir == "antbuild":
+        return os.path.join(os.path.dirname(__file__),'tmp',"ant")
     elif dir == "jdk":
         return os.path.join(os.path.dirname(__file__),'tmp',[ f.name for f in os.scandir("tmp") if f.is_dir() and f.name.startswith("jdk") ][0])
 

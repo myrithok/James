@@ -10,6 +10,7 @@ import jdk
 import git
 import shutil
 import stat
+import time
 
 # Project imports
 from jamesSA import saveSentimentModel
@@ -33,15 +34,16 @@ def init():
         os.mkdir(tempPath())
         jdk.install(version="15",path=tempPath())
         git.Git(tempPath()).clone("https://gitbox.apache.org/repos/asf/ant.git")
-        os.environ['JAVA_HOME'] = tempPath("jdk")
-        os.environ['ANT_HOME'] = tempPath("ant")
-        os.environ['PATH'] += os.pathsep + os.path.join(tempPath("ant"),"bin")
-        os.system('cd tmp && cd ant && build.bat')
         for root, dirs, files in os.walk(tempPath()):
             for fname in files:
                 path = os.path.join(root, fname)
                 os.chmod(path ,stat.S_IWRITE)
-        os.system('cd Mallet && ant')
+        time.sleep(5)
+        os.environ['JAVA_HOME'] = tempPath("jdk")
+        os.environ['ANT_HOME'] = tempPath("ant")
+        os.environ['PATH'] += os.pathsep + os.path.join(tempPath("ant"),"bin")
+        os.system('cd ' + tempPath("antbuild") + ' && build.bat')
+        os.system('cd ' + malletPath() + ' && ant')
         shutil.rmtree(tempPath())
     else: 
         git.cmd.Git(malletPath()).pull()
