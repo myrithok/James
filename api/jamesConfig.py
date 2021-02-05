@@ -87,3 +87,12 @@ def apiPath():
 
 def sentimentPath():
     return os.path.join(os.path.dirname(__file__),'model')
+
+def malletRepo():
+    return "https://github.com/mimno/Mallet.git"
+
+def antRepo():
+    return "https://gitbox.apache.org/repos/asf/ant.git"
+
+def jdkVersion():
+    return "15"
