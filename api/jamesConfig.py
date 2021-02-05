@@ -54,7 +54,7 @@ def malletPath():
             str
                     the path to the mallet folder
     '''
-    return os.path.join(os.path.dirname(__file__),'mallet')
+    return os.path.join(os.path.dirname(__file__),'Mallet')
 
 def malletFile():
     '''
@@ -68,3 +68,15 @@ def malletFile():
     '''
     return os.path.join(malletPath(),'bin','mallet')
 
+def tempPath(dir = None):
+
+    if dir == None:
+        return os.path.join(os.path.dirname(__file__),'tmp')
+    if dir == "ant":
+        return os.path.join(os.path.dirname(__file__),'tmp',"ant","dist")
+    elif dir == "jdk":
+        return os.path.join(os.path.dirname(__file__),'tmp',[ f.name for f in os.scandir("tmp") if f.is_dir() and f.name.startswith("jdk") ][0])
+
+def apiPath():
+
+    return os.path.dirname(__file__)
