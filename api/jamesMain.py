@@ -1,6 +1,6 @@
 # Project imports
 from jamesClasses import docResults
-from jamesConfig import sentimentFilename
+from jamesConfig import cfg
 from jamesLDA import buildBestCoherenceTopicModel, buildTopicModel, getTopics, getResults
 from jamesPreProcessing import preProcess, preProcessSentence
 from jamesSA import loadSentimentModel, getSentenceSentiment
@@ -36,7 +36,7 @@ def process(inputCorpus, topicNum=None):
     ### buildBestCoherenceModel is encapsulated in buildTopicModel and run whenever topicNum == None
     topicModel = buildTopicModel(corpus, topicNum)
     # Load the sentiment model using loadSentimentModel, imported from jamesSA
-    sentimentModel = loadSentimentModel(sentimentFilename())
+    sentimentModel = loadSentimentModel(cfg['path']['safile'])
     # Produce a jamesResults object, imported from jamesClasses, containing the topic
     #   model information using getResults, imported from jamesLDA
     results = getResults(topicModel, corpus)

@@ -14,10 +14,11 @@ import time
 
 # Project imports
 from jamesSA import saveSentimentModel
-from jamesConfig import sentimentFilename, jamesTrainingData, tempPath, malletPath, apiPath, sentimentPath, malletRepo, antRepo, jdkVersion
+from jamesConfig import cfg
 
 # The init method performs all necessary initialization
 def init():
+    print("Beginning setup...")
     # Set a seed, and load everything necessary from nltk
     print("Downloading nltk data...")
     np.random.seed(2018)
@@ -26,53 +27,53 @@ def init():
     nltk.download('punkt')
     nltk.download('averaged_perceptron_tagger')
     # Create the model folder if it does not already exist
-    if not os.path.exists(sentimentPath()):
+    if not os.path.exists(cfg['path']['sapath']):
         print("Creating model folder...")
-        os.mkdir(sentimentPath())
+        os.mkdir(cfg['path']['sapath'])
     # Build the sentiment model and save it, overwriting any existing model
     #    Imported from jamesSA
     print("Generating sentiment model...")
-    saveSentimentModel(sentimentFilename(),jamesTrainingData())
+    saveSentimentModel(cfg['path']['safile'],cfg['satraining'])
     # If the mallet folder does not already exist, perform first time setup
-    if not os.path.exists(malletPath()):
+    if not os.path.exists(cfg['path']['malletpath']):
         # Clone the latest mallet repo
         print("Cloning mallet repo...")
-        git.Git(apiPath()).clone(malletRepo())
+        git.Git(cfg['path']['api']).clone(cfg['repo']['mallet'])
         # Create a temp folder for temporary setup software
         print("Creating temp folder...")
-        os.mkdir(tempPath())
+        os.mkdir(cfg['path']['temp'])
         # Install latest JDK using the AdoptOpenJDK API into the temp folder
         print("Installing JDK...")
-        jdk.install(version=jdkVersion(),path=tempPath())
+        jdk.install(version=cfg['jdkversion'],path=cfg['path']['temp'])
         # Clone the latest Apache ant repo into the temp folder
         print("Cloning ant repo...")
-        git.Git(tempPath()).clone(antRepo())
+        git.Git(cfg['path']['temp']).clone(cfg['repo']['ant'])
         # Disable the read-only property of all files in the temp folder
         # Several files in these repos may be marked as read-only by default,
         #    which must be disabled for these files to be cleaned up at the end
         print("Disabling read-only...")
-        for root, dirs, files in os.walk(tempPath()):
+        for root, dirs, files in os.walk(cfg['path']['temp']):
             for fname in files:
                 path = os.path.join(root, fname)
                 os.chmod(path ,stat.S_IWRITE)
         time.sleep(5)
         # Build apache ant
         print("Building ant...")
-        os.environ['JAVA_HOME'] = tempPath("jdk")
-        os.environ['ANT_HOME'] = tempPath("ant")
-        os.environ['PATH'] += os.pathsep + os.path.join(tempPath("ant"),"bin")
-        os.system('cd ' + tempPath("antbuild") + ' && build.bat')
+        os.environ['JAVA_HOME'] = os.path.join(cfg['path']['temp'],[ f.name for f in os.scandir("tmp") if f.is_dir() and f.name.startswith("jdk") ][0])
+        os.environ['ANT_HOME'] = cfg['path']['antfile']
+        os.environ['PATH'] += os.pathsep + cfg['path']['antbin']
+        os.system('cd ' + cfg['path']['antpath'] + ' && build.bat')
         # Build mallet
         print("Building mallet...")
-        os.system('cd ' + malletPath() + ' && ant')
+        os.system('cd ' + cfg['path']['malletpath'] + ' && ant')
         # Delete the temp folder and all contents
         print("Cleaning up temp folder...")
-        shutil.rmtree(tempPath())
+        shutil.rmtree(cfg['path']['temp'])
     # If the mallet folder already exists, then pull the mallet repo to ensure
     #    it is up-to-date
     else:
         print("Pulling latest mallet...")
-        git.cmd.Git(malletPath()).pull()
+        git.cmd.Git(cfg['path']['malletpath']).pull()
     print("Setup complete")
 
 # Run init
