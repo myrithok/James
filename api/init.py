@@ -39,6 +39,15 @@ def init():
         # Clone the latest mallet repo
         print("Cloning mallet repo...")
         git.Git(cfg['path']['api']).clone(cfg['repo']['mallet'])
+        # Edit mallet logging settings to suppress console output
+        print("Suppressing mallet console output...")
+        file = open(cfg['path']['malletlogging'],'r')
+        logging = file.read()
+        file.close()
+        logging = logging.replace(".level= INFO", ".level= SEVERE")
+        file = open(cfg['path']['malletlogging'],'w')
+        file.write(logging)
+        file.close()
         # Create a temp folder for temporary setup software
         print("Creating temp folder...")
         os.mkdir(cfg['path']['temp'])
@@ -66,15 +75,6 @@ def init():
         # Build mallet
         print("Building mallet...")
         os.system('cd ' + cfg['path']['malletpath'] + ' && ant')
-        # Edit mallet logging settings to supress console output
-        print("Supressing mallet console output...")
-        file = open(cfg['path']['malletlogging'],'r')
-        logging = file.read()
-        file.close()
-        logging = logging.replace(".level= INFO", ".level= WARNING")
-        file = open(cfg['path']['malletlogging'],'w')
-        file.write(logging)
-        file.close()
         # Delete the temp folder and all contents
         print("Cleaning up temp folder...")
         shutil.rmtree(cfg['path']['temp'])
