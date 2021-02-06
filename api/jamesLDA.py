@@ -146,7 +146,7 @@ def getResults(topicModel, corpus):
                     a jamesResults object (imported from jamesClasses) containing
                     the topic results
     '''
-    return jamesResults(topicModel.top_topics(corpus.getBoW()))
+    return jamesResults(topicModel.top_topics(corpus.getBoW(),topn=cfg['topicwords']))
 
 def getTopics(bow, topicModel):
     '''

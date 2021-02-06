@@ -4,6 +4,7 @@ from nltk.corpus import twitter_samples
 # This file is meant to gather hard-coded names or values, as well as file paths, in one place
 
 cfg = {'topicmax':20,
+        'topicwords':20,
         'jdkversion':'15',
         'satraining':{"Positive": twitter_samples.tokenized('positive_tweets.json'),
                       "Negative": twitter_samples.tokenized('negative_tweets.json')},
