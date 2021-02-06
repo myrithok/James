@@ -66,6 +66,15 @@ def init():
         # Build mallet
         print("Building mallet...")
         os.system('cd ' + cfg['path']['malletpath'] + ' && ant')
+        # Edit mallet logging settings to supress console output
+        print("Supressing mallet console output...")
+        file = open(cfg['path']['malletlogging'],'r')
+        logging = file.read()
+        file.close()
+        logging = logging.replace(".level= INFO", ".level= WARNING")
+        file = open(cfg['path']['malletlogging'],'w')
+        file.write(logging)
+        file.close()
         # Delete the temp folder and all contents
         print("Cleaning up temp folder...")
         shutil.rmtree(cfg['path']['temp'])
