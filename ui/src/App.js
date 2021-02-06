@@ -1,13 +1,11 @@
-import "./App.scss";
-import Dropzone from "react-dropzone";
-import { useState } from "react";
-import UploadedFile from "./components/UploadedFile";
-import { Button, Input } from "@material-ui/core";
-import { isEmpty } from "lodash";
+import { useCallback, useState } from "react";
 import Axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloudDownloadAlt } from "@fortawesome/free-solid-svg-icons";
-import { fillerText, testResponse } from "./resources";
+import { Input } from "@material-ui/core";
+import ResultsContainer from "./scenes/ResultsContainer/ResultsContainer";
+import ApplicationDescription from "./components/ApplicationDescription/ApplicationDescription";
+import UploadControls from "./components/UploadControls/UploadControls";
+import FileDrop from "./components/FileDrop";
+import "./App.scss";
 
 /*
   App contains the code for the main page of the application, using the custom component UploadedFile
@@ -21,22 +19,35 @@ const App = () => {
   //State Variables
   const [files, setFiles] = useState();
   const [results, setResults] = useState();
-  const [numTopics, numTopicsInput] = useInput({type: "number", placeholder: "Leave blank for default"})
+  const [loading, setLoading] = useState(false);
+  const [numTopics, numTopicsInput] = useInput({
+    type: "number",
+    placeholder: "Leave blank for default",
+  });
 
   //Reusable function to handle input from user in a text box
   function useInput({ type, placeholder }) {
     const [value, setValue] = useState("");
-    const input = <Input inputMode={"numeric"} value={value} onChange={e => setValue(e.target.value)} type={type} placeholder={placeholder}/>;
+    const input = (
+      <Input
+        inputMode={"numeric"}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        type={type}
+        placeholder={placeholder}
+      />
+    );
     return [value, input];
   }
-/*
+  /*
   Function to handle the submission, accessed by the "Calculate" button
   Data is submitted as a FormData object, as a POST request to the Flask backend server, hosted at http://localhost:5000/upload
   formData contains the number of files, the number of topics, and each file labeled by its index
   The response is the results from running the topic modeling and sentiment analysis algorithms on the input files
 */
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
+    setLoading(true);
     let formData = new FormData();
     formData.append("fileCount", files.length);
     formData.append("numTopics", numTopics);
@@ -47,8 +58,13 @@ const App = () => {
       url: "http://localhost:5000/upload",
       method: "POST",
       data: formData,
-    }).then((response) => setResults(response));
-  };
+    })
+      .then((response) => {
+        setResults(response.data);
+        setLoading(true);
+      })
+      .catch((error) => console.log(error));
+  }, [files, numTopics]);
 
   return (
     <div className="App">
@@ -58,73 +74,27 @@ const App = () => {
           Dropzone is used to allow the user to "drop" text files into the area, or select them from their drive
           Once received, the files are added to the state variable "files"
         */}
-        <Dropzone onDrop={(acceptedFiles) => setFiles(acceptedFiles)} multiple>
-          {({ getRootProps, getInputProps }) => (
-            <div className="drop-zone" {...getRootProps()}>
-              <input {...getInputProps()} />
-              <FontAwesomeIcon icon={faCloudDownloadAlt} size="3x" />
-              <p className="file-drop-instructions">
-                Drop files or click here to select files from your drive
-              </p>
-            </div>
-          )}
-        </Dropzone>
+        {!results && <FileDrop setFiles={setFiles} />}
       </div>
       {/*
         Results are outputted here in JSON, once received
       */}
-      {results ? (
-        <div className="results-container">
-          These are the results:
-          <pre>{`${JSON.stringify(results, null, 3)}`}</pre>
-          <Button
-              variant="contained"
-              color="primary"
-              onClick={() =>  window.location.reload(false)}
-          >
-            Start Over
-          </Button>
-        </div>
-      ) : (
-        <div className="controls-container">
-
-          {/*
-             Optional input field to input number of topics
-          */}
-          <label className="numTopicsPrompt">(Optional) Number of Topics: </label>
-          {numTopicsInput}
-
-          <br/>
-
-          {files &&
-            files.map((file, index) => (
-              //  Custom component for each uploaded file
-              <UploadedFile
-                id={index}
-                file={file}
-                removeFile={() =>
-                  setFiles(files.filter((file) => file !== files[index]))
-                }
-              />
-            ))}
-
-          {/*
-              Button to submit files and send REST request to backend
-          */}
-          <Button
-              variant="contained"
-              color="primary"
-              disabled={isEmpty(files)}
-              onClick={() => handleSubmit()}
-          >
-            Calculate
-          </Button>
-        </div>
+      {results && (
+        <ResultsContainer
+          topics={results.topics}
+          sentiments={results.sentiments}
+        />
       )}
-      <div className="description-container">
-        <h4>Super Awesome Description</h4>
-        <p>{fillerText}</p>
-      </div>
+      {!results && (
+        <UploadControls
+          numTopicsInput={numTopicsInput}
+          files={files}
+          setFiles={setFiles}
+          handleSubmit={handleSubmit}
+          loading={loading}
+        />
+      )}
+      {!results && <ApplicationDescription />}
     </div>
   );
 };
