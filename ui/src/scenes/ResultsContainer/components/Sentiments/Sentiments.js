@@ -4,11 +4,20 @@ import "./styles.scss";
 
 const Sentiments = ({ sentiments }) => {
   return (
-    <div className="sentiment-container">
-      <h2 className="sentiment-title">Sentiments</h2>
-      {sentiments.map((sentiment) => (
-        <DocumentSection data={sentiment} />
-      ))}
+    <div className="sentiment-container" data-testid="sentiment-container">
+      <h2 className="sentiment-title" data-testid="sentiment-title">
+        Sentiments
+      </h2>
+      {sentiments.length === 0 ? (
+        <div data-testid={`no-sentiment-data`}>
+          <div>Sorry, no sentiments could be parsed from the document.</div>
+          <div>Please upload a different document and try again.</div>
+        </div>
+      ) : (
+        sentiments.map((sentiment, index) => (
+          <DocumentSection data={sentiment} id={index} />
+        ))
+      )}
     </div>
   );
 };

@@ -17,10 +17,10 @@ const UploadControls = ({
              Optional input field to input number of topics
           */}
       {loading ? (
-        <CircularProgress />
+        <CircularProgress data-testid="loader" />
       ) : (
         <>
-          <label className="numTopicsPrompt">
+          <label className="numTopicsPrompt" data-testid="num-topics-prompt">
             (Optional) Number of Topics:
           </label>
           {numTopicsInput}
@@ -34,6 +34,7 @@ const UploadControls = ({
             color="primary"
             disabled={isEmpty(files)}
             onClick={handleSubmit}
+            data-testid="submit-btn"
           >
             Calculate
           </Button>
