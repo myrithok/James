@@ -15,7 +15,6 @@ import time
 # Add James to path
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
-from api.jamesConfig import cfg
 from api.jamesSA import saveSentimentModel
 
 # The setup method performs all necessary setup
@@ -28,6 +27,9 @@ def setup():
     nltk.download('twitter_samples')
     nltk.download('punkt')
     nltk.download('averaged_perceptron_tagger')
+    # This import must be after twitter_samples are downloaded, as they are
+    #    loaded into the cfg object
+    from api.jamesConfig import cfg
     # Create the model folder if it does not already exist
     if not os.path.exists(cfg['path']['sapath']):
         print("Creating model folder...")
