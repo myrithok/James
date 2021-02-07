@@ -1,15 +1,14 @@
 # Library imports
 from gensim.corpora import Dictionary
-from gensim.utils import simple_preprocess
 from gensim.parsing.preprocessing import STOPWORDS
+from gensim.utils import simple_preprocess
 from nltk.stem import WordNetLemmatizer, SnowballStemmer
 from nltk.tag import pos_tag
 import re
 import string
 
 # Project imports
-from api.jamesClasses import jamesCorpus, inputCorpus, corpusDoc
-
+from jamesClasses import jamesCorpus, inputCorpus, corpusDoc
 
 def preProcess(corpus):
     '''

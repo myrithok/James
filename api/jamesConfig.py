@@ -1,6 +1,6 @@
 # Library imports
-import os
 from nltk.corpus import twitter_samples
+import os
 # This file is meant to gather hard-coded names or values, as well as file paths, in one place
 
 cfg = {'topicmax':20,

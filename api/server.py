@@ -4,8 +4,8 @@ from flask_cors import CORS
 import json
 
 # Project imports
-from jamesMain import process
 from jamesClasses import inputCorpus
+from jamesMain import process
 
 # Flask backend setup
 app = Flask(__name__)

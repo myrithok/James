@@ -1,10 +1,10 @@
 # Library imports
+from nltk import NaiveBayesClassifier
 import pickle
 import random
-from nltk import NaiveBayesClassifier
 
 # Project imports
-from api.jamesPreProcessing import jamesLemmatize
+from jamesPreProcessing import jamesLemmatize
 
 def buildSentimentModel(data):
     '''

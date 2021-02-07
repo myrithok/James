@@ -3,18 +3,18 @@
 #   only if something loaded by this file needs to change
 
 # Library imports
+import git
+import jdk
 import nltk
 import numpy as np
 import os
-import jdk
-import git
 import shutil
 import stat
 import time
 
 # Project imports
-from api.jamesSA import saveSentimentModel
-from api.jamesConfig import cfg
+from jamesConfig import cfg
+from jamesSA import saveSentimentModel
 
 # The init method performs all necessary initialization
 def init():
