@@ -4,3 +4,4 @@ api/Mallet/
 api/model/
 api/tmp/
 __pycache__/
+testing/tests/testdata/generated/

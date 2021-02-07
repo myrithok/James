@@ -33,7 +33,7 @@ class TestSA(unittest.TestCase):
         classifier = buildSentimentModel(cfg['satraining'])
 
         # save the classifier to file
-        saveSentimentModel(os.path.join(os.path.dirname(__file__),'testdata','testSAModel.pickle'), cfg['satraining'])
+        saveSentimentModel(os.path.join(os.path.dirname(__file__),'testdata','generated','testSAModel.pickle'), cfg['satraining'])
 
         # test the sentiment scoring by making a prediction
         x1 = getSentenceSentiment("Very bad", classifier)
