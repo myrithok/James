@@ -50,34 +50,38 @@ def setup():
         file.close()
         # Create a temp folder for temporary setup software
         print("Creating temp folder...")
-        os.mkdir(cfg['path']['temp'])
+        os.mkdir(cfg['path']['tmp'])
         # Install latest JDK using the AdoptOpenJDK API into the temp folder
         print("Installing JDK...")
-        jdk.install(version=cfg['jdkversion'],path=cfg['path']['temp'])
+        jdk.install(version=cfg['jdkversion'],path=cfg['path']['tmp'])
         # Clone the latest Apache ant repo into the temp folder
         print("Cloning ant repo...")
-        git.Git(cfg['path']['temp']).clone(cfg['repo']['ant'])
-        # Disable the read-only property of all files in the temp folder
-        # Several files in these repos may be marked as read-only by default,
-        #    which must be disabled for these files to be cleaned up at the end
-        print("Disabling read-only...")
-        for root, dirs, files in os.walk(cfg['path']['temp']):
-            for fname in files:
-                path = os.path.join(root, fname)
-                os.chmod(path ,stat.S_IWRITE)
-        time.sleep(5)
+        git.Git(cfg['path']['tmp']).clone(cfg['repo']['ant'])
         # Build apache ant
         print("Building ant...")
-        os.environ['JAVA_HOME'] = os.path.join(cfg['path']['temp'],[ f.name for f in os.scandir("tmp") if f.is_dir() and f.name.startswith("jdk") ][0])
+        os.environ['JAVA_HOME'] = os.path.join(cfg['path']['tmp'],[ f.name for f in os.scandir("tmp") if f.is_dir() and f.name.startswith("jdk") ][0])
         os.environ['ANT_HOME'] = cfg['path']['antfile']
         os.environ['PATH'] += os.pathsep + cfg['path']['antbin']
         os.system('cd ' + cfg['path']['antpath'] + ' && build.bat')
         # Build mallet
         print("Building mallet...")
         os.system('cd ' + cfg['path']['malletpath'] + ' && ant')
+        # Disable the read-only property of all files in the temp folder
+        # Several files in these repos may be marked as read-only by default,
+        #    which must be disabled for these files to be cleaned up at the end
+        print("Disabling read-only...")
+        for root, dirs, files in os.walk(cfg['path']['tmp']):
+            for fname in files:
+                path = os.path.join(root, fname)
+                os.chmod(path ,stat.S_IWRITE)
+        for root, dirs, files in os.walk(cfg['path']['mallet']):
+            for fname in files:
+                path = os.path.join(root, fname)
+                os.chmod(path ,stat.S_IWRITE)
+        time.sleep(5)
         # Delete the temp folder and all contents
         print("Cleaning up temp folder...")
-        shutil.rmtree(cfg['path']['temp'])
+        shutil.rmtree(cfg['path']['tmp'])
     # If the mallet folder already exists, then pull the mallet repo to ensure
     #    it is up-to-date
     else:

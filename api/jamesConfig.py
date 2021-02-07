@@ -16,7 +16,7 @@ cfg = {'topicmax':20,
                 'malletpath':os.path.join(os.path.dirname(__file__),'Mallet'),
                 'malletfile':os.path.join(os.path.dirname(__file__),'Mallet','bin','mallet'),
                 'malletlogging':os.path.join(os.path.dirname(__file__),'Mallet','src','cc','mallet','util','resources','logging.properties'),
-                'temp':os.path.join(os.path.dirname(__file__),'tmp'),
+                'tmp':os.path.join(os.path.dirname(__file__),'tmp'),
                 'antpath':os.path.join(os.path.dirname(__file__),'tmp','ant'),
                 'antfile':os.path.join(os.path.dirname(__file__),'tmp','ant','dist'),
                 'antbin':os.path.join(os.path.dirname(__file__),'tmp','ant','dist','bin')}
