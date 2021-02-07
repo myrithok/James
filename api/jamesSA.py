@@ -4,7 +4,8 @@ import random
 from nltk import NaiveBayesClassifier
 
 # Project imports
-from jamesPreProcessing import jamesLemmatize
+from api.jamesPreProcessing import jamesLemmatize
+
 
 def buildSentimentModel(data):
     '''
@@ -30,6 +31,7 @@ def buildSentimentModel(data):
     classifier = NaiveBayesClassifier.train(trainingData)
     # Return the trained NaiveBayesClassifier
     return classifier
+
 
 def prepareTrainingData(data):
     '''
@@ -59,7 +61,8 @@ def prepareTrainingData(data):
         #   jamesLemmatize, imported from jamesPreProcessing, and append the lemmatized token
         #   to the tokens list
         for token in data[label]:
-            tokens.append(jamesLemmatize(token, minTokenLen=1, doStem=False, doStemDic=False)["lemmatized"])
+            tokens.append(jamesLemmatize(token, minTokenLen=1,
+                                         doStem=False, doStemDic=False)["lemmatized"])
         # Prepare a token dictionary from the lemmatized token list using getTokenDic, found below
         tokenDic = getTokenDic(tokens)
         # Pair each token from the token dictionary with the current label to prepare the dataset
@@ -70,6 +73,7 @@ def prepareTrainingData(data):
     random.shuffle(trainingData)
     # Return the prepared training data
     return trainingData
+
 
 def getTokenDic(tokenList):
     '''
@@ -90,7 +94,8 @@ def getTokenDic(tokenList):
     for tokens in tokenList:
         yield dict([token, True] for token in tokens)
 
-def saveSentimentModel(filename,trainingData):
+
+def saveSentimentModel(filename, trainingData):
     '''
     This method builds a sentiment model, and saves it to a specified filename
     It is called only by init, as the sentiment model only needs to be built and
@@ -114,6 +119,7 @@ def saveSentimentModel(filename,trainingData):
     pickle.dump(sentimentModel, f)
     f.close()
 
+
 def loadSentimentModel(filename):
     '''
     This method loads a saved sentiment model and returns it
@@ -135,6 +141,7 @@ def loadSentimentModel(filename):
     f.close()
     return sentimentModel
 
+
 def getSentenceSentiment(text, model):
     '''
     This method uses a sentiment analysis model to find the probability that
@@ -154,7 +161,8 @@ def getSentenceSentiment(text, model):
                     the probability that the given sentence is positive, as a float
     '''
     # Lemmatize the given sentence using jamesLemmatize, imported from jamesPreProcessing
-    tokens = jamesLemmatize(text, minTokenLen=1, doStem=False, doStemDic=False)['lemmatized']
+    tokens = jamesLemmatize(text, minTokenLen=1, doStem=False, doStemDic=False)[
+        'lemmatized']
     # Use the given NaiveBayesClassifier to classify the sentence
     results = model.prob_classify(dict([token, True] for token in tokens))
     # Return the probability that the sentence was positive

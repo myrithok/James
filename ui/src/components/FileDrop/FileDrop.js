@@ -7,9 +7,13 @@ const FileDrop = ({ setFiles }) => {
   return (
     <Dropzone onDrop={(acceptedFiles) => setFiles(acceptedFiles)} multiple>
       {({ getRootProps, getInputProps }) => (
-        <div className="drop-zone" {...getRootProps()}>
+        <div className="drop-zone" data-testid="drop-zone" {...getRootProps()}>
           <input {...getInputProps()} />
-          <FontAwesomeIcon icon={faCloudDownloadAlt} size="3x" />
+          <FontAwesomeIcon
+            icon={faCloudDownloadAlt}
+            size="3x"
+            data-testid="file-drop-icon"
+          />
           <p className="file-drop-instructions">
             Drop files or click here to select files from your drive
           </p>

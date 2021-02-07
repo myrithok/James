@@ -4,10 +4,12 @@ from gensim.utils import simple_preprocess
 from gensim.parsing.preprocessing import STOPWORDS
 from nltk.stem import WordNetLemmatizer, SnowballStemmer
 from nltk.tag import pos_tag
-import re, string
+import re
+import string
 
 # Project imports
-from jamesClasses import jamesCorpus, inputCorpus, corpusDoc
+from api.jamesClasses import jamesCorpus, inputCorpus, corpusDoc
+
 
 def preProcess(corpus):
     '''
@@ -39,7 +41,8 @@ def preProcess(corpus):
         #   analysis later
         doc.addSentences(separateSentences(doc.text))
         # Lemmatize the document using jamesLemmatize (found below)
-        lemmatized = jamesLemmatize(doc.text, minTokenLen=4, doStem=True, doStemDic=True)
+        lemmatized = jamesLemmatize(
+            doc.text, minTokenLen=4, doStem=True, doStemDic=True)
         # Add the lemmatized document stem list to the corpusDoc (imported from jamesClasses),
         #   to be used to generate the document's word id bag of words
         doc.addLemmatized(lemmatized["lemmatized"])
@@ -60,6 +63,7 @@ def preProcess(corpus):
     #   corpusDoc objects, the word stem id dictionary, and the stem word dictionary,
     #   and return it
     return jamesCorpus(docs, dic, stemDic)
+
 
 def preProcessSentence(text, dic):
     '''
@@ -82,6 +86,7 @@ def preProcessSentence(text, dic):
     # Lemmatize and stem the sentence using jamesLemmatize (found below),
     #   convert the stem results to a bag of word stem ids, and return it
     return dic.doc2bow(jamesLemmatize(text, minTokenLen=4, doStem=True, doStemDic=False)["lemmatized"])
+
 
 def jamesLemmatize(tokens, minTokenLen, doStem, doStemDic):
     '''
@@ -129,7 +134,8 @@ def jamesLemmatize(tokens, minTokenLen, doStem, doStemDic):
     # Tag each word using pos_tag, imported from nltk.tag, and iterate through each token and tag
     for token, tag in pos_tag(tokens):
         # Filter out undesired information from the token, and format it to lowercase
-        token = re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', token)
+        token = re.sub(
+            'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', token)
         token = re.sub("(@[A-Za-z0-9_]+)", "", token)
         token = token.lower()
         # Check whether the token is tagged as a noun, a verb, or other, and set pos appropriately
@@ -162,6 +168,7 @@ def jamesLemmatize(tokens, minTokenLen, doStem, doStemDic):
     # Otherwise, return a dictionary with only the lemmatized list
     return {"lemmatized": lemmatized}
 
+
 def separateSentences(text):
     '''
     This method is used to separate a document into a clean list of sentences
@@ -176,6 +183,8 @@ def separateSentences(text):
             list
                     a list of strings, where each string is a sentence from the document
     '''
+    if not isinstance(text, str):
+        raise TypeError
     # Add a newline after every period, exclamation point, and question mark
     text = text.replace(".", ".\n")
     text = text.replace("!", "!\n")
@@ -186,9 +195,11 @@ def separateSentences(text):
     sentences = text.split("\n")
     # Strip leading and trailing whitespace from every sentence in the list, and filter
     #   the resulting sentences using sentenceFilter found below
-    cleaned = filter(sentenceFilter, [sentence.strip() for sentence in sentences])
+    cleaned = filter(sentenceFilter, [sentence.strip()
+                                      for sentence in sentences])
     # Convert the results back to a list, and return them
     return list(cleaned)
+
 
 def sentenceFilter(sentence):
     '''
@@ -205,6 +216,8 @@ def sentenceFilter(sentence):
             bool
                     true if the sentence contains at least one letter, false otherwise
     '''
+    if not isinstance(sentence, str):
+        raise TypeError
     if re.search('[a-zA-Z]', sentence):
         return True
     return False
