@@ -1,11 +1,18 @@
-from api.jamesSA import buildSentimentModel, prepareTrainingData, getTokenDic, saveSentimentModel, loadSentimentModel, getSentenceSentiment
-from api.jamesConfig import jamesTrainingData
+# Library imports
+import os
+import sys
 import unittest
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+# Import the file to be tested
+from api.jamesSA import buildSentimentModel, prepareTrainingData, getTokenDic, saveSentimentModel, loadSentimentModel, getSentenceSentiment
+# Other required project imports
+from api.jamesConfig import cfg
 
 
 class TestSA(unittest.TestCase):
     def test_prepareTrainingData(self):
-        data1 = jamesTrainingData()
+        data1 = cfg['satraining']
         self.assertEqual(isinstance(data1, dict), True)
 
         ret = prepareTrainingData(data1)
@@ -19,14 +26,14 @@ class TestSA(unittest.TestCase):
 
     def test_SentimentModel(self):
         # Load training data
-        data = jamesTrainingData()
+        data = cfg['satraining']
         self.assertEqual(isinstance(data, dict), True)
 
         # train a classifier
-        classifier = buildSentimentModel(jamesTrainingData())
+        classifier = buildSentimentModel(cfg['satraining'])
 
         # save the classifier to file
-        saveSentimentModel("testSAModel.pickle", jamesTrainingData())
+        saveSentimentModel(os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','generated','testSAModel.pickle'), cfg['satraining'])
 
         # test the sentiment scoring by making a prediction
         x1 = getSentenceSentiment("Very bad", classifier)
@@ -37,7 +44,7 @@ class TestSA(unittest.TestCase):
 
     def test_loadSentimentModel(self):
         # load a model
-        model = loadSentimentModel("testSAModel.pickle")
+        model = loadSentimentModel(os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testSAModel.pickle'))
 
         # test the sentiment scoring
         x1 = getSentenceSentiment("Very bad", model)

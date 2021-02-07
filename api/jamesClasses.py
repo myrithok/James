@@ -1,3 +1,9 @@
+# Library imports
+import os
+import sys
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 class jamesResults:
     '''
     The jamesResults class is used to represent the result set of this application
@@ -429,6 +435,10 @@ class jamesCorpus:
             getBoW() -> list
                     This method is used to get a list of bags of words, where each bag of words is
                     corresponds to one document in the corpus
+
+            getLemmatized() -> list
+                    This method is used to get a list of lists of strings, where each list corresponds
+                    to one document in the corpus
     '''
     def __init__(self, docs, dic, stemDic):
         '''
@@ -461,6 +471,17 @@ class jamesCorpus:
             bow.append(doc.bow)
         return bow
 
+    def getLemmatized(self):
+        '''
+        Output
+        ------
+                list
+                        a bag of words as a list of lists of strings
+        '''
+        lemma = []
+        for doc in self.docs:
+            lemma.append(doc.lemmatized)
+        return lemma
 
 class corpusDoc:
     '''

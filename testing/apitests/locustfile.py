@@ -1,4 +1,5 @@
 from locust import HttpUser, task, between, tag
+import os
 
 class WebsiteUser(HttpUser):
     wait_time = between(2, 5)
@@ -10,7 +11,8 @@ class WebsiteUser(HttpUser):
             "fileCount": 1,
             "numTopics": 2
         }
-        file = open('macro_micro.txt', 'r')
+        filename = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testdata.txt')
+        file = open(filename, 'r')
         self.client.post("/upload", data=test_request, files={'file0': file})
 
     @tag('POST')
