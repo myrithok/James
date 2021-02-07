@@ -55,7 +55,13 @@ cd api
 pip install -r requirements.txt
 ```
 
-- start server wth:
+- Run run setup with:
+
+```code
+py setup.py
+```
+
+- start server with:
 
 ```code
 py server.py
