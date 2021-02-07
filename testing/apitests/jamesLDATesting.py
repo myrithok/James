@@ -13,7 +13,7 @@ from api.jamesConfig import cfg
 
 # Method for loading and constructing a test corpus from a file in testdata
 def loadTestCorpus():
-    filename = os.path.join(os.path.dirname(__file__),'testdata','testdata.txt')
+    filename = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testdata.txt')
     f = open(filename,'r')
     testData = f.read()
     f.close()
@@ -24,14 +24,14 @@ def loadTestCorpus():
 
 # Method for loading and constructing a test LDA model from files in testdata
 def loadTestModel():
-    filename = os.path.join(os.path.dirname(__file__),'testdata','testmodel')
+    filename = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testmodel')
     testModel = gensim.models.ldamodel.LdaModel.load(filename)
     return testModel
 
 # Method for loading and constructing a test sentence from the test corpus and
 #    a file in testdata
 def loadTestSentence(testCorpus,number=""):
-    filename = os.path.join(os.path.dirname(__file__),'testdata','testsentence' + number + '.txt')
+    filename = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testsentence' + number + '.txt')
     f = open(filename,'r')
     rawSentence= f.read()
     f.close()

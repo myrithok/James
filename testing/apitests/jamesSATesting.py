@@ -33,7 +33,7 @@ class TestSA(unittest.TestCase):
         classifier = buildSentimentModel(cfg['satraining'])
 
         # save the classifier to file
-        saveSentimentModel(os.path.join(os.path.dirname(__file__),'testdata','generated','testSAModel.pickle'), cfg['satraining'])
+        saveSentimentModel(os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','generated','testSAModel.pickle'), cfg['satraining'])
 
         # test the sentiment scoring by making a prediction
         x1 = getSentenceSentiment("Very bad", classifier)
@@ -44,7 +44,7 @@ class TestSA(unittest.TestCase):
 
     def test_loadSentimentModel(self):
         # load a model
-        model = loadSentimentModel(os.path.join(os.path.dirname(__file__),'testdata','testSAModel.pickle'))
+        model = loadSentimentModel(os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testSAModel.pickle'))
 
         # test the sentiment scoring
         x1 = getSentenceSentiment("Very bad", model)

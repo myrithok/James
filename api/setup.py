@@ -76,11 +76,11 @@ def setup():
             for fname in files:
                 path = os.path.join(root, fname)
                 os.chmod(path ,stat.S_IWRITE)
-        for root, dirs, files in os.walk(cfg['path']['mallet']):
+        for root, dirs, files in os.walk(cfg['path']['malletpath']):
             for fname in files:
                 path = os.path.join(root, fname)
                 os.chmod(path ,stat.S_IWRITE)
-        time.sleep(5)
+        time.sleep(10)
         # Delete the temp folder and all contents
         print("Cleaning up temp folder...")
         shutil.rmtree(cfg['path']['tmp'])
