@@ -13,7 +13,7 @@ from api.jamesConfig import cfg
 
 # Method for loading and constructing a test corpus from a file in testdata
 def loadTestCorpus():
-    filename = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testdata.txt')
+    filename = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testdata1.txt')
     f = open(filename,'r')
     testData = f.read()
     f.close()
