@@ -6,4 +6,5 @@ api/Mallet/
 api/model/
 api/tmp/
 __pycache__/
-testing/testdata/generated/
+testing/testdata/generated/*
+!testing/testdata/generated/.gitkeep
