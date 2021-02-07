@@ -1,4 +1,4 @@
-from init import *
+from setup import *
 from jamesClasses import *
 from jamesConfig import *
 from jamesLDA import *

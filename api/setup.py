@@ -16,8 +16,8 @@ import time
 from jamesConfig import cfg
 from jamesSA import saveSentimentModel
 
-# The init method performs all necessary initialization
-def init():
+# The setup method performs all necessary setup
+def setup():
     print("Beginning setup...")
     # Set a seed, and load everything necessary from nltk
     print("Downloading nltk data...")
@@ -85,5 +85,6 @@ def init():
         git.cmd.Git(cfg['path']['malletpath']).pull()
     print("Setup complete")
 
-# Run init
-init()
+# Run setup
+if __name__ == '__main__':
+    setup()
