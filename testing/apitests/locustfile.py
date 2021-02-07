@@ -5,8 +5,8 @@ import os
 # Locust creates an HTTP user which sends REST requests to the backend
 # Web instance is located at http://localhost:8089
 class WebsiteUser(HttpUser):
-    # Each user makes a request, waits between 2-5 seconds and then makes another one
-    wait_time = between(2, 5)
+    # Each user makes a request, waits between 10-15 seconds and then makes another one
+    wait_time = between(10, 15)
 
     # The tag is used in the command to specify which tasks to complete.
     # The task weighting (ex. 2) shows how much more often this task will be chosen.
@@ -15,13 +15,13 @@ class WebsiteUser(HttpUser):
     # uploadTestBasic creates a POST request and sends 1 file with numtopics=2 to the
     # backend.
     @tag('POST')
-    @task(3)
+    @task(5)
     def uploadTestBasic(self):
         test_request = {
             "fileCount": 1,
             "numTopics": 2
         }
-        filename = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testdata', 'testdata.txt')
+        filename = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testdata', 'testdata1.txt')
         file = open(filename, 'r')
         self.client.post("/upload", data=test_request, files={'file0': file})
 
@@ -40,15 +40,15 @@ class WebsiteUser(HttpUser):
 
     # uploadTwoFiles creates a POST request and sends 2 files to backend.
     @tag('POST')
-    @task(2)
+    @task(3)
     def uploadTwoFiles(self):
         test_request = {
             "fileCount": 2,
             "numTopics": 2
         }
-        filename0 = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testdata', 'testsentenceone.txt')
+        filename0 = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testdata', 'testdata1.txt')
         file0 = open(filename0, 'r')
-        filename1 = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testdata', 'testsentencetwo.txt')
+        filename1 = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testdata', 'testdata2.txt')
         file1 = open(filename1, 'r')
 
         self.client.post("/upload", data=test_request, files={'file0': file0, 'file1': file1})
