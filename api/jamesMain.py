@@ -1,10 +1,14 @@
+# Library imports
+import os
+import sys
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
 from api.jamesClasses import docResults
-from api.jamesConfig import sentimentFilename
+from api.jamesConfig import cfg
 from api.jamesLDA import buildBestCoherenceTopicModel, buildTopicModel, getTopics, getResults
 from api.jamesPreProcessing import preProcess, preProcessSentence
 from api.jamesSA import loadSentimentModel, getSentenceSentiment
-
 
 def process(inputCorpus, topicNum=None):
     '''
@@ -34,18 +38,10 @@ def process(inputCorpus, topicNum=None):
     # Input is inputCorpus object, imported from jamesClasses
     # Output is jamesCorpus object, imported from jamesClasses
     corpus = preProcess(inputCorpus)
-    # If a specific number of topics is not specified, build a topic model for the
-    #   preprocessed corpus using buildBestCoherenceTopicModel, imported from jamesLDA
-    # This method finds a number of topics that produces the best average coherence
-    #   score, and returns this topic model
-    if topicNum == None:
-        topicModel = buildBestCoherenceTopicModel(corpus)
-    # If a number of topics is specified, simply build a topic model for the input corpus
-    #   with the specified number of topics using buildTopicModel, imported from jamesLDA
-    else:
-        topicModel = buildTopicModel(corpus, topicNum)
+    ### buildBestCoherenceModel is encapsulated in buildTopicModel and run whenever topicNum == None
+    topicModel = buildTopicModel(corpus, topicNum)
     # Load the sentiment model using loadSentimentModel, imported from jamesSA
-    sentimentModel = loadSentimentModel(sentimentFilename())
+    sentimentModel = loadSentimentModel(cfg['path']['safile'])
     # Produce a jamesResults object, imported from jamesClasses, containing the topic
     #   model information using getResults, imported from jamesLDA
     results = getResults(topicModel, corpus)

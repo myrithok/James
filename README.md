@@ -55,10 +55,10 @@ cd api
 pip install -r requirements.txt
 ```
 
-- Run init.py file with:
+- Run run setup with:
 
 ```code
-py init.py
+py setup.py
 ```
 
 - start server with:

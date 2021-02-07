@@ -2,10 +2,13 @@
 from flask import Flask, request
 from flask_cors import CORS
 import json
-
+import os
+import sys
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
-from jamesMain import process
-from jamesClasses import inputCorpus
+from api.jamesClasses import inputCorpus
+from api.jamesMain import process
 
 # Flask backend setup
 app = Flask(__name__)

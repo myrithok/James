@@ -1,13 +1,14 @@
-# run from James directory
-# python -m unittest testing.jamesPreProcessingTesting
-
+# Library imports
+import os
+import sys
+import unittest
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+# Import the file to be tested
 from api.jamesPreProcessing import preProcess, preProcessSentence, jamesLemmatize, \
     separateSentences, sentenceFilter
-
+# Other required project imports
 from api.jamesClasses import inputCorpus, corpusDoc
-
-import unittest
-
 
 class TestPreProcessingMethods(unittest.TestCase):
     def test_preProcess(self):
