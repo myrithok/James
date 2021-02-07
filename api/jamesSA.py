@@ -4,7 +4,7 @@ import random
 from nltk import NaiveBayesClassifier
 
 # Project imports
-from jamesPreProcessing import jamesLemmatize
+from api.jamesPreProcessing import jamesLemmatize
 
 def buildSentimentModel(data):
     '''

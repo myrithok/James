@@ -74,8 +74,6 @@ def buildBestCoherenceTopicModel(corpus):
     maximum = cfg['topicmax']
     # Initialize each variable to test the max
     topScore = topModel = currentModel = currentResults = currentScore = None
-    # save the results coherence scores to a list for verification
-    scores = []
     # Iterate through each number of topics to try, between 2 and the maximum (inclusive)
     for n in range(2, maximum + 1):
         # Build the topic model for the current number of topics using buildTopicModel found above

@@ -1,9 +1,10 @@
 # Project imports
-from jamesClasses import docResults
-from jamesConfig import cfg
-from jamesLDA import buildBestCoherenceTopicModel, buildTopicModel, getTopics, getResults
-from jamesPreProcessing import preProcess, preProcessSentence
-from jamesSA import loadSentimentModel, getSentenceSentiment
+from api.jamesClasses import docResults
+from api.jamesConfig import cfg
+from api.jamesLDA import buildBestCoherenceTopicModel, buildTopicModel, getTopics, getResults
+from api.jamesPreProcessing import preProcess, preProcessSentence
+from api.jamesSA import loadSentimentModel, getSentenceSentiment
+
 
 def process(inputCorpus, topicNum=None):
     '''

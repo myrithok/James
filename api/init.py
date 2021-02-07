@@ -13,8 +13,8 @@ import stat
 import time
 
 # Project imports
-from jamesSA import saveSentimentModel
-from jamesConfig import cfg
+from api.jamesSA import saveSentimentModel
+from api.jamesConfig import cfg
 
 # The init method performs all necessary initialization
 def init():

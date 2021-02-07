@@ -4,10 +4,12 @@ from gensim.utils import simple_preprocess
 from gensim.parsing.preprocessing import STOPWORDS
 from nltk.stem import WordNetLemmatizer, SnowballStemmer
 from nltk.tag import pos_tag
-import re, string
+import re
+import string
 
 # Project imports
-from jamesClasses import jamesCorpus, inputCorpus, corpusDoc
+from api.jamesClasses import jamesCorpus, inputCorpus, corpusDoc
+
 
 def preProcess(corpus):
     '''
@@ -176,6 +178,8 @@ def separateSentences(text):
             list
                     a list of strings, where each string is a sentence from the document
     '''
+    if not isinstance(text, str):
+        raise TypeError
     # Add a newline after every period, exclamation point, and question mark
     text = text.replace(".", ".\n")
     text = text.replace("!", "!\n")
@@ -205,6 +209,8 @@ def sentenceFilter(sentence):
             bool
                     true if the sentence contains at least one letter, false otherwise
     '''
+    if not isinstance(sentence, str):
+        raise TypeError
     if re.search('[a-zA-Z]', sentence):
         return True
     return False

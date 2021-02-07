@@ -1,8 +1,5 @@
-
 api/__pycache__/
-
+testing/__pycache__/
 api/Mallet/
-
 api/model/
-
 api/tmp/
