@@ -44,7 +44,7 @@ npm start
 - java
 ### Usage
 
-from the root:
+From the root:
 
 - install requirements with:
 
