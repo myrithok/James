@@ -13,8 +13,8 @@ class TestjamesClasses1(unittest.TestCase):
 
     def setUp(self):
 
-        self.file1 = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','netflix_chips.txt')
-        self.file2 = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','macro_micro.txt')
+        self.file1 = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testdata1.txt')
+        self.file2 = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testdata2.txt')
         f1 = open(self.file1, "r")
         self.text1 = f1.read()
         f1.close()
