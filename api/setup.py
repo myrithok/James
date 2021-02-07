@@ -61,7 +61,7 @@ def setup():
         git.Git(cfg['path']['tmp']).clone(cfg['repo']['ant'])
         # Build apache ant
         print("Building ant...")
-        os.environ['JAVA_HOME'] = os.path.join(cfg['path']['tmp'],[ f.name for f in os.scandir("tmp") if f.is_dir() and f.name.startswith("jdk") ][0])
+        os.environ['JAVA_HOME'] = os.path.join(cfg['path']['tmp'],[ f.name for f in os.scandir(cfg['path']['tmp']) if f.is_dir() and f.name.startswith("jdk") ][0])
         os.environ['ANT_HOME'] = cfg['path']['antfile']
         os.environ['PATH'] += os.pathsep + cfg['path']['antbin']
         os.system('cd ' + cfg['path']['antpath'] + ' && build.bat')
