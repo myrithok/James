@@ -44,26 +44,22 @@ npm start
 - java
 ### Usage
 
-- from the root, navigate to the the `api` directory with:
-
-```code
-cd api
-```
+from the root:
 
 - install requirements with:
 
 ```code
-pip install -r requirements.txt
+pip install -r api/requirements.txt
 ```
 
 - Run run setup with:
 
 ```code
-py setup.py
+py api/setup.py
 ```
 
 - start server with:
 
 ```code
-py server.py
+py api/server.py
 ```
