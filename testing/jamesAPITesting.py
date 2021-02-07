@@ -11,7 +11,7 @@ def apiUnitTest():
 
 def apiStressTest():
 	filename = os.path.join(os.path.dirname(__file__),'apitests','locustfile.py')
-	os.system('locust -f ' + filename + '--host http://localhost:5000 --users 5000 --spawn-rate 20')
+	os.system('locust -f ' + filename + '--host http://localhost:5000 --users 100 --spawn-rate 10 --tags POST')
 
 # Run every test in the testing directory
 if __name__ == '__main__':
