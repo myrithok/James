@@ -7,10 +7,12 @@ import nltk
 import numpy as np
 
 # Project imports
-from jamesSA import saveSentimentModel
-from jamesConfig import sentimentFilename, jamesTrainingData
+from api.jamesSA import saveSentimentModel
+from api.jamesConfig import sentimentFilename, jamesTrainingData
 
 # The init method performs all necessary initialization
+
+
 def init():
     # Set a seed, and load everything necessary from nltk
     np.random.seed(2018)
@@ -20,7 +22,8 @@ def init():
     nltk.download('averaged_perceptron_tagger')
     # Build the sentiment model, and save it to a filename imported from jamesConfig,
     #   imported from jamesSA
-    saveSentimentModel(sentimentFilename(),jamesTrainingData())
+    saveSentimentModel(sentimentFilename(), jamesTrainingData())
+
 
 # Run init
 init()
