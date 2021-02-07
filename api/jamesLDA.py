@@ -1,10 +1,12 @@
 # Library imports
 from gensim.models import wrappers, coherencemodel
 import os
-
+import sys
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
-from jamesClasses import jamesResults
-from jamesConfig import cfg
+from api.jamesClasses import jamesResults
+from api.jamesConfig import cfg
 
 def buildTopicModel(corpus, topicNum):
     '''
@@ -84,7 +86,6 @@ def buildBestCoherenceTopicModel(corpus):
                                                          dictionary=corpus.dic, corpus=corpus.getBoW(),
                                                          coherence="c_v")
         currentScore = currentCoherence.get_coherence()
-        scores.append(currentScore)
         # If this model has a higher average coherence score than the current best,
         #   or it is the first model generated, store this model and score as the
         #   top model and score

@@ -1,6 +1,9 @@
 # Library imports
 from nltk.corpus import twitter_samples
 import os
+import sys
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # This file is meant to gather hard-coded names or values, as well as file paths, in one place
 
 cfg = {'topicmax':20,

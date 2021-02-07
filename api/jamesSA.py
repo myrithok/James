@@ -1,10 +1,13 @@
 # Library imports
 from nltk import NaiveBayesClassifier
+import os
 import pickle
 import random
-
+import sys
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
-from jamesPreProcessing import jamesLemmatize
+from api.jamesPreProcessing import jamesLemmatize
 
 def buildSentimentModel(data):
     '''

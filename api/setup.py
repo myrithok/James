@@ -10,11 +10,13 @@ import numpy as np
 import os
 import shutil
 import stat
+import sys
 import time
-
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
-from jamesConfig import cfg
-from jamesSA import saveSentimentModel
+from api.jamesConfig import cfg
+from api.jamesSA import saveSentimentModel
 
 # The setup method performs all necessary setup
 def setup():

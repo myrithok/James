@@ -4,11 +4,14 @@ from gensim.parsing.preprocessing import STOPWORDS
 from gensim.utils import simple_preprocess
 from nltk.stem import WordNetLemmatizer, SnowballStemmer
 from nltk.tag import pos_tag
+import os
 import re
 import string
-
+import sys
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
-from jamesClasses import jamesCorpus, inputCorpus, corpusDoc
+from api.jamesClasses import jamesCorpus, inputCorpus, corpusDoc
 
 def preProcess(corpus):
     '''
