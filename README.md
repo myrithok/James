@@ -41,6 +41,7 @@ npm start
 
 - python3
 - pip3
+- java
 ### Usage
 
 - from the root, navigate to the the `api` directory with:
