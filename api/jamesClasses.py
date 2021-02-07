@@ -45,18 +45,34 @@ class jamesResults:
         ----------
                 topicOutput: list
                         the results of the top_topics method of a gensim ldamodel
+                        list of (list, float) where float is a coherence score for a topic
+                        the inner list of type (float, string), where float is a word weight
+                        and string is a word.
         '''
-        if not topicOutput:
-            raise Exception("Empty input value")
         self.topicResults = []
         self.stemDic = {}
         self.documentResults = []
+        assert isinstance(topicOutput, list), "parameter must be a list"
+        assert topicOutput != [], "list must be nonempty"
+        for element in topicOutput:
+            assert isinstance(element, tuple), "list must be list of tuples"
+            assert len(element) == 2, "must be tuple of type (list, float)"
+            assert isinstance(element[0], list), "must be tuple of type (list, float)"
+            assert isinstance(element[1], float), "must be tuple of type (list, float)"
+            #assert element[1] >= 0, "second index of tuple must be non-negative"
+            for segment in element[0]:
+                assert isinstance(segment, tuple), "list must be list of tuples"
+                assert len(segment) == 2, "must be tuple of type (float, str)"
+                assert isinstance(segment[0], float), "must be tuple of type (float, str)"
+                assert segment[0] >= 0, "first parameter of tuple in list must be non-negative"
+                assert isinstance(segment[1], str), "must be tuple of type (float, str)"
+
         i = 1
         for result in topicOutput:
             self.topicResults.append(topicResults(i, result))
             i += 1
 
-    def addDocResults(self, docResults):
+    def addDocResults(self, docResult):
         '''
         Parameters
         ----------
@@ -64,7 +80,8 @@ class jamesResults:
                         the results for a single document as a docResults 
                         object, found below
         '''
-        self.documentResults.append(docResults)
+        assert isinstance(docResult, docResults)
+        self.documentResults.append(docResult)
 
     def addStemDic(self, stemDic):
         '''
@@ -74,6 +91,7 @@ class jamesResults:
                         a dictionary mapping word stems to an example of a word
                         that produces that stem
         '''
+        assert isinstance(stemDic, dict)
         self.stemDic = stemDic
 
     def getNumberOfTopics(self):
@@ -132,8 +150,11 @@ class topicResults:
         Parameters
         ----------
                 num: int
-                        an integer denoting the number of the topic, and (word list, coherence pair),
-                        where the coherence is a float and the word list is a list of (float, string) pairs
+                        an integer denoting the number of the topic
+
+                result: tuple
+                        a tuple of form (list, float) where float is a coherence score for the inner list, which is
+                        a list of form (float, string), which is a word weight, word string pair.
 
         Methods
         -------
@@ -142,6 +163,21 @@ class topicResults:
                         objects into nested dictionaries and lists which can be easily
                         converted to a json object
         '''
+        assert isinstance(num, int), "first parameter must be type 'int'"
+        assert num >= 0, "first parameter must be non-negative"
+        assert isinstance(result, tuple), "second parameter must be type 'tuple'"
+        assert result != (), "second parameter must be non-empty"
+        assert isinstance(result[1], (int, float)), "second index of second parameter must be type 'float'"
+        assert isinstance(result[0], list), "first index of second parameter must be type 'list'"
+        assert result[0] != [], "first index of second parameter must be non-empty"
+        for element in result[0]:
+            assert isinstance(element, tuple), "second parameter must be a list of type tuple (float, str)"
+            assert len(element) == 2, "second parameter must be a list of type tuple (float, str)"
+            assert isinstance(element[0], float), "first parameter of tuple in list must be type float"
+            assert element[0] >= 0, "first parameter of tuple in list must be non-negative"
+            assert isinstance(element[1], str), "second parameter of tuple in list must be type 'str'"
+
+
         self.topicNum = num
         self.coherence = result[1]
         self.topicWords = []
@@ -197,6 +233,9 @@ class topicWord:
                         a (weight,word) pair, where the word is a string and the weight
                         is a float
         '''
+        assert isinstance(word, tuple), "parameter must be type 'tuple'"
+        assert isinstance(word[0], (int,float)), "first index of tuple parameter must be type 'float'"
+        assert isinstance(word[1], str), "second index of tuple parameter must be type 'str'"
         self.word = word[1]
         self.weight = word[0]
 
@@ -213,6 +252,8 @@ class topicWord:
                 dict
                         the word data formatted as a dictionary
         '''
+        assert isinstance(stemDic, dict), "parameter must be type 'dict'"
+        assert self.word in stemDic, "word must have an entry in dictionary"
         return {"word": stemDic[self.word],
                 "weight": str(self.weight)}
 
@@ -245,7 +286,7 @@ class docResults:
                     objects into nested dictionaries and lists which can be easily
                     converted to a json object
     '''
-    def __init__(self, title, topics):
+    def __init__(self, title, topics):    # must be numbers and float
         '''
         docResults is initialized with the title of the document, and the topic
         distribution for the document
@@ -259,12 +300,21 @@ class docResults:
                         a list of (topic number, weight) pairs where the topic number is an integer
                         and the weight is a float
         '''
+        assert isinstance(title, str), "first parameter must be type 'str'"
+        assert isinstance(topics, list), "second parameter must be type 'list'"
+        for element in topics:
+            assert isinstance(element, tuple), "second parameter must be a list of type tuple (int, float)"
+            assert len(element) == 2,           "second parameter must be a list of type tuple (int, float)"
+            assert isinstance(element[0], int), "first parameter of tuple must be type int"
+            assert element[0] >= 0, "first parameter of tuple must be non-negative"
+            assert isinstance(element[1], (int, float)), "second parameter of tuple must be type 'float'"
+            assert element[1] >= 0, "second parameter of tuple must be non-negative"
         self.docTitle = title
         self.docTopics = []
         for topic in topics:
             self.docTopics.append(docTopic(topic))
 
-    def addSentiment(self, num, weight, sentiment):
+    def addSentiment(self, num, weight, sentiment):   # these types must be correct
         '''
         Parameters
         ----------
@@ -277,6 +327,11 @@ class docResults:
                 sentiment: float
                         the sentiment for a given topic
         '''
+        assert isinstance(num, int), "first parameter must be type 'int'"
+        assert isinstance(weight, (int, float)), "second parameter must be type 'float'"
+        assert weight >= 0, "second parameter must be non-negative"
+        assert isinstance(sentiment, (int, float)), "third parameter must be type 'float'"
+        assert num in range(0, len(self.docTopics))
         self.docTopics[num-1].addSentiment(weight, sentiment)
 
     def averageSentiments(self):
@@ -346,6 +401,11 @@ class docTopic:
                         a (topic number, weight) pair, where the topic number is an integer and
                         the weight is a float
         '''
+        assert isinstance(topic, tuple), "parameter must be of type tuple (int, float)"
+        assert isinstance(topic[0], int), "first parameter of tuple must be type int"
+        assert topic[0]>=0, "first parameter of tuple must be non-negative"
+        assert isinstance(topic[1], (int, float)), "second parameter of tuple must be type 'float'"
+        assert topic[1]>=0, "second parameter of tuple must be non-negative"
         self.topicNum = topic[0] + 1
         self.weight = topic[1]
         self.sentimentTotal = 0.0
@@ -361,6 +421,9 @@ class docTopic:
                 sentiment: float
                         a sentence sentiment as a float
         '''
+        assert isinstance(weight, (int, float)), "first parameter must type float"
+        assert weight >= 0, "first parameter must be non-negative"
+        assert isinstance(sentiment, (int, float)), "second parameter must be type float"
         self.sentimentTotal += sentiment * weight
         self.sentimentWeight += weight
 
@@ -368,7 +431,8 @@ class docTopic:
         '''
         Average the sentiment for this topic by dividing it by the total topic weight added
         '''
-        self.sentimentTotal = self.sentimentTotal / self.sentimentWeight
+        if self.sentimentWeight != 0:
+            self.sentimentTotal = self.sentimentTotal / self.sentimentWeight
 
     def output(self):
         '''
@@ -411,6 +475,9 @@ class inputCorpus:
         doc: str
                 the document contents as a string
         '''
+        assert isinstance(title, str), "first parameter must be of type 'str'"
+        assert isinstance(doc, str), "second parameter must be of type 'str'"
+
         self.docs.append(corpusDoc(title, doc))
 
 class jamesCorpus:
@@ -436,8 +503,8 @@ class jamesCorpus:
                     This method is used to get a list of bags of words, where each bag of words is
                     corresponds to one document in the corpus
 
-            getLemmatized() -> list
-                    This method is used to get a list of lists of strings, where each list corresponds
+            getLemmatized() -> List
+                    This method is used to get a List of lists of strings, where each list corresponds
                     to one document in the corpus
     '''
     def __init__(self, docs, dic, stemDic):
@@ -455,6 +522,10 @@ class jamesCorpus:
                         a stem word dictionary
                         where the keys and values are strings
         '''
+        assert isinstance(docs, list), "first parameter must be of type 'list'"
+        # dic is a gensim Dictionary
+        assert isinstance(stemDic, dict), "third parameter must be of type 'dict'"
+
         self.docs = docs
         self.dic = dic
         self.stemDic = stemDic
@@ -533,6 +604,9 @@ class corpusDoc:
                 text: str
                         the text of the document as a string
         '''
+
+        assert isinstance(title, str), "first parameter must be of type 'str'"
+        assert isinstance(text, str), "second parameter must be of type 'str'"
         self.title = title
         self.text = text
         self.lemmatized = []
@@ -546,6 +620,7 @@ class corpusDoc:
                 lemmatized: list
                         the text of the document in lemmatized form as a list of strings
         '''
+        assert isinstance(lemmatized, list), "parameter must be of type 'list'"
         self.lemmatized = lemmatized
 
     def addBoW(self, bow):
@@ -556,6 +631,7 @@ class corpusDoc:
                         the text of the document in bag of words form, as a list of
                         (integer, integer) pairs
         '''
+        assert isinstance(bow, list), "parameter must be of type 'list'"
         self.bow = bow
 
     def addSentences(self, sentences):
@@ -566,4 +642,5 @@ class corpusDoc:
                         the text of the document separated into a list of sentences, where
                         each sentence is a string
         '''
+        assert isinstance(sentences, list), "parameter must be of type 'list'"
         self.sentences = sentences
