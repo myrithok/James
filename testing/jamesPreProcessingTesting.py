@@ -26,15 +26,37 @@ class TestPreProcessingMethods(unittest.TestCase):
         i2.addDoc("TestTitle", "Dog cat horse mcmaster")
         corpus2 = preProcess(i2)
 
-        # Failed case
-        # self.assertEqual(corpus2.stemDic, {
-        #                  'Dog': 'Dog', 'cat': 'cat', 'horse': 'horse', 'mcmaster': 'mcmaster'})
         for val in corpus2.docs:
             self.assertEqual(isinstance(val, corpusDoc), True)
 
         self.assertEqual(corpus2.dic[0], "hors")
         self.assertEqual(corpus2.dic[1], "mcmaster")
-        pass
+
+        # TODO Contains Failed case
+        self.assertEqual(corpus2.stemDic.get("Dog", 0), "Dog")
+        self.assertEqual(corpus2.stemDic.get("cat", 0), "cat")
+        self.assertEqual(corpus2.stemDic.get("horse", 0), "horse")
+        self.assertEqual(corpus2.stemDic.get("mcmaster", 0), "mcmaster")
+
+        i3 = inputCorpus()
+        i3.addDoc("TestTitle", "And then I was king william james")
+        corpus2 = preProcess(i3)
+        for val in corpus2.docs:
+            self.assertEqual(isinstance(val, corpusDoc), True)
+
+        self.assertEqual(corpus2.stemDic.get("king", 0), "king")
+        self.assertEqual(corpus2.stemDic.get("william", 0), "william")
+        self.assertEqual(corpus2.stemDic.get("james", 0), "james")
+
+        i3 = inputCorpus()
+        i3.addDoc("TestTitle", "dancing running flying kicking")
+        corpus2 = preProcess(i3)
+        for val in corpus2.docs:
+            self.assertEqual(isinstance(val, corpusDoc), True)
+
+        self.assertEqual(corpus2.stemDic.get("danc", 0), "dancing")
+        self.assertEqual(corpus2.stemDic.get("run", 0), "kicking")
+        self.assertEqual(corpus2.stemDic.get("fly", 0), "flying")
 
     def test_preProcessSentence(self):
         # pre-process individual sentences by creating a bag of words
@@ -43,19 +65,14 @@ class TestPreProcessingMethods(unittest.TestCase):
         corpus = preProcess(i)
         x = preProcessSentence("This is a test case", corpus.dic)
         self.assertEqual(x, [(0, 1), (1, 1)])
-        # print(x)
-        pass
 
     def test_jamesLemmatize(self):
         # Lemmatize and stem text
         x = jamesLemmatize("This is a test case", 3, True, False)
         # print(x)
         self.assertEqual(x["lemmatized"], ['test', 'case'])
-
         y = jamesLemmatize("This is a test case", 3, False, False)
         self.assertEqual(y["lemmatized"], ['test', 'case'])
-
-        pass
 
     def test_separateSentences(self):
         # Converts a document to a list of sentences
@@ -97,31 +114,58 @@ class TestPreProcessingMethods(unittest.TestCase):
 
         # Test for lowercase letters
         self.assertEqual(sentenceFilter('abcdefghijklmnopqrstuvwxyz'), True)
+        self.assertEqual(sentenceFilter('abc'), True)
+        self.assertEqual(sentenceFilter('a'), True)
+        self.assertEqual(sentenceFilter('z'), True)
+        self.assertEqual(sentenceFilter('aaaaaaaa'), True)
+        self.assertEqual(sentenceFilter('aaaaaaaazzzzzzz'), True)
 
         # Test for uppercase letters
         self.assertEqual(sentenceFilter('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), True)
+        self.assertEqual(sentenceFilter('ABC'), True)
+        self.assertEqual(sentenceFilter('A'), True)
+        self.assertEqual(sentenceFilter('Z'), True)
+        self.assertEqual(sentenceFilter('AAAAAAAAAAAAAA'), True)
+        self.assertEqual(sentenceFilter('ZZZZZZZZZZZZZZZZZZZZ'), True)
 
         self.assertEqual(sentenceFilter(
             'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'), True)
 
         # Test for numbers and letters
         self.assertEqual(sentenceFilter('123456789ABCD'), True)
+        self.assertEqual(sentenceFilter('123456789ABCDefgh'), True)
+        self.assertEqual(sentenceFilter('aaaaa11111'), True)
+        self.assertEqual(sentenceFilter('1111111a'), True)
+        self.assertEqual(sentenceFilter('aaaaaaaaaa1231'), True)
+        self.assertEqual(sentenceFilter('    1 223aaa'), True)
+        self.assertEqual(sentenceFilter('???223aaa'), True)
 
         # Test for a single character
         self.assertEqual(sentenceFilter('T'), True)
+        self.assertEqual(sentenceFilter('Z'), True)
+        self.assertEqual(sentenceFilter(' Z'), True)
+        self.assertEqual(sentenceFilter('             Z'), True)
 
         # Test for numbers
         self.assertEqual(sentenceFilter('123456789'), False)
+        self.assertEqual(sentenceFilter(
+            '123456789123456789123456789123456789'), False)
+        self.assertEqual(sentenceFilter('               123456789'), False)
+        self.assertEqual(sentenceFilter(
+            '             123456789            '), False)
 
         # Test for empty string
         self.assertEqual(sentenceFilter(''), False)
 
         # Test for special characters
         self.assertEqual(sentenceFilter('!@#$%^&*'), False)
+        self.assertEqual(sentenceFilter('        '), False)
 
         # Test for invalid inputs
         with self.assertRaises(TypeError):
             sentenceFilter(12)
+        with self.assertRaises(TypeError):
+            sentenceFilter(99999999)
         with self.assertRaises(TypeError):
             sentenceFilter(3.14)
         # pass
