@@ -2,7 +2,8 @@
 
 ## About
 
-This is going to be a description of the application
+This project combines LDA topic modelling and sentiment analysis to analyze the change in sentiment an author has towards a topic in a corpus.
+
 
 ## Front End
 
