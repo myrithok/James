@@ -12,6 +12,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
 from api.jamesClasses import jamesCorpus, inputCorpus, corpusDoc
+from api.jamesConfig import cfg
 
 def preProcess(corpus):
     '''
@@ -43,7 +44,7 @@ def preProcess(corpus):
         #   analysis later
         doc.addSentences(separateSentences(doc.text))
         # Lemmatize the document using jamesLemmatize (found below)
-        lemmatized = jamesLemmatize(doc.text, minTokenLen=4, doStem=True, doStemDic=True)
+        lemmatized = jamesLemmatize(doc.text, doStem=True, doStemDic=True)
         # Add the lemmatized document stem list to the corpusDoc (imported from jamesClasses),
         #   to be used to generate the document's word id bag of words
         doc.addLemmatized(lemmatized["lemmatized"])
@@ -85,9 +86,9 @@ def preProcessSentence(text, dic):
     '''
     # Lemmatize and stem the sentence using jamesLemmatize (found below),
     #   convert the stem results to a bag of word stem ids, and return it
-    return dic.doc2bow(jamesLemmatize(text, minTokenLen=4, doStem=True, doStemDic=False)["lemmatized"])
+    return dic.doc2bow(jamesLemmatize(text, doStem=True, doStemDic=False)["lemmatized"])
 
-def jamesLemmatize(tokens, minTokenLen, doStem, doStemDic):
+def jamesLemmatize(tokens, doStem, doStemDic):
     '''
     This method is used to lemmatize and stem text for both topic modeling and sentiment analysis
     It is used by preProcess and preProcessSentence above, as well as jamesSA
@@ -98,9 +99,6 @@ def jamesLemmatize(tokens, minTokenLen, doStem, doStemDic):
                     the input to be lemmatized and stemmed
                     either a string that has not yet been tokenized, or a list representing an
                     already tokenized string
-
-            minTokenLen: int
-                    the minimum allowable token length when lemmatizing the input
 
             doStem: bool
                     a setting for whether or not the input should also be stemmed
@@ -145,7 +143,7 @@ def jamesLemmatize(tokens, minTokenLen, doStem, doStemDic):
             pos = 'a'
         # Filter out each token that is punctuation, in STOPWORDS (imported from
         #   gensim.parsing.preprocessing), or is shorter than the minimum acceptable token length
-        if token not in STOPWORDS and token not in string.punctuation and len(token) >= minTokenLen:
+        if token not in STOPWORDS and token not in string.punctuation and len(token) >= cfg['mintokenlen']:
             # Lemmatize the token using WordNetLemmatizer
             lemma = lemmatizer.lemmatize(token, pos)
             # Stem the token using the SnowballStemmer, if needed

@@ -8,6 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 cfg = {'topicmax':20,
         'topicwords':20,
+        'mintokenlen':1,
         'jdkversion':'15',
         'satraining':{"Positive": twitter_samples.tokenized('positive_tweets.json'),
                       "Negative": twitter_samples.tokenized('negative_tweets.json')},

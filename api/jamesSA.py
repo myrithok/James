@@ -62,7 +62,7 @@ def prepareTrainingData(data):
         #   jamesLemmatize, imported from jamesPreProcessing, and append the lemmatized token
         #   to the tokens list
         for token in data[label]:
-            tokens.append(jamesLemmatize(token, minTokenLen=1, doStem=False, doStemDic=False)["lemmatized"])
+            tokens.append(jamesLemmatize(token, doStem=False, doStemDic=False)["lemmatized"])
         # Prepare a token dictionary from the lemmatized token list using getTokenDic, found below
         tokenDic = getTokenDic(tokens)
         # Pair each token from the token dictionary with the current label to prepare the dataset
@@ -157,7 +157,7 @@ def getSentenceSentiment(text, model):
                     the probability that the given sentence is positive, as a float
     '''
     # Lemmatize the given sentence using jamesLemmatize, imported from jamesPreProcessing
-    tokens = jamesLemmatize(text, minTokenLen=1, doStem=False, doStemDic=False)['lemmatized']
+    tokens = jamesLemmatize(text, doStem=False, doStemDic=False)['lemmatized']
     # Use the given NaiveBayesClassifier to classify the sentence
     results = model.prob_classify(dict([token, True] for token in tokens))
     # Return the probability that the sentence was positive
