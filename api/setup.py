@@ -55,6 +55,10 @@ def setup():
     file = open(cfg['path']['malletlogging'],'w')
     file.write(logging)
     file.close()
+    if os.path.exists(cfg['path']['tmp']):
+        #Clean up pre-existing temp folder if previous setup was interupted
+        print("Cleaning up old temp folder...")
+        shutil.rmtree(cfg['path']['tmp'])
     # Create a temp folder for temporary setup software
     print("Creating temp folder...")
     os.mkdir(cfg['path']['tmp'])
