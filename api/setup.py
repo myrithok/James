@@ -8,6 +8,7 @@ import jdk
 import nltk
 import numpy as np
 import os
+import platform
 import shutil
 import stat
 import sys
@@ -73,7 +74,10 @@ def setup():
     os.environ['JAVA_HOME'] = os.path.join(cfg['path']['tmp'],[ f.name for f in os.scandir(cfg['path']['tmp']) if f.is_dir() and f.name.startswith("jdk") ][0])
     os.environ['ANT_HOME'] = cfg['path']['antfile']
     os.environ['PATH'] += os.pathsep + cfg['path']['antbin']
-    os.system('cd ' + cfg['path']['antpath'] + ' && build.bat')
+    if platform.system() == 'Windows':
+        os.system('cd ' + cfg['path']['antpath'] + ' && build.bat')
+    else:
+        os.system('cd ' + cfg['path']['antpath'] + ' && ./build.sh')
     # Build mallet
     print("Building mallet...")
     os.system('cd ' + cfg['path']['malletpath'] + ' && ant')
