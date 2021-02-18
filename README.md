@@ -50,17 +50,17 @@ From the root:
 - install requirements with:
 
 ```code
-pip install -r api/requirements.txt
+pip3 install -r api/requirements.txt
 ```
 
 - Run run setup with:
 
 ```code
-py api/setup.py
+python3 api/setup.py
 ```
 
 - start server with:
 
 ```code
-py api/server.py
+python3 api/server.py
 ```
