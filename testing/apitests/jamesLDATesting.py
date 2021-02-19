@@ -22,12 +22,6 @@ def loadTestCorpus():
     testCorpus = jamesPreProcessing.preProcess(inputCorpus)
     return testCorpus
 
-# Method for loading and constructing a test LDA model from files in testdata
-def loadTestModel():
-    filename = os.path.join(os.path.dirname(os.path.dirname(__file__)),'testdata','testmodel')
-    testModel = gensim.models.ldamodel.LdaModel.load(filename)
-    return testModel
-
 # Method for loading and constructing a test sentence from the test corpus and
 #    a file in testdata
 def loadTestSentence(testCorpus,number=""):
@@ -40,7 +34,7 @@ def loadTestSentence(testCorpus,number=""):
 
 # Load the test corpus, test model, and test sentence into constants
 TESTCORPUS = loadTestCorpus()
-TESTMODEL = loadTestModel()
+TESTMODEL = jamesLDA.buildTopicModel(TESTCORPUS,2)
 TESTSENTENCEONE = loadTestSentence(TESTCORPUS,"one")
 TESTSENTENCETWO = loadTestSentence(TESTCORPUS,"two")
 
