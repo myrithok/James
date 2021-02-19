@@ -81,18 +81,18 @@ def setup():
     # Build mallet
     print("Building mallet...")
     os.system('cd ' + cfg['path']['malletpath'] + ' && ant')
-    # Disable the read-only property of all files in the temp folder
-    # Several files in these repos may be marked as read-only by default,
-    #    which must be disabled for these files to be cleaned up at the end
-    print("Disabling read-only...")
+    # Change the permissions for everything in the temp directory and mallet directory
+    # This is required both to allow the temp files to be removed, and for
+    #    mallet to be executed by the james backend
+    print("Modifying permissions on downloaded directories...")
     for root, dirs, files in os.walk(cfg['path']['tmp']):
         for fname in files:
             path = os.path.join(root, fname)
-            os.chmod(path ,stat.S_IWRITE)
+            os.chmod(path ,stat.S_IRWXU)
     for root, dirs, files in os.walk(cfg['path']['malletpath']):
         for fname in files:
             path = os.path.join(root, fname)
-            os.chmod(path ,stat.S_IWRITE)
+            os.chmod(path ,stat.S_IRWXU)
     time.sleep(10)
     # Delete the temp folder and all contents
     print("Cleaning up temp folder...")
