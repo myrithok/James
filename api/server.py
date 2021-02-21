@@ -51,4 +51,4 @@ def index():
 
 # Backend main
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8002)
