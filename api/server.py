@@ -27,14 +27,21 @@ def index():
             file = 'file' + str(x)
             # If any file is not found, return an error
             if file not in request.files:
-                return 'Error with attached files'
-            # For each file, read and decode the contents,
-            #   check that the file is not empty,
-            #   read the filename without the file extension, 
-            #   and add these to the inputCorpus object
-            contents = request.files.get(file).read().decode("utf-8")
+                return 'Error with attached files', 500
+            # If any file is not a .txt file, return an error
+            if not request.files.get(file).filename.split(".")[-1] == 'txt':
+                return 'Only .txt files accepted', 500
+            # Try to read and decode the contents of each file
+            # If any issue is encountered, return an error
+            try:
+                contents = request.files.get(file).read().decode("utf-8")
+            except:
+                return 'Error with attached files', 500
+            # If any file was empty, return an error
             if contents == "":
-                return 'Attached file empty'
+                return 'File empty', 500
+            # For each file, read the filename without the file extension, 
+            #   and add these to the inputCorpus object
             title = request.files.get(file).filename.split(".")[0]
             corpus.addDoc(title, contents)
         # The number of topics is taken from the request.
