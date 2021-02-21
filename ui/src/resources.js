@@ -1838,3 +1838,11 @@ medieval typesetter chose to garble a well-known (but
 non-Biblical—that would have been sacrilegious) text, or whether a
 quirk in the 1914 Loeb Edition inspired a graphic designer, it's
 admittedly an odd way for Cicero to sail into the 21st century.`;
+
+export const descriptionText = `James combines LDA topic modelling and sentiment analysis to analyze the change in sentiment an author has towards a topic in a corpus.
+
+To use the tool, simply drop a text file or multiple text files into the dropzone above. You can also add files by clicking on the dropzone icon to open up a file browser to find files to upload. To upload multiple files, select all the files you want to upload, and then press the submit button.
+
+After uploading the desired files, you can optionally select a number of topics for the algorithm. If left blank, the algorithm will determine the best number of topics for the inputted text. If an optional number is selected, the algorithm will process much quicker. 
+
+Once satisfied with all the previous steps, click "Calculate" above and the algorithm will start processing the text, and display the output here.`;

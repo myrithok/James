@@ -1,11 +1,11 @@
 import React from "react";
-import { fillerText } from "../../resources";
+import { descriptionText } from "../../resources";
 
 const ApplicationDescription = () => {
   return (
     <div className="description-container" data-testid="description-container">
-      <h4>Super Awesome Description</h4>
-      <p>{fillerText}</p>
+      <h4>James Description</h4>
+      <p>{descriptionText}</p>
     </div>
   );
 };
