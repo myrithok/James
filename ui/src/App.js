@@ -55,7 +55,7 @@ const App = () => {
       formData.append(`file${index}`, file);
     });
     Axios({
-      url: "http://localhost:8002/upload",
+      url: "http://35.183.97.235:8002/upload",
       method: "POST",
       data: formData,
     })
