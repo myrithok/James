@@ -32,8 +32,8 @@ def index():
             #   check that the file is not empty,
             #   read the filename without the file extension, 
             #   and add these to the inputCorpus object
-            contents == request.files.get(file).read().decode("utf-8")
-            if contents = "":
+            contents = request.files.get(file).read().decode("utf-8")
+            if contents == "":
                 return 'Attached file empty'
             title = request.files.get(file).filename.split(".")[0]
             corpus.addDoc(title, contents)
