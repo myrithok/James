@@ -1,0 +1,87 @@
+.App {
+  text-align: center;
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding-bottom: 3rem;
+}
+
+h1 {
+  color: #61dafb;
+}
+
+.main-content {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.drop-zone {
+  width: 15%;
+  height: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  color: #282c34;
+  margin: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.4rem;
+
+  cursor: pointer;
+}
+
+.drop-zone:focus {
+  outline: none;
+  background-color: #61dafb;
+}
+
+.file-drop-instructions {
+  margin-top: 1rem;
+  font-size: medium;
+}
+
+.controls-container {
+  width: 40%;
+  height: auto;
+  background-color: white;
+  color: #282c34;
+  padding: 0.5rem 2.5rem;
+  margin: 0.5rem 2.5rem;
+  border-radius: 0.4rem;
+}
+.description-container {
+  width: 40%;
+  background-color: white;
+  color: #282c34;
+  padding: 0.5rem 2.5rem 2rem;
+  margin: 0.5rem 2.5rem;
+  border-radius: 0.4rem;
+}
+.results-container {
+  font-size: 1rem;
+  width: 40%;
+  text-align: left;
+
+  background-color: white;
+  color: #282c34;
+  padding: 0.5rem 2.5rem 2rem;
+  margin: 0.5rem 2.5rem;
+  border-radius: 0.4rem;
+}
+
+.results-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.numTopicsPrompt {
+  font-size: 1.5rem;
+}

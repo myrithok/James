@@ -1,6 +1,6 @@
 import React from "react";
 import Topic from "./components/Topic";
-import "./styles.scss";
+import "./styles.css";
 
 const Topics = ({ topics }) => {
   return (

@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core";
 import React from "react";
-import "./styles.scss";
+import "./styles.css";
 
 /*
   UploadedFile Component to handle each uploaded file

@@ -1,6 +1,6 @@
 import React from "react";
 import DocumentSection from "./components/DocumentSection";
-import "./styles.scss";
+import "./styles.css";
 
 const Sentiments = ({ sentiments }) => {
   return (

@@ -5,7 +5,7 @@ import ResultsContainer from "./scenes/ResultsContainer/ResultsContainer";
 import ApplicationDescription from "./components/ApplicationDescription/ApplicationDescription";
 import UploadControls from "./components/UploadControls/UploadControls";
 import FileDrop from "./components/FileDrop";
-import "./App.scss";
+import "./App.css";
 
 /*
   App contains the code for the main page of the application, using the custom component UploadedFile
