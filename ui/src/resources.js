@@ -1846,3 +1846,5 @@ To use the tool, simply drop a text file or multiple text files into the dropzon
 After uploading the desired files, you can optionally select a number of topics for the algorithm. If left blank, the algorithm will determine the best number of topics for the inputted text. If an optional number is selected, the algorithm will process much quicker. 
 
 Once satisfied with all the previous steps, click "Calculate" above and the algorithm will start processing the text, and display the output here.`;
+
+export const bugText = `If you would like to report a software bug, make a suggestion on how we can improve the app, or have any other requests, feel free to create an issue on the James github `
