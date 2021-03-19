@@ -41,6 +41,11 @@ class TestJamesMain_process(unittest.TestCase):
             for word in topic['topicwords']:
                 self.assertIsInstance(word['word'],str)
                 self.assertIsInstance(word['weight'],str)
+            self.assertIsInstance(topic['examplesentences'],list)
+            self.assertLessEqual(len(topic['examplesentences']),3)
+            for sentence in topic['examplesentences']:
+                self.assertIsInstance(sentence['sentence'],str)
+                self.assertIsInstance(sentence['weight'],str)
         self.assertIsInstance(testoutput['sentiments'],list)
         for sentiment in testoutput['sentiments']:
             self.assertIsInstance(sentiment['doctitle'],str)

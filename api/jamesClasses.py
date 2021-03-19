@@ -1,6 +1,8 @@
 # Library imports
 import os
 import sys
+# Project imports
+from api.jamesConfig import cfg
 # Add James to path
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
@@ -27,6 +29,12 @@ class jamesResults:
 
             addStemDic(stemDic: dict)
                     used to load a stem dictionary into the stemDic property
+
+            addSentence(sentence: str, sentenceTopics: list)
+                    used to check a sentence against example sentences contained in 
+                    all result topics, and add the sentence to the example sentences list
+                    if the example sentences list is not full, or if the input sentence is
+                    a better example than the worst example sentence currently in the list
 
             getNumberOfTopics() -> int
                     get the number of topics in the result set
@@ -94,6 +102,24 @@ class jamesResults:
         assert isinstance(stemDic, dict)
         self.stemDic = stemDic
 
+    def addSentence(self, sentence, sentenceTopics):
+        '''
+        Parameters
+        ----------
+                sentence: str
+                        a string containing a potential example sentence
+
+                sentenceTopics: list
+                        a list of (int, float) tuples, where there int is a
+                        topic number, and the float is the input sentence's weight
+                        towards that topic
+        '''
+        assert isinstance(sentence, str), "sentence must be a string"
+        assert isinstance(sentenceTopics, list), "sentenceTopics must be a string"
+        assert sentenceTopics != [], "sentenceTopics list must be nonempty"
+        for topic in sentenceTopics:
+            self.topicResults[topic[0]].addSentence(sentence,topic[1])
+
     def getNumberOfTopics(self):
         '''
         Output
@@ -135,8 +161,18 @@ class topicResults:
                     a list of words and their corresponding weights, which represent
                     the meaning of the topic, as topicWord objects (found below)
 
+            exampleSentences: list
+                    a list of 3 sentences as exampleSentence objects that were most
+                    heavily weighted towards this topic, sorted by descending weight 
+
     Methods
     -------
+            addSentence(sentence: str, weight: float)
+                    used to check a sentence against example sentences contained in this topic,
+                    and add the sentence to the example sentences list if the example sentences
+                    list is not full, or if the input sentence is a better example than the worst
+                    example sentence currently in the list
+
             output(stemDic: dict) -> dict
                     This method is used to recursively construct the object and all nested
                     objects into nested dictionaries and lists which can be easily
@@ -155,19 +191,12 @@ class topicResults:
                 result: tuple
                         a tuple of form (list, float) where float is a coherence score for the inner list, which is
                         a list of form (float, string), which is a word weight, word string pair.
-
-        Methods
-        -------
-                output(stemDic: dict) -> dict
-                        This method is used to recursively construct the object and all nested
-                        objects into nested dictionaries and lists which can be easily
-                        converted to a json object
         '''
         assert isinstance(num, int), "first parameter must be type 'int'"
         assert num >= 0, "first parameter must be non-negative"
         assert isinstance(result, tuple), "second parameter must be type 'tuple'"
         assert result != (), "second parameter must be non-empty"
-        assert isinstance(result[1], (int, float)), "second index of second parameter must be type 'float'"
+        assert isinstance(result[1], float), "second index of second parameter must be type 'float'"
         assert isinstance(result[0], list), "first index of second parameter must be type 'list'"
         assert result[0] != [], "first index of second parameter must be non-empty"
         for element in result[0]:
@@ -183,6 +212,28 @@ class topicResults:
         self.topicWords = []
         for word in result[0]:
             self.topicWords.append(topicWord(word))
+        self.exampleSentences = []
+
+    def addSentence(self, sentence, weight):
+        '''
+        Parameters
+        ----------
+                sentence: str
+                        a string containing a potential example sentence
+
+                weight: float
+                        the weight of the input sentence towards the current topic
+        '''
+        assert isinstance(sentence, str), "sentence must be a string"
+        assert isinstance(weight, float), "weight must be a float"
+        if len(self.exampleSentences) < cfg['exsnum']:
+            pass
+        elif self.exampleSentences[-1].weight < weight:
+            self.exampleSentences.pop()
+        else:
+            return
+        self.exampleSentences.append(exampleSentence(sentence, weight))
+        self.exampleSentences.sort(key = lambda x: x.weight, reverse = True)
 
     def output(self, stemDic):
         '''
@@ -200,9 +251,13 @@ class topicResults:
         wordsOut = []
         for word in self.topicWords:
             wordsOut.append(word.output(stemDic))
+        sentencesOut = []
+        for sentence in self.exampleSentences:
+            sentencesOut.append(sentence.output())
         return {"topicnum": self.topicNum,
                 "coherence": str(self.coherence),
-                "topicwords": wordsOut}
+                "topicwords": wordsOut,
+                "examplesentences": sentencesOut}
 
 class topicWord:
     '''
@@ -215,12 +270,12 @@ class topicWord:
                 the word as a string
 
             weight: float
-                the weight of this word
+                the weight of this word towards the current topic
 
     Methods
     -------
             output(stemDic: dict) -> dict
-                    This method is used to  construct the object into a dictionary which can
+                    This method is used to construct the object into a dictionary which can
                     be easily converted to a json object
     '''
     def __init__(self, word):
@@ -234,7 +289,7 @@ class topicWord:
                         is a float
         '''
         assert isinstance(word, tuple), "parameter must be type 'tuple'"
-        assert isinstance(word[0], (int,float)), "first index of tuple parameter must be type 'float'"
+        assert isinstance(word[0], float), "first index of tuple parameter must be type 'float'"
         assert isinstance(word[1], str), "second index of tuple parameter must be type 'str'"
         self.word = word[1]
         self.weight = word[0]
@@ -255,6 +310,53 @@ class topicWord:
         assert isinstance(stemDic, dict), "parameter must be type 'dict'"
         assert self.word in stemDic, "word must have an entry in dictionary"
         return {"word": stemDic[self.word],
+                "weight": str(self.weight)}
+
+class exampleSentence:
+    '''
+    The exampleSentence class is used to represent a single topic example sentence and its
+    corresponding weight towards the current topic
+
+    Attributes
+    ----------
+            sentence: str
+                the sentence as a string
+
+            weight: float
+                the weight of this sentence towards the current topic
+
+    Methods
+    -------
+            output() -> dict
+                    This method is used to construct the object into a dictionary which can
+                    be easily converted to a json object
+    '''
+    def __init__(self, sentence, weight):
+        '''
+        exampleSentence is initialized with a sentence and a weight
+
+        Parameters
+        ----------
+            sentence: str
+                the sentence as a string
+
+            weight: float
+                the weight of this sentence towards the current topic
+
+        '''
+        assert isinstance(sentence, str), "sentence parameter must be type 'str'"
+        assert isinstance(weight, float), "weight parameter must be type 'float'"
+        self.sentence = sentence
+        self.weight = weight
+
+    def output(self):
+        '''
+        Output
+        ------
+                dict
+                        the sentence data formatted as a dictionary
+        '''
+        return {"sentence": self.sentence,
                 "weight": str(self.weight)}
 
 class docResults:
@@ -307,7 +409,7 @@ class docResults:
             assert len(element) == 2,           "second parameter must be a list of type tuple (int, float)"
             assert isinstance(element[0], int), "first parameter of tuple must be type int"
             assert element[0] >= 0, "first parameter of tuple must be non-negative"
-            assert isinstance(element[1], (int, float)), "second parameter of tuple must be type 'float'"
+            assert isinstance(element[1], float), "second parameter of tuple must be type 'float'"
             assert element[1] >= 0, "second parameter of tuple must be non-negative"
         self.docTitle = title
         self.docTopics = []
@@ -328,9 +430,9 @@ class docResults:
                         the sentiment for a given topic
         '''
         assert isinstance(num, int), "first parameter must be type 'int'"
-        assert isinstance(weight, (int, float)), "second parameter must be type 'float'"
+        assert isinstance(weight, float), "second parameter must be type 'float'"
         assert weight >= 0, "second parameter must be non-negative"
-        assert isinstance(sentiment, (int, float)), "third parameter must be type 'float'"
+        assert isinstance(sentiment, float), "third parameter must be type 'float'"
         assert num in range(0, len(self.docTopics))
         self.docTopics[num-1].addSentiment(weight, sentiment)
 
@@ -404,7 +506,7 @@ class docTopic:
         assert isinstance(topic, tuple), "parameter must be of type tuple (int, float)"
         assert isinstance(topic[0], int), "first parameter of tuple must be type int"
         assert topic[0]>=0, "first parameter of tuple must be non-negative"
-        assert isinstance(topic[1], (int, float)), "second parameter of tuple must be type 'float'"
+        assert isinstance(topic[1], float), "second parameter of tuple must be type 'float'"
         assert topic[1]>=0, "second parameter of tuple must be non-negative"
         self.topicNum = topic[0] + 1
         self.weight = topic[1]
@@ -421,9 +523,9 @@ class docTopic:
                 sentiment: float
                         a sentence sentiment as a float
         '''
-        assert isinstance(weight, (int, float)), "first parameter must type float"
+        assert isinstance(weight, float), "first parameter must type float"
         assert weight >= 0, "first parameter must be non-negative"
-        assert isinstance(sentiment, (int, float)), "second parameter must be type float"
+        assert isinstance(sentiment, float), "second parameter must be type float"
         self.sentimentTotal += sentiment * weight
         self.sentimentWeight += weight
 
