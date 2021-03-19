@@ -340,7 +340,7 @@ class TestjamesClasses3(unittest.TestCase):
         # with keys "topicnum", "coherence", and topicwords.
         self.wordsOut = [self.topicWord1.output(self.dict1), self.topicWord2.output(self.dict1)]
         self.topicResults1output1 = {"topicnum": self.topicNum, "coherence": str(self.coherenceScore1),
-                                     "topicwords": self.wordsOut}
+                                     "topicwords": self.wordsOut, "examplesentences": []}
         # find the output of topicResults1
         self.assertEqual(self.topicResults1.output(self.dict1), self.topicResults1output1)
         # the dictionary input parameter must have an entry for all stem words

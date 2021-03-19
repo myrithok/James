@@ -257,7 +257,7 @@ class topicResults:
         return {"topicnum": self.topicNum,
                 "coherence": str(self.coherence),
                 "topicwords": wordsOut,
-                "exampleSentences": sentencesOut}
+                "examplesentences": sentencesOut}
 
 class topicWord:
     '''

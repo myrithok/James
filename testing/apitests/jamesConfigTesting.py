@@ -18,6 +18,12 @@ class TestJamesConfig_cfg(unittest.TestCase):
     # Test that the cfg property topicwords exists, and is an int
     def test_topicwords_is_int(self):
         self.assertIsInstance(jamesConfig.cfg['topicwords'],int)
+    # Test that the cfg property mintokenlen exists, and is an int
+    def test_topicwords_is_int(self):
+        self.assertIsInstance(jamesConfig.cfg['mintokenlen'],int)
+    # Test that the cfg property exsnum exists, and is an int
+    def test_topicwords_is_int(self):
+        self.assertIsInstance(jamesConfig.cfg['exsnum'],int)
     # Test that the cfg property jdkversion exists, and is a str
     def test_jdkversion_is_str(self):
         self.assertIsInstance(jamesConfig.cfg['jdkversion'],str)
