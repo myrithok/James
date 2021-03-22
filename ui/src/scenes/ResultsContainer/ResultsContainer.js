@@ -3,7 +3,7 @@ import { Button } from "@material-ui/core";
 import Topics from "./components/Topics";
 import Sentiments from "./components/Sentiments";
 
-const ResultsContainer = ({ topics, sentiments }) => {
+const ResultsContainer = ({ topics, sentiments, handleDownload }) => {
   return (
     <div className="results-container">
       <Topics topics={topics} />
@@ -17,6 +17,15 @@ const ResultsContainer = ({ topics, sentiments }) => {
           data-testId="results-reset-btn"
         >
           Reset
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => handleDownload()}
+          className="results-reset-btn"
+          data-testId="results-reset-btn"
+        >
+          Download Results
         </Button>
       </div>
     </div>

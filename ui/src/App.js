@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import Axios from "axios";
+import FileDownload from 'js-file-download'
 import { Input } from "@material-ui/core";
 import ResultsContainer from "./scenes/ResultsContainer/ResultsContainer";
 import ApplicationDescription from "./components/ApplicationDescription/ApplicationDescription";
@@ -66,6 +67,18 @@ const App = () => {
       .catch((error) => console.log(error));
   }, [files, numTopics]);
 
+  const handleDownload = useCallback(() => {    
+    let formData = new FormData();
+    formData.append("results", JSON.stringify(results));
+    Axios({
+      url: "http://35.183.97.235:8002/download",
+      method: "POST",
+      data: formData,
+    }).then((response) => {
+      FileDownload(response.data, 'report.csv');
+  })
+  }, [results]);
+
   return (
     <div className="App">
       <h1>James</h1>
@@ -83,6 +96,7 @@ const App = () => {
         <ResultsContainer
           topics={results.topics}
           sentiments={results.sentiments}
+          handleDownload={handleDownload}
         />
       )}
       {!results && (
