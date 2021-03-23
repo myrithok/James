@@ -125,6 +125,8 @@ def jamesLemmatize(tokens, doStem, doStemDic):
     # Initialize a SnowballStemmer in english, imported from nltk.stem, if needed
     if doStem:
         stemmer = SnowballStemmer('english')
+    # Remove apostrophes and text following before lemmatizing
+    tokens = re.sub("\'[a-zA-Z0-9]*",'',tokens)
     # Tokenize the text using simple_preprocess, imported from gensim.utils, if needed
     if type(tokens) == str:
         tokens = simple_preprocess(tokens)
