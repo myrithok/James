@@ -21,7 +21,7 @@ const UploadControls = ({
       ) : (
         <>
           <label className="numTopicsPrompt" data-testid="num-topics-prompt">
-            (Optional) Number of Topics:
+            (Optional) Number of Topics:&nbsp;
           </label>
           {numTopicsInput}
           <br />
