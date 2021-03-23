@@ -9,7 +9,7 @@ const Topics = ({ topics }) => {
         Topics
       </h2>
       {topics.map((topic, index) => (
-        <Topic data={topic} id={index} />
+        <Topic data={topic} id={index} key={index}/>
       ))}
     </div>
   );

@@ -20,7 +20,7 @@ const Topic = ({ data }) => {
       </div>
       <div className="words-grid" data-testid={`words-grid-${topicnum}`}>
         {topicwords.map((word, index) => (
-          <WordSection data={word} topicId={topicnum} wordId={index} />
+          <WordSection data={word} topicId={topicnum} wordId={index} key={index}/>
         ))}
       </div>
     </div>

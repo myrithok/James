@@ -8,6 +8,7 @@ const FilesContainer = ({ files, setFiles }) => {
         //  Custom component for each uploaded file
         <UploadedFile
           id={index + 1}
+          key={index + 1}
           file={file}
           removeFile={() =>
             setFiles(files.filter((file) => file !== files[index]))

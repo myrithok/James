@@ -30,7 +30,7 @@ const DocumentSection = ({ data, id }) => {
             <div>Please upload a different document and try again.</div>
           </div>
         ) : (
-          topics.map((topic) => <Sentiment data={topic} />)
+          topics.map((topic) => <Sentiment data={topic} key={topic.topicnum}/>)
         )}
       </div>
     </div>

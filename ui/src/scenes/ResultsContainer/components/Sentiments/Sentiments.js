@@ -15,7 +15,7 @@ const Sentiments = ({ sentiments }) => {
         </div>
       ) : (
         sentiments.map((sentiment, index) => (
-          <DocumentSection data={sentiment} id={index} />
+          <DocumentSection data={sentiment} id={index} key={index}/>
         ))
       )}
     </div>
