@@ -11,6 +11,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
 from api.jamesClasses import inputCorpus
+from api.jamesConfig import cfg
 from api.jamesMain import process
 
 # Flask backend setup
@@ -106,4 +107,4 @@ def download():
 
 # Backend main
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8002)
+    app.run(host=cfg['host']['ip'], port=cfg['host']['port'])

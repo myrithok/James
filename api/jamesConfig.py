@@ -24,5 +24,7 @@ cfg = {'topicmax':20,
                 'tmp':os.path.join(os.path.dirname(__file__),'tmp'),
                 'antpath':os.path.join(os.path.dirname(__file__),'tmp','ant'),
                 'antfile':os.path.join(os.path.dirname(__file__),'tmp','ant','dist'),
-                'antbin':os.path.join(os.path.dirname(__file__),'tmp','ant','dist','bin')}
+                'antbin':os.path.join(os.path.dirname(__file__),'tmp','ant','dist','bin')},
+        'host':{'ip':'0.0.0.0',
+                'port':8002}
 }
