@@ -6,7 +6,7 @@ const ApplicationDescription = () => {
     <div className="description-container" data-testid="description-container">
       <h4>Welcome to James</h4>
       <p>{descriptionText}</p>
-      <h4>Help us improve</h4>
+      <h4>Help Us Improve</h4>
       <p>{bugText}</p>
       <a href="https://github.com/myrithok/James/issues">here</a>
     </div>
