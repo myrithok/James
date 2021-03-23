@@ -76,7 +76,7 @@ def download():
         # Construct the csv
         data = makeCSV(results)
         # Construct the response
-        output = make_response(data.getvalue())
+        output = make_response(data)
         output.headers["Content-Disposition"] = "attachment; filename=export.csv"
         output.headers["Content-type"] = "text/csv"
         # Return the response
