@@ -1,7 +1,4 @@
 # Library imports
-import io
-import pyexcel as pe
-import csv
 from flask import Flask, request, make_response, Response
 from flask_cors import CORS
 import json
@@ -12,6 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
 from api.jamesClasses import inputCorpus
 from api.jamesConfig import cfg
+from api.jamesCSV import makeCSV
 from api.jamesMain import process
 
 # Flask backend setup
@@ -68,44 +66,24 @@ def index():
     except:
         return "Error processing attached files", 500
 
-def create_csv_list(topics, sentiments):
-    csv_list = []
-
-    csv_list.append(["Topics"])
-    for topic in [x for x in topics]:
-        csv_list.append(["\n"])
-        csv_list.append(["Topic Number", topic["topicnum"]])
-        csv_list.append(["Coherence", topic["coherence"]])
-        csv_list.append(list(topic["topicwords"][0].keys()))
-        for x in topic["topicwords"]:
-            csv_list.append(list(x.values()))
-
-    csv_list.append(["\n"])
-    csv_list.append(["Sentiment"])
-    for sentiment in [x for x in sentiments]:
-        csv_list.append(["Document Title", sentiment["doctitle"]])
-        csv_list.append(list(sentiment["topics"][0].keys()))
-        for x in sentiment["topics"]:
-            csv_list.append(list(x.values()))
-
-    return csv_list
-
-
-@app.route('/download', methods=['GET', 'POST'])
+# POST request handling for downloading results
+@app.route('/download', methods=['POST'])
 def download():
-    results = json.loads(request.form["results"])
-    topic_data = results['topics']
-    sentiment_data = results['sentiments']
-    csv_list = create_csv_list(topic_data, sentiment_data)
-
-    sheet = pe.Sheet(csv_list)
-    i = io.StringIO()
-    sheet.save_to_memory("csv", i)
-    output = make_response(i.getvalue())
-    output.headers["Content-Disposition"] = "attachment; filename=export.csv"
-    output.headers["Content-type"] = "text/csv"
-    return output
-
+    # Try to download csv of given results
+    try:
+        # Load the results from the request json object
+        results = json.loads(request.form["results"])
+        # Construct the csv
+        data = makeCSV(results)
+        # Construct the response
+        output = make_response(data.getvalue())
+        output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+        output.headers["Content-type"] = "text/csv"
+        # Return the response
+        return output
+    # If csv generation fails, return error result
+    except:
+        return "Error downloading results", 500
 
 # Backend main
 if __name__ == '__main__':
