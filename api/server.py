@@ -21,50 +21,52 @@ cors = CORS(app)
 # POST request handling for uploaded files
 @app.route('/upload', methods=['GET', 'POST'])
 def index():
-    global RESPONSE
-    if request.method == 'POST':
-        # Initialize an empty inputCorpus object, imported from jamesClasses
-        corpus = inputCorpus()
-        # Iterate through each file that should be uploaded
-        for x in range(int(request.form["fileCount"])):
-            # Files should be named 'file1', 'file2', 'file3', etc.
-            file = 'file' + str(x)
-            # If any file is not found, return an error
-            if file not in request.files:
-                return 'Error with attached files', 500
-            # If any file is not a .txt file, return an error
-            if not request.files.get(file).filename.split(".")[-1] == 'txt':
-                return 'Only .txt files accepted', 500
-            # Try to read and decode the contents of each file
-            # If any issue is encountered, return an error
-            try:
-                contents = request.files.get(file).read().decode("utf-8")
-            except:
-                return 'Error with attached files', 500
-            # If any file was empty, return an error
-            if contents == "":
-                return 'File empty', 500
-            # For each file, read the filename without the file extension,
-            #   and add these to the inputCorpus object
-            title = request.files.get(file).filename.split(".")[0]
-            corpus.addDoc(title, contents)
-        # The number of topics is taken from the request.
-        numTopics = request.form["numTopics"]
-        # The process method imported from jamesMain produces results from the input corpus
-        # If the number of topics was specified by the user, then the process will take in that number as an argument
-        results = process(corpus) if (numTopics == "") else process(
-            corpus, topicNum=int(numTopics))
+    # Try to process uploaded files
+    try:
+        if request.method == 'POST':
+            # Initialize an empty inputCorpus object, imported from jamesClasses
+            corpus = inputCorpus()
+            # Iterate through each file that should be uploaded
+            for x in range(int(request.form["fileCount"])):
+                # Files should be named 'file1', 'file2', 'file3', etc.
+                file = 'file' + str(x)
+                # If any file is not found, return an error
+                if file not in request.files:
+                    return 'Error with attached file(s)', 500
+                # If any file is not a .txt file, return an error
+                if not request.files.get(file).filename.split(".")[-1] == 'txt':
+                    return 'Only .txt files accepted', 500
+                # Try to read and decode the contents of each file
+                # If any issue is encountered, return an error
+                try:
+                    contents = request.files.get(file).read().decode("utf-8")
+                except:
+                    return 'Error with attached file(s)', 500
+                # If any file was empty, return an error
+                if contents == "":
+                    return 'File empty', 500
+                # For each file, read the filename without the file extension,
+                #   and add these to the inputCorpus object
+                title = request.files.get(file).filename.split(".")[0]
+                corpus.addDoc(title, contents)
+            # The number of topics is taken from the request.
+            numTopics = request.form["numTopics"]
+            # The process method imported from jamesMain produces results from the input corpus
+            # If the number of topics was specified by the user, then the process will take in that number as an argument
+            results = process(corpus) if (numTopics == "") else process(
+                corpus, topicNum=int(numTopics))
+            if results == None:
+                return 'Error with attached file(s)', 500
+            # Convert the results to a json object, and return it to the frontend
+            response = json.dumps(results)
+            return response, 200
 
-        # Convert the results to a json object, and return it to the frontend
-        RESPONSE = json.dumps(results)
-        return RESPONSE, 200
-
-    # If making a GET request, the page will display "No files received" until the server receives the input files
-    if request.method == 'GET':
-        response = RESPONSE if ("RESPONSE" in globals()
-                                ) else "No files received"
-        return response, 200
-
+        # If making a GET request, the page will display "No files received"
+        if request.method == 'GET':
+            return "No files received", 200
+    # If processing files fails, return error result
+    except:
+        return "Error processing attached files", 500
 
 def create_csv_list(topics, sentiments):
     csv_list = []
