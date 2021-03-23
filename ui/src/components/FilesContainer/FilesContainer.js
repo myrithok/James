@@ -7,7 +7,8 @@ const FilesContainer = ({ files, setFiles }) => {
       {files.map((file, index) => (
         //  Custom component for each uploaded file
         <UploadedFile
-          id={index}
+          id={index + 1}
+          key={index + 1}
           file={file}
           removeFile={() =>
             setFiles(files.filter((file) => file !== files[index]))

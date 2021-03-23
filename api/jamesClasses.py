@@ -250,7 +250,8 @@ class topicResults:
         '''
         wordsOut = []
         for word in self.topicWords:
-            wordsOut.append(word.output(stemDic))
+            if word.weight > 0:
+                wordsOut.append(word.output(stemDic))
         sentencesOut = []
         for sentence in self.exampleSentences:
             sentencesOut.append(sentence.output())

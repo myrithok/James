@@ -14,7 +14,7 @@ const ResultsContainer = ({ topics, sentiments, handleDownload }) => {
           color="primary"
           onClick={() => window.location.reload(false)}
           className="results-reset-btn"
-          data-testId="results-reset-btn"
+          data-testid="results-reset-btn"
         >
           Reset
         </Button>
@@ -23,7 +23,7 @@ const ResultsContainer = ({ topics, sentiments, handleDownload }) => {
           color="secondary"
           onClick={() => handleDownload()}
           className="results-reset-btn"
-          data-testId="results-reset-btn"
+          data-testid="results-reset-btn"
         >
           Download Results
         </Button>
