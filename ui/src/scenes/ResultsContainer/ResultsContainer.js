@@ -3,11 +3,21 @@ import { Button } from "@material-ui/core";
 import Topics from "./components/Topics";
 import Sentiments from "./components/Sentiments";
 
-const ResultsContainer = ({ topics, sentiments, handleDownload }) => {
+const ResultsContainer = ({
+  topics,
+  sentiments,
+  handleDownload,
+  hiddenTopics,
+  toggleHide,
+}) => {
   return (
     <div className="results-container">
-      <Topics topics={topics} />
-      <Sentiments sentiments={sentiments} />
+      <Topics
+        topics={topics}
+        hiddenTopics={hiddenTopics}
+        toggleHide={toggleHide}
+      />
+      <Sentiments sentiments={sentiments} hiddenTopics={hiddenTopics} />
       <div className="results-footer">
         <Button
           variant="contained"
