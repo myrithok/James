@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Axios from "axios";
-import FileDownload from 'js-file-download'
+import FileDownload from "js-file-download";
 import { Input } from "@material-ui/core";
 import ResultsContainer from "./scenes/ResultsContainer/ResultsContainer";
 import ApplicationDescription from "./components/ApplicationDescription/ApplicationDescription";
@@ -20,11 +20,21 @@ const App = () => {
   //State Variables
   const [files, setFiles] = useState();
   const [results, setResults] = useState();
+  const [hiddenTopics, setHiddenTopics] = useState([]);
   const [loading, setLoading] = useState(false);
   const [numTopics, numTopicsInput] = useInput({
     type: "number",
     placeholder: "Leave blank for default",
   });
+
+  const handleToggleHide = (topicId) => {
+    if (hiddenTopics.includes(topicId)) {
+      const newTopics = hiddenTopics.filter((topic) => topic !== topicId);
+      setHiddenTopics(newTopics);
+    } else {
+      setHiddenTopics([...hiddenTopics, topicId]);
+    }
+  };
 
   //Reusable function to handle input from user in a text box
   function useInput({ type, placeholder }) {
@@ -67,17 +77,18 @@ const App = () => {
       .catch((error) => console.log(error));
   }, [files, numTopics]);
 
-  const handleDownload = useCallback(() => {    
+  const handleDownload = useCallback(() => {
     let formData = new FormData();
     formData.append("results", JSON.stringify(results));
+    formData.append("hiddenTopics", hiddenTopics);
     Axios({
       url: "http://35.183.97.235:8002/download",
       method: "POST",
       data: formData,
     }).then((response) => {
-      FileDownload(response.data, 'report.csv');
-  })
-  }, [results]);
+      FileDownload(response.data, "report.csv");
+    });
+  }, [results, hiddenTopics]);
 
   return (
     <div className="App">
@@ -97,6 +108,8 @@ const App = () => {
           topics={results.topics}
           sentiments={results.sentiments}
           handleDownload={handleDownload}
+          hiddenTopics={hiddenTopics}
+          toggleHide={handleToggleHide}
         />
       )}
       {!results && (

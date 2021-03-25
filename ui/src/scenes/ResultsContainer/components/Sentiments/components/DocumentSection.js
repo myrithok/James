@@ -9,7 +9,7 @@ const SentimentGridHeadings = () => (
   </div>
 );
 
-const DocumentSection = ({ data, id }) => {
+const DocumentSection = ({ data, id, hiddenTopics }) => {
   const { doctitle, topics } = data;
   return (
     <div className="sentiment-section" data-testid={`sentiment-section-${id}`}>
@@ -30,7 +30,13 @@ const DocumentSection = ({ data, id }) => {
             <div>Please upload a different document and try again.</div>
           </div>
         ) : (
-          topics.map((topic) => <Sentiment data={topic} key={topic.topicnum}/>)
+          topics.map((topic) => (
+            <Sentiment
+              data={topic}
+              key={topic.topicnum}
+              hiddenTopics={hiddenTopics}
+            />
+          ))
         )}
       </div>
     </div>

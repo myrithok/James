@@ -2,7 +2,7 @@ import React from "react";
 import DocumentSection from "./components/DocumentSection";
 import "./styles.css";
 
-const Sentiments = ({ sentiments }) => {
+const Sentiments = ({ sentiments, hiddenTopics }) => {
   return (
     <div className="sentiment-container" data-testid="sentiment-container">
       <h2 className="sentiment-title" data-testid="sentiment-title">
@@ -15,7 +15,12 @@ const Sentiments = ({ sentiments }) => {
         </div>
       ) : (
         sentiments.map((sentiment, index) => (
-          <DocumentSection data={sentiment} id={index} key={index}/>
+          <DocumentSection
+            data={sentiment}
+            id={index}
+            key={index}
+            hiddenTopics={hiddenTopics}
+          />
         ))
       )}
     </div>

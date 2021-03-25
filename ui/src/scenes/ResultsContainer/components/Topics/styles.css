@@ -28,7 +28,7 @@
 }
 
 .topic-coherence {
-  margin: 0 0 1rem;
+  margin: 1rem 0;
   font-size: 16px;
   font-style: italic;
 }
@@ -83,4 +83,3 @@
 .sentenceweight-data {
   font-size: 20px;
 }
-
