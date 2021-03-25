@@ -311,6 +311,7 @@ class topicWord:
         assert isinstance(stemDic, dict), "parameter must be type 'dict'"
         assert self.word in stemDic, "word must have an entry in dictionary"
         return {"word": stemDic[self.word],
+                "stem": self.word,
                 "weight": str(self.weight)}
 
 class exampleSentence:
