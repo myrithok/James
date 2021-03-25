@@ -91,4 +91,4 @@ def download():
 
 # Backend main
 if __name__ == '__main__':
-    app.run(host=cfg['host']['ip'], port=cfg['host']['port'])
+    app.run(host=cfg['host']['ip'], port=cfg['host']['port'], threaded=True)
