@@ -52,6 +52,15 @@
   font-weight: 600;
 }
 
+.stem-data {
+  font-size: 20px;
+}
+
+.weight-data {
+  font-size: 20px;
+  font-style: italic;
+}
+
 .sentence-title {
   font-weight: 600;
 }
@@ -71,11 +80,6 @@
 }
 
 .sentence-data {
-  font-size: 20px;
-  font-style: italic;
-}
-
-.weight-data {
   font-size: 20px;
   font-style: italic;
 }
