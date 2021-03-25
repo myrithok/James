@@ -1,8 +1,9 @@
 import React from "react";
 import WordSection from "./WordSection";
+import SentenceSection from "./SentenceSection";
 
 const Topic = ({ data }) => {
-  const { topicnum, coherence, topicwords } = data;
+  const { topicnum, coherence, topicwords, examplesentences } = data;
   return (
     <div className="topic-section" data-testid={`topic-section-${topicnum}`}>
       <div
@@ -12,7 +13,7 @@ const Topic = ({ data }) => {
         <h3
           className="topic-sub-heading"
           data-testid={`topic-sub-heading-${topicnum}`}
-        >{`Topic Number: ${topicnum}`}</h3>
+        >{`Topic ${topicnum}`}</h3>
         <div
           className="topic-coherence"
           data-testid={`topic-coherence-${topicnum}`}
@@ -21,6 +22,14 @@ const Topic = ({ data }) => {
       <div className="words-grid" data-testid={`words-grid-${topicnum}`}>
         {topicwords.map((word, index) => (
           <WordSection data={word} topicId={topicnum} wordId={index} key={index}/>
+        ))}
+      </div>
+      <div className="sentence-grid">
+        <div className="sentence-title">
+        Example sentences:
+        </div>
+        {examplesentences.map((sentence, index) => (
+          <SentenceSection data={sentence} topicId={topicnum} sentenceId={index} key={index}/>
         ))}
       </div>
     </div>
