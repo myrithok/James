@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@material-ui/core";
+import ScrollToTop from "react-scroll-up";
 import Topics from "./components/Topics";
 import Sentiments from "./components/Sentiments";
 
@@ -12,13 +13,10 @@ const ResultsContainer = ({
 }) => {
   return (
     <div className="results-container">
-      <Topics
-        topics={topics}
-        hiddenTopics={hiddenTopics}
-        toggleHide={toggleHide}
-      />
-      <Sentiments sentiments={sentiments} hiddenTopics={hiddenTopics} />
-      <div className="results-footer">
+      <h2 className="results-title">
+      Results
+      </h2>
+      <div className="results-buttons">
         <Button
           variant="contained"
           color="primary"
@@ -28,6 +26,7 @@ const ResultsContainer = ({
         >
           Reset
         </Button>
+        &nbsp;&nbsp;
         <Button
           variant="contained"
           color="secondary"
@@ -38,6 +37,21 @@ const ResultsContainer = ({
           Download Results
         </Button>
       </div>
+      <Topics
+        topics={topics}
+        hiddenTopics={hiddenTopics}
+        toggleHide={toggleHide}
+      />
+      <Sentiments sentiments={sentiments} hiddenTopics={hiddenTopics} />
+      <ScrollToTop showUnder={0} duration={1000} >
+        <Button
+          variant="contained"
+          color="primary"
+          className="results-top-btn"
+        >
+          Back to Top
+        </Button>
+      </ScrollToTop>
     </div>
   );
 };

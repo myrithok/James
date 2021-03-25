@@ -76,7 +76,14 @@ h1 {
   border-radius: 0.4rem;
 }
 
-.results-footer {
+.results-title {
+  font-size: 40px;
+  margin: 0 0 1rem;
+  text-align: center;
+  font-style: italic;
+}
+
+.results-buttons {
   display: flex;
   align-items: center;
   justify-content: center;
