@@ -71,10 +71,14 @@ def index():
 def download():
     # Try to download csv of given results
     try:
-        # Load the results from the request json object
+        # Load the results and hidden topics from the request json object
         results = json.loads(request.form["results"])
+        hidden = json.loads(request.form["hiddenTopics"])
+        # If the user has hidden all topics, return an error
+        if len(hidden) >= len(results["topics"]):
+            return "All topics hidden", 500
         # Construct the csv
-        data = makeCSV(results)
+        data = makeCSV(results,hidden)
         # Construct the response
         output = make_response(data)
         output.headers["Content-Disposition"] = "attachment; filename=export.csv"

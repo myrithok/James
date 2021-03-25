@@ -80,7 +80,7 @@ const App = () => {
   const handleDownload = useCallback(() => {
     let formData = new FormData();
     formData.append("results", JSON.stringify(results));
-    formData.append("hiddenTopics", hiddenTopics);
+    formData.append("hiddenTopics", JSON.stringify(hiddenTopics));
     Axios({
       url: "http://35.183.97.235:8002/download",
       method: "POST",

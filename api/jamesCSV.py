@@ -3,7 +3,7 @@ import io
 import pyexcel as pe
 import csv
 
-def makeCSV(results):
+def makeCSV(results,hidden=[]):
     '''
     Method called by server.py to convert a result set into a csv
 
@@ -13,6 +13,10 @@ def makeCSV(results):
                     a result set from running james as a
                     json object
 
+            hidden: list (optional)
+                    a list of topic numbers to be hidden from
+                    the results
+
     Output
     ------
             str
@@ -20,7 +24,7 @@ def makeCSV(results):
     '''
     # Create a 2-dimensional list from the result set using
     #   createCsvList, found below
-    csvList = createCsvList(results)
+    csvList = createCsvList(results,hidden)
     # Convert the csv list into a csv
     sheet = pe.Sheet(csvList)
     i = io.StringIO()
@@ -29,7 +33,7 @@ def makeCSV(results):
     output = i.getvalue()
     return output
 
-def createCsvList(results):
+def createCsvList(results,hidden=[]):
     '''
     Method called by makeCSV, above, to convert a result set
     into a 2-dimensional list that can be inserted  into a csv
@@ -39,6 +43,10 @@ def createCsvList(results):
             results: json
                     a result set from running james as a
                     json object
+
+            hidden: list (optional)
+                    a list of topic numbers to be hidden from
+                    the results
 
     Output
     ------
@@ -52,30 +60,33 @@ def createCsvList(results):
     csvList = []
     # Add the title for the topic section
     csvList.append(["Topics"])
-    # Iterate through each topic
-    for topic in [x for x in results['topics']]:
-        # Insert the topic number and coherence score
-        csvList.append(["\n"])
-        csvList.append(["Topic Number", topic["topicnum"]])
-        csvList.append(["Coherence", topic["coherence"]])
-        # Insert the topic word
-        csvList.append(list(topic["topicwords"][0].keys()))
-        for y in topic["topicwords"]:
-            csvList.append(list(y.values()))
-        # Insert the example sentences
-        csvList.append(list(topic["examplesentences"][0].keys()))
-        for y in topic["examplesentences"]:
-            csvList.append(list(y.values()))
+    # Iterate through each topic that has not been hidden
+    for topic in results['topics']:
+        if topic["topicnum"] not in hidden:
+            # Insert the topic number and coherence score
+            csvList.append(["\n"])
+            csvList.append(["Topic Number", topic["topicnum"]])
+            csvList.append(["Coherence", topic["coherence"]])
+            # Insert the topic word
+            csvList.append(list(topic["topicwords"][0].keys()))
+            for y in topic["topicwords"]:
+                csvList.append(list(y.values()))
+            # Insert the example sentences
+            csvList.append(list(topic["examplesentences"][0].keys()))
+            for y in topic["examplesentences"]:
+                csvList.append(list(y.values()))
     # Add the title for the sentiment section
     csvList.append(["\n"])
     csvList.append(["Sentiment"])
     # Iterate through each document
-    for sentiment in [x for x in results['sentiments']]:
+    for sentiment in results['sentiments']:
         # Insert the document title
         csvList.append(["Document Title", sentiment["doctitle"]])
-        # Insert the document topic weights and sentiments
+        # Insert the document topic weights and sentiments for all
+        #   topics that are not hidden
         csvList.append(list(sentiment["topics"][0].keys()))
-        for y in sentiment["topics"]:
-            csvList.append(list(y.values()))
+        for topic in sentiment["topics"]:
+            if topic["topicnum"] not in hidden:
+                csvList.append(list(topic.values()))
     # Return the final list
     return csvList
