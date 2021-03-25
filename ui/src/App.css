@@ -56,6 +56,12 @@ h1 {
   margin: 0.5rem 2.5rem;
   border-radius: 0.4rem;
 }
+
+.loading-container {
+  flex-direction: row;
+  align-items: center;
+}
+
 .description-container {
   width: 40%;
   background-color: white;

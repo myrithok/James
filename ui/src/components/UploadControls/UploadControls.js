@@ -17,7 +17,20 @@ const UploadControls = ({
              Optional input field to input number of topics
           */}
       {loading ? (
-        <CircularProgress data-testid="loader" />
+        <div className="loading-container">
+          Processing! This may take a few minutes...
+          <br /> <br />
+          <CircularProgress data-testid="loader" />
+          <br /> <br />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => window.location.reload(false)}
+            className="loading-cancel-btn"
+          >
+            Cancel
+          </Button>
+        </div>
       ) : (
         <>
           <label className="numTopicsPrompt" data-testid="num-topics-prompt">
