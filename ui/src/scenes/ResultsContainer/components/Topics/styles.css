@@ -9,6 +9,7 @@
   font-size: 40px;
   margin: 0 0 1rem;
 }
+
 .topic-section {
   width: 100%;
   margin-bottom: 3rem;
@@ -25,9 +26,11 @@
 .topic-sub-heading {
   margin: 0 0 0.5rem;
 }
+
 .topic-coherence {
   margin: 0 0 1rem;
   font-size: 16px;
+  font-style: italic;
 }
 
 .words-grid {
@@ -48,6 +51,36 @@
   text-transform: capitalize;
   font-weight: 600;
 }
+
+.sentence-title {
+  font-weight: 600;
+}
+
+.sentence-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.sentence-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 1rem;
+}
+
+.sentence-data {
+  font-size: 20px;
+  font-style: italic;
+}
+
 .weight-data {
   font-size: 20px;
+  font-style: italic;
 }
+
+.sentenceweight-data {
+  font-size: 20px;
+}
+
