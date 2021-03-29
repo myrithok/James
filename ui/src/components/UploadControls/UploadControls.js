@@ -14,6 +14,13 @@ const UploadControls = ({
 }) => {
   const isNumTopicsInvalid =
     numTopics < 1 || numTopics > 100 || numTopics % 1 !== 0;
+
+  const fileTypeError = files
+    ? files.map((file) => file.type).some((type) => type !== "text/plain")
+    : false;
+
+  console.log(files);
+  console.log(fileTypeError);
   return (
     <div className="controls-container">
       {/*
@@ -51,7 +58,7 @@ const UploadControls = ({
           <Button
             variant="contained"
             color="primary"
-            disabled={isEmpty(files) || isNumTopicsInvalid}
+            disabled={isEmpty(files) || isNumTopicsInvalid || fileTypeError}
             onClick={handleSubmit}
             data-testid="submit-btn"
           >
