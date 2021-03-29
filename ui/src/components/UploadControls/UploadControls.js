@@ -54,7 +54,7 @@ const UploadControls = ({
           {files && <FilesContainer files={files} setFiles={setFiles} />}
           {/*
               Button to submit files and send REST request to backend
-          */}
+            */}
           <Button
             variant="contained"
             color="primary"
@@ -64,6 +64,11 @@ const UploadControls = ({
           >
             Calculate
           </Button>
+          {fileTypeError && (
+            <div className="file-type-error">
+              *One of the files you have entered is not a text file!
+            </div>
+          )}
         </>
       )}
     </div>

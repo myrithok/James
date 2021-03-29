@@ -101,3 +101,7 @@ h1 {
 .topic-num-restriction {
   font-size: medium;
 }
+.file-type-error {
+  font-size: medium;
+  color: red;
+}
