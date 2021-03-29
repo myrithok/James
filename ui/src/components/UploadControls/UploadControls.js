@@ -12,7 +12,8 @@ const UploadControls = ({
   handleSubmit,
   loading,
 }) => {
-  const isNumTopicsInvalid = numTopics < 1 || numTopics > 100;
+  const isNumTopicsInvalid =
+    numTopics < 1 || numTopics > 100 || numTopics % 1 !== 0;
   return (
     <div className="controls-container">
       {/*
@@ -41,7 +42,7 @@ const UploadControls = ({
           {numTopicsInput}
           <br />
           <div className="topic-num-restriction">
-            *Number of topics must be between 1 and 100
+            *Number of topics must be an integer between 1 and 100
           </div>
           {files && <FilesContainer files={files} setFiles={setFiles} />}
           {/*
