@@ -6,11 +6,13 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 const UploadControls = ({
   numTopicsInput,
+  numTopics,
   files,
   setFiles,
   handleSubmit,
   loading,
 }) => {
+  const isNumTopicsInvalid = numTopics < 1 || numTopics > 100;
   return (
     <div className="controls-container">
       {/*
@@ -38,6 +40,9 @@ const UploadControls = ({
           </label>
           {numTopicsInput}
           <br />
+          <div className="topic-num-restriction">
+            *Number of topics must be between 1 and 100
+          </div>
           {files && <FilesContainer files={files} setFiles={setFiles} />}
           {/*
               Button to submit files and send REST request to backend
@@ -45,7 +50,7 @@ const UploadControls = ({
           <Button
             variant="contained"
             color="primary"
-            disabled={isEmpty(files)}
+            disabled={isEmpty(files) || isNumTopicsInvalid}
             onClick={handleSubmit}
             data-testid="submit-btn"
           >
