@@ -3,7 +3,6 @@ venv/
 api/__pycache__/
 testing/__pycache__/
 api/Mallet/
-api/model/
 api/tmp/
 __pycache__/
 testing/testdata/generated/*

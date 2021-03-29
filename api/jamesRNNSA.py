@@ -12,21 +12,23 @@ import numpy as np
 # from sklearn.feature_extraction.text import TfidfTransformer
 
 
-def read_file(filename):
-    with open(filename, "r") as f:
-        data = f.read()
-        data = data.split("\n")
+def read_file(filename, filetype):
+    if filetype == "txt":
+        with open(filename, "r") as f:
+            data = f.read()
+            data = data.split("\n")
 
-    for line in range(len(data)):
-        data[line] = data[line].split("\t")
+        for line in range(len(data)):
+            data[line] = data[line].split("\t")
 
-    return data
+        return pd.DataFrame(data, columns=['text', 'sentiment'])
+    elif filetype == "csv":
+        return pd.read_csv(filename)
+    else:
+        raise Exception("Invalid filetype")
 
 
 def preprocess_data(data):
-    # convert to pandas dataframe
-    data = pd.DataFrame(data, columns=['text', 'sentiment'])
-
     # Preprocessing
     # Set to lowercase
     data['text'] = data['text'].apply(lambda x: x.lower())
@@ -37,31 +39,30 @@ def preprocess_data(data):
     return data
 
 
-def get_tokenizer(data):
+def get_tokenizer(data, features):
 
     # define 2000 max features
     # use tokenizer to vectorize and convert text into seuqnces
 
     # the max number of words to keep, based on word frequency
-    max_features = 2000
+    # features
 
     # creates a dictionary based on the word frequency
 
-    tokenizer = Tokenizer(num_words=max_features, split=' ')
+    tokenizer = Tokenizer(num_words=features, split=' ')
 
     # creates a dictionary based on the word frequency. Each word gets a unique integer value
     # lower integer means more frequent words
     tokenizer.fit_on_texts(data['text'].values)
     return tokenizer
 
+# Trains a model. Only needs to be run once to initiate model
 
-def trainRNN():
+
+def train_RNN(data, features, name):
     # read files
-    data = read_file("model//amazon_cells_labelled.txt") + \
-        read_file("model//imdb_labelled.txt") + \
-        read_file("model//yelp_labelled.txt")
     data = preprocess_data(data)
-    tokenizer = get_tokenizer(data)
+    tokenizer = get_tokenizer(data, features)
 
     # transforms each text in texts to a sequence of integers
     X = tokenizer.texts_to_sequences(data['text'].values)
@@ -72,7 +73,6 @@ def trainRNN():
     # create LSTM network
     # embed_dim, lstm_out, batch_size and dropout_x are hyperparameters
     # ie they need to be tweaked manually
-    max_features = 2000
     embed_dim = 128
     lstm_out = 196
 
@@ -83,7 +83,7 @@ def trainRNN():
     # first argument: number of distinct words in the training set
     # second arg: size of embedding vectors
     # input length: size of each input sequence
-    model.add(Embedding(max_features, embed_dim, input_length=X.shape[1]))
+    model.add(Embedding(features, embed_dim, input_length=X.shape[1]))
 
     # Dropout layer
     # arg: rate = fraction of the input units to drop
@@ -123,7 +123,7 @@ def trainRNN():
     batch_size = 32
     # verbose has to do with the information displayed when training the model. 0 for no output
     model.fit(X_train, Y_train, epochs=7, batch_size=batch_size, verbose=2)
-    model.save(".//model//")
+    model.save("api//model//" + name)
     #validation_size = 500
     #X_validate = X_test[-validation_size:]
     #Y_validate = Y_test[-validation_size:]
@@ -143,29 +143,35 @@ def trainRNN():
 
 # trainRNN()
 
-def load_RNN():
-    model = keras.models.load_model('.//model//')
+def load_RNN(name):
+    model = keras.models.load_model('api//model//' + name)
     return model
 
 
-def RNN_prediction(model, documents, tokenizer):
+def RNN_prediction(model, documents, tokenizer, datashape):
     # vectorizing the tweet by the pre-fitted tokenizer instance
     documents = tokenizer.texts_to_sequences(documents)
     # padding the tweet to have exactly the same shape as `embedding_2` input
-    documents = pad_sequences(documents, maxlen=55, dtype='int32', value=0)
+    # datashape = 55 for SA, 91 for SO
+    documents = pad_sequences(documents, maxlen=datashape, dtype='int32', value=0)
     sentiment = model.predict(documents, batch_size=32)
-    print(sentiment)
+    return sentiment
 
 
-# read files for tokenizer
-data = read_file("model//amazon_cells_labelled.txt") + \
-    read_file("model//imdb_labelled.txt") + \
-    read_file("model//yelp_labelled.txt")
-data = preprocess_data(data)
-# create tokenizer
-tokenizer = get_tokenizer(data)
+# dataset from : https://www.kaggle.com/marklvl/sentiment-labelled-sentences-data-set
+def reTrainSA():
+    data = read_file("trainingdata//amazon_cells_labelled.txt","txt") + \
+        read_file("trainingdata//imdb_labelled.txt","txt") + \
+        read_file("trainingdata//yelp_labelled.txt","txt")
+    train_RNN(data, 2000, "SAmodel")
 
-model = load_RNN()
-docs = ['the happy dog ended up dying']
+def getPredictor(model_name, files, filetype, features):
+    # read files for tokenizer
+    data = pd.concat([read_file(file, filetype) for file in files])
 
-RNN_prediction(model, docs, tokenizer)
+    data = preprocess_data(data)
+    # create tokenizer
+    tokenizer = get_tokenizer(data, features)
+
+    model = load_RNN(model_name)
+    return model, tokenizer
