@@ -46,6 +46,7 @@ const App = () => {
         onChange={(e) => setValue(e.target.value)}
         type={type}
         placeholder={placeholder}
+        inputProps={{ min: 1, max: 100 }}
       />
     );
     return [value, input];
@@ -115,6 +116,7 @@ const App = () => {
       {!results && (
         <UploadControls
           numTopicsInput={numTopicsInput}
+          numTopics={numTopics}
           files={files}
           setFiles={setFiles}
           handleSubmit={handleSubmit}
