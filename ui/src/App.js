@@ -99,7 +99,7 @@ const App = () => {
           Dropzone is used to allow the user to "drop" text files into the area, or select them from their drive
           Once received, the files are added to the state variable "files"
         */}
-        {!results && <FileDrop setFiles={setFiles} />}
+        {!results && <FileDrop setFiles={setFiles} loading={loading} />}
       </div>
       {/*
         Results are outputted here in JSON, once received

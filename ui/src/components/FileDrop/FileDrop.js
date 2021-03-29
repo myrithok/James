@@ -3,9 +3,13 @@ import Dropzone from "react-dropzone";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudDownloadAlt } from "@fortawesome/free-solid-svg-icons";
 
-const FileDrop = ({ setFiles }) => {
+const FileDrop = ({ setFiles, loading }) => {
   return (
-    <Dropzone onDrop={(acceptedFiles) => setFiles(acceptedFiles)} multiple>
+    <Dropzone
+      onDrop={(acceptedFiles) => setFiles(acceptedFiles)}
+      multiple
+      disabled={loading}
+    >
       {({ getRootProps, getInputProps }) => (
         <div className="drop-zone" data-testid="drop-zone" {...getRootProps()}>
           <input {...getInputProps()} />
