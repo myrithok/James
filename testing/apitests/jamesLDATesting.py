@@ -52,11 +52,6 @@ class TestJamesLDA_buildTopicModel(unittest.TestCase):
         for i in range(1,4):
             testmodel = jamesLDA.buildTopicModel(TESTCORPUS,i)
             self.assertEqual(len(testmodel.get_topics()), i)
-    # Test that the correct output type is produced when the number of
-    #    topics is not specified
-    def test_unspecified_topicnum(self):
-        testmodel = jamesLDA.buildTopicModel(TESTCORPUS,None)
-        self.assertIsInstance(testmodel,gensim.models.ldamodel.LdaModel)
     # Test that the generated topic model identifies important words
     def test_topic_generation(self):
         testmodel = jamesLDA.buildTopicModel(TESTCORPUS,2)
@@ -67,23 +62,6 @@ class TestJamesLDA_buildTopicModel(unittest.TestCase):
                 topicwords.append(word[1])
         self.assertTrue('netflix' in topicwords or 'netflix' in topicwords)
         self.assertTrue('chip' in topicwords or 'chip' in topicwords)
-        
-# Tests for the buildBestCoherenceTopicModel method in jamesLDA
-class TestJamesLDA_buildBestCoherenceTopicModel(unittest.TestCase):
-    # Test that the correct output type is produced
-    def test_builds_mallet_model(self):
-        testmodel = jamesLDA.buildBestCoherenceTopicModel(TESTCORPUS)
-        self.assertIsInstance(testmodel,gensim.models.wrappers.ldamallet.LdaMallet)
-    # Test that the model chosen actually has the highest coherence score
-    def test_best_coherence_is_chosen(self):
-        testmodel = jamesLDA.buildBestCoherenceTopicModel(TESTCORPUS)
-        testcoherence = gensim.models.coherencemodel.CoherenceModel(model=testmodel,texts=TESTCORPUS.getLemmatized(),dictionary=TESTCORPUS.dic,corpus=TESTCORPUS.getBoW(),coherence="c_v")
-        testscore = testcoherence.get_coherence()
-        for i in range(2, cfg['topicmax'] + 1):
-            tempmodel = jamesLDA.buildMalletModel(TESTCORPUS, i)
-            tempcoherence = gensim.models.coherencemodel.CoherenceModel(model=tempmodel,texts=TESTCORPUS.getLemmatized(),dictionary=TESTCORPUS.dic, corpus=TESTCORPUS.getBoW(),coherence="c_v")
-            tempscore = tempcoherence.get_coherence()
-            self.assertLessEqual(tempscore,testscore)
 
 # Tests for the buildMalletModel method in jamesLDA
 class TestJamesLDA_buildMalletModel(unittest.TestCase):

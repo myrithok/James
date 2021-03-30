@@ -27,9 +27,6 @@ class TestJamesMain_process(unittest.TestCase):
     # Test that a correct object type is output when the number of topics is specified
     def test_specified_topics(self):
         self.assertIsInstance(jamesMain.process(TESTCORPUS,1),dict)
-    # Test that a correct object type is output when the number of topics is not specified
-    def test_unspecified_topics(self):
-        self.assertIsInstance(jamesMain.process(TESTCORPUS),dict)
     # Test that the output contains the expected structure
     def test_required_output(self):
         testoutput = jamesMain.process(TESTCORPUS,1)
