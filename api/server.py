@@ -49,10 +49,12 @@ def index():
                 corpus.addDoc(title, contents)
             # The number of topics is taken from the request.
             numTopics = request.form["numTopics"]
+            # The dataset selected for sentiment analysis
+            datasetChoice = request.form["datasetChoice"]
             # The process method imported from jamesMain produces results from the input corpus
             # If the number of topics was specified by the user, then the process will take in that number as an argument
-            results = process(corpus) if (numTopics == "") else process(
-                corpus, topicNum=int(numTopics))
+            results = process(corpus, datasetChoice) if (numTopics == "") else process(
+                corpus, topicNum=int(numTopics), datasetChoice)
             if results == None:
                 return 'Error with attached file(s)', 500
             # Convert the results to a json object, and return it to the frontend
