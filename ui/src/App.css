@@ -75,6 +75,7 @@ h1 {
   font-size: 1rem;
   width: 40%;
   text-align: left;
+  min-width: 800px;
 
   background-color: white;
   color: #282c34;
