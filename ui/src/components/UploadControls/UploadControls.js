@@ -7,6 +7,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 const UploadControls = ({
   numTopicsInput,
   numTopics,
+  datasetSelect,
+  datasetChoice,
   files,
   setFiles,
   handleSubmit,
@@ -49,6 +51,11 @@ const UploadControls = ({
           <div className="topic-num-restriction">
             *Number of topics must be an integer between 1 and 100
           </div>
+          <label className="datasetPrompt">
+            Sentiment Dataset:&nbsp;
+          </label>
+          {datasetSelect}
+          <br />
           {files && <FilesContainer files={files} setFiles={setFiles} />}
           {/*
               Button to submit files and send REST request to backend

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import Axios from "axios";
 import FileDownload from "js-file-download";
-import { Input } from "@material-ui/core";
+import { Input, Select, MenuItem } from "@material-ui/core";
 import ResultsContainer from "./scenes/ResultsContainer/ResultsContainer";
 import ApplicationDescription from "./components/ApplicationDescription/ApplicationDescription";
 import UploadControls from "./components/UploadControls/UploadControls";
@@ -25,6 +25,9 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [numTopics, numTopicsInput] = useInput({
     type: "number",
+  });
+  const [datasetChoice, datasetSelect] = useSelect({
+    type: "menuItem",
   });
 
   const handleToggleHide = (topicId) => {
@@ -50,6 +53,23 @@ const App = () => {
     );
     return [value, input];
   }
+  //Reusable function to handle input from user in a select box
+  function useSelect({ type }) {
+    const [value, setValue] = useState("");
+    const select = (
+      <Select
+        onChange={(e) => setValue(e.target.value)}
+        autoWidth={true}
+        variant="standard"
+        defaultValue={"pa"}
+      >
+        <MenuItem value={"pa"}>Pro-Anti Data</MenuItem>
+        <MenuItem value={"so"}>Support-Object Data</MenuItem>
+        <MenuItem value={"pn"}>Positive-Negative Data</MenuItem>
+      </Select>
+    );
+    return [value, select];
+  }
   /*
   Function to handle the submission, accessed by the "Calculate" button
   Data is submitted as a FormData object, as a POST request to the Flask backend server, hosted at http://localhost:5000/upload
@@ -62,6 +82,7 @@ const App = () => {
     let formData = new FormData();
     formData.append("fileCount", files.length);
     formData.append("numTopics", numTopics);
+    formData.append("datasetChoice", datasetChoice);
     files.forEach((file, index) => {
       formData.append(`file${index}`, file);
     });
@@ -75,7 +96,7 @@ const App = () => {
         setLoading(true);
       })
       .catch((error) => console.log(error));
-  }, [files, numTopics]);
+  }, [files, numTopics, datasetChoice]);
 
   const handleDownload = useCallback(() => {
     let formData = new FormData();
@@ -116,6 +137,8 @@ const App = () => {
         <UploadControls
           numTopicsInput={numTopicsInput}
           numTopics={numTopics}
+          datasetSelect={datasetSelect}
+          datasetChoice={datasetChoice}
           files={files}
           setFiles={setFiles}
           handleSubmit={handleSubmit}

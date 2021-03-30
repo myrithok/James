@@ -112,3 +112,7 @@ h1 {
   font-size: medium;
   color: red;
 }
+
+.datasetPrompt {
+  font-size: 1.5rem;
+}

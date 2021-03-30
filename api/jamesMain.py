@@ -9,8 +9,9 @@ from api.jamesConfig import cfg
 from api.jamesLDA import buildTopicModel, getTopics, getResults
 from api.jamesPreProcessing import preProcess, preProcessSentence
 from api.jamesSA import loadSentimentModel, getSentenceSentiment
+from api.jamesRNN import getPredictor, RNN_prediction
 
-def process(inputCorpus, topicNum):
+def process(inputCorpus, topicNum, datasetChoice):
     '''
     Main method called by server.py to handle processing of input corpus
 
@@ -36,7 +37,10 @@ def process(inputCorpus, topicNum):
     # Build the topic model on the corpus using the input number of topics
     topicModel = buildTopicModel(corpus, topicNum)
     # Load the sentiment model using loadSentimentModel, imported from jamesSA
-    sentimentModel = loadSentimentModel(cfg['path']['safile'])
+    # sentimentModel = loadSentimentModel(cfg['path']['safile'])
+    # get model information from config file. modeltype, trainingdata for tokenizer, training data file format, feature number, datashape (used in RNN_prediction)
+    modelInfo = cfg['path'][datasetChoice]
+    sentimentmodel, tokenizer = getPredictor(modelInfo[0],modelInfo[1], modelInfo[2],modelInfo[3])
     # Produce a jamesResults object, imported from jamesClasses, containing the topic
     #   model information using getResults, imported from jamesLDA
     results = getResults(topicModel, corpus)
@@ -62,12 +66,16 @@ def process(inputCorpus, topicNum):
             results.addSentence(sentence, sentenceTopics)
             # Use the sentiment analysis model to find the sentiment for the current
             #   sentence using getSentenceSentiment, imported from jamesSA
-            sentenceSentiment = getSentenceSentiment(sentence, sentimentModel)
+            ## sentenceSentiment = getSentenceSentiment(sentence, sentimentModel)
+
+            # RNN_prediction returns a list of [neg, pos] scores
+            sentenceSentiment = RNN_prediction(sentimentmodel, [sentence], tokenizer, modelInfo[4])
+
             # Add the sentence's sentiment to each topic's sentiment for the current
             #   document results docResults object, weighted by the sentence's topic
             #   distribution
             for topic in sentenceTopics:
-                docResult.addSentiment(topic[0], topic[1], sentenceSentiment)
+                docResult.addSentiment(topic[0], topic[1], float(sentenceSentiment[0][1]))
         # Calculate the average sentiment for each topic in the current document
         docResult.averageSentiments()
         # Add the docResults object to the jamesResults result set

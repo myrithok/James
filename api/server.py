@@ -52,8 +52,13 @@ def index():
                 numTopics = int(request.form["numTopics"])
             except:
                 return "Error with number of topics", 500
+            # The dataset selected for sentiment analysis is taken from the request
+            try:
+                datasetChoice = request.form["datasetChoice"]
+            except:
+                return 'Error with selected dataset', 500
             # The process method imported from jamesMain produces results from the input corpus
-            results = process(corpus, numTopics)
+            results = process(corpus, numTopics, datasetChoice)
             if results == None:
                 return 'Error with attached file(s)', 500
             # Convert the results to a json object, and return it to the frontend
