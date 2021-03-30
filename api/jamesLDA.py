@@ -11,22 +11,7 @@ from api.jamesConfig import cfg
 def buildTopicModel(corpus, topicNum):
     '''
     This method is used to build a gensim topic model of the given number of
-    topics for a given corpus. If a number is not specified, then the
-    buildBestCoherenceTopicModel function is called. If a number is specified,
-    then buildMalletModel is called. Both of these functions return a mallet model,
-    which is converted to a gensim lda model and returned.
-
-                    buildTopicModel
-                        |    |
-    (topicNum specified)|    |(topicNum not specified)
-                        |    |________________
-                        |                     |
-                        |                     V
-                  (once)|        buildBestCoherenceTopicModel
-                        |        _____________|
-                        |       |      (multiple times)
-                        V       V
-                     buildMalletModel
+    topics for a given corpus. 
 
     Parameters
     ----------
@@ -42,65 +27,19 @@ def buildTopicModel(corpus, topicNum):
             gensim.models.ldamodel
                     the topic model generated from the input corpus
     '''
-    # If the number of topics is no specified, call buildBestCoherenceTopicModel
-    if topicNum == None:
-        ldaMallet = buildBestCoherenceTopicModel(corpus)
-    # If the number of of topics is specified, build a mallet model with that many topcis
-    else: 
-        ldaMallet = buildMalletModel(corpus, topicNum)
+    # Build a mallet model with that many topcis
+    ldaMallet = buildMalletModel(corpus, topicNum)
     # convert the ldaMallet model to an ldaModel
-    ldaModel = wrappers.ldamallet.malletmodel2ldamodel(ldaMallet, gamma_threshold=0.001, iterations=50)
+    ldaModel = wrappers.ldamallet.malletmodel2ldamodel(ldaMallet,
+                                                       gamma_threshold=cfg['malletsettings']['gamma_threshold'],
+                                                       iterations=cfg['malletsettings']['iterations'])
     # Return the topic model
     return ldaModel
-
-def buildBestCoherenceTopicModel(corpus):
-    '''
-    This method is used to the ideal number of topics for a topic model when
-    a number is not specified by the user
-    This is done by building a topic model using buildMalletModel for each number of
-    topics between 2 and a maximum, then picking the topic model from these that had
-    the highest average coherence score for its topics
-
-    Parameters
-    ----------
-            corpus: jamesCorpus
-                    the corpus to be modeled, as a jamesCorpus
-                    object (imported from jamesClasses)
-
-    Output
-    ------
-            gensim.models.wrappers.LdaMallet
-                    the topic model generated from the input corpus
-    '''
-    # Import the maximum number of topics to try from jamesConfig
-    maximum = cfg['topicmax']
-    # Initialize each variable to test the max
-    topScore = topModel = currentModel = currentResults = currentScore = None
-    # Iterate through each number of topics to try, between 2 and the maximum (inclusive)
-    for n in range(2, maximum + 1):
-        # Build the topic model for the current number of topics using buildTopicModel found above
-        currentModel = buildMalletModel(corpus,n)
-        ### run CoherenceModel for each new Mallet Model. Requires getLemmatized() which was added method
-        ### using coherence method "c_v" allows for results between (0,1) where greater number is better score
-        currentCoherence = coherencemodel.CoherenceModel(model=currentModel, texts=corpus.getLemmatized(),
-                                                         dictionary=corpus.dic, corpus=corpus.getBoW(),
-                                                         coherence="c_v")
-        currentScore = currentCoherence.get_coherence()
-        # If this model has a higher average coherence score than the current best,
-        #   or it is the first model generated, store this model and score as the
-        #   top model and score
-        if topScore == None or currentScore > topScore:
-            topScore = currentScore
-            topModel = currentModel
-    # Return the top model that was found
-    return topModel
 
 def buildMalletModel(corpus, topicNum):
     '''
     This method is used to build a mallet lda model.
-    It is called once by buildTopicModel if a number of topics has been specified,
-    or several times by buildBestCoherenceTopicModel to find the best coherence
-    score if no number of topics was specified.
+    It is called by buildTopicModel.
 
     Parameters
     ----------
