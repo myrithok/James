@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
 from api.jamesClasses import docResults
 from api.jamesConfig import cfg
-from api.jamesLDA import buildBestCoherenceTopicModel, buildTopicModel, getTopics, getResults
+from api.jamesLDA import buildTopicModel, getTopics, getResults
 from api.jamesPreProcessing import preProcess, preProcessSentence
 from api.jamesSA import loadSentimentModel, getSentenceSentiment
 
