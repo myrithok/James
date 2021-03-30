@@ -197,17 +197,16 @@ def RNN_prediction(model, documents, tokenizer, datashape):
 
 
 # dataset from : https://www.kaggle.com/marklvl/sentiment-labelled-sentences-data-set
-def reTrainSA():
+def reTrainModel(modelType, features, modelName):
     data = pd.DataFrame(columns=['text', 'sentiment'])
-    for file, fileformat in zip(cfg['path']['pn'][1],cfg['path']['pn'][2]):
-        data += read_file(file,fileformat)
-    train_RNN(data, 2000, "SAmodel")
-
-def reTrainSO():
-    data = pd.DataFrame(columns=['text', 'sentiment'])
-    for file, fileformat in zip(cfg['path']['so'][1],cfg['path']['so'][2]):
-        data += read_file(file,fileformat)
-    train_RNN(data, 500, "SOmodel")
+    fileinfo = cfg['path'][modelType]
+    files = fileinfo[1]
+    filetype = fileinfo[2]
+    fileDataFrames = []
+    for file in files:
+        fileDataFrames.append(read_file(file,filetype))
+    data = data.append(fileDataFrames)
+    train_RNN(data, features, modelName)
 
 def getPredictor(model_name, files, filetype, features):
     # read files for tokenizer
@@ -219,4 +218,3 @@ def getPredictor(model_name, files, filetype, features):
 
     model = load_RNN(model_name)
     return model, tokenizer
-

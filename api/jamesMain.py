@@ -72,12 +72,15 @@ def process(inputCorpus, topicNum, datasetChoice):
             # Use the sentiment analysis model to find the sentiment for the current
             #   sentence using getSentenceSentiment, imported from jamesSA
             ## sentenceSentiment = getSentenceSentiment(sentence, sentimentModel)
-            sentenceSentiment = RNN_prediction(sentimentmodel, sentence, tokenizer, modelInfo[4])
+
+            # RNN_prediction returns a list of [neg, pos] scores
+            sentenceSentiment = RNN_prediction(sentimentmodel, [sentence], tokenizer, modelInfo[4])
+
             # Add the sentence's sentiment to each topic's sentiment for the current
             #   document results docResults object, weighted by the sentence's topic
             #   distribution
             for topic in sentenceTopics:
-                docResult.addSentiment(topic[0], topic[1], sentenceSentiment)
+                docResult.addSentiment(topic[0], topic[1], float(sentenceSentiment[0][1]))
         # Calculate the average sentiment for each topic in the current document
         docResult.averageSentiments()
         # Add the docResults object to the jamesResults result set
