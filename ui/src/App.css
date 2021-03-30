@@ -8,6 +8,7 @@
   font-size: calc(10px + 2vmin);
   color: white;
   padding-bottom: 3rem;
+  min-width: 1080px;
 }
 
 h1 {
