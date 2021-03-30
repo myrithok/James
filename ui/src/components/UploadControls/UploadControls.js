@@ -19,8 +19,6 @@ const UploadControls = ({
     ? files.map((file) => file.type).some((type) => type !== "text/plain")
     : false;
 
-  console.log(files);
-  console.log(fileTypeError);
   return (
     <div className="controls-container">
       {/*

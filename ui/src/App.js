@@ -24,7 +24,6 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [numTopics, numTopicsInput] = useInput({
     type: "number",
-    placeholder: "Leave blank for default",
   });
 
   const handleToggleHide = (topicId) => {
@@ -37,7 +36,7 @@ const App = () => {
   };
 
   //Reusable function to handle input from user in a text box
-  function useInput({ type, placeholder }) {
+  function useInput({ type }) {
     const [value, setValue] = useState("");
     const input = (
       <Input
@@ -45,7 +44,6 @@ const App = () => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         type={type}
-        placeholder={placeholder}
         inputProps={{ min: 1, max: 100 }}
       />
     );
