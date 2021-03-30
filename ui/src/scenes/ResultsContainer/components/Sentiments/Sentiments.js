@@ -6,7 +6,7 @@ const Sentiments = ({ sentiments, hiddenTopics }) => {
   return (
     <div className="sentiment-container" data-testid="sentiment-container">
       <h2 className="sentiment-title" data-testid="sentiment-title">
-        Sentiments
+        Analysis
       </h2>
       {sentiments.length === 0 ? (
         <div data-testid={`no-sentiment-data`}>
