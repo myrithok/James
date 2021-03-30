@@ -1,3 +1,7 @@
+import os
+import sys
+# Add James to path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from tensorflow import keras
 import pandas as pd
 import re
@@ -9,6 +13,7 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
+from api.jamesConfig import cfg
 # from sklearn.feature_extraction.text import TfidfTransformer
 
 # SO Generate csv dataset
@@ -177,7 +182,7 @@ def train_RNN(data, features, name):
 # trainRNN()
 
 def load_RNN(name):
-    model = keras.models.load_model('api//model//' + name)
+    model = keras.models.load_model(name)
     return model
 
 
@@ -193,9 +198,9 @@ def RNN_prediction(model, documents, tokenizer, datashape):
 
 # dataset from : https://www.kaggle.com/marklvl/sentiment-labelled-sentences-data-set
 def reTrainSA():
-    data = read_file("trainingdata//amazon_cells_labelled.txt","txt") + \
-        read_file("trainingdata//imdb_labelled.txt","txt") + \
-        read_file("trainingdata//yelp_labelled.txt","txt")
+    data = pd.DataFrame(columns=['text', 'sentiment'])
+    for file, fileformat in zip(cfg['path']['pn'][1],cfg['path']['pn'][2]):
+        data += read_file(file,fileformat)
     train_RNN(data, 2000, "SAmodel")
 
 def getPredictor(model_name, files, filetype, features):
@@ -208,12 +213,3 @@ def getPredictor(model_name, files, filetype, features):
 
     model = load_RNN(model_name)
     return model, tokenizer
-
-file = "api//trainingdata//convote_v1.1//SO_congressional_data.csv"
-ftype = "csv"
-features = 500
-model, tk = getPredictor("SOmodel//", [file], ftype, features)
-
-docs = ["i disagree with this"]
-ret = RNN_prediction(model,  docs, tk, 91)
-print(ret)

@@ -9,6 +9,7 @@ from api.jamesConfig import cfg
 from api.jamesLDA import buildBestCoherenceTopicModel, buildTopicModel, getTopics, getResults
 from api.jamesPreProcessing import preProcess, preProcessSentence
 from api.jamesSA import loadSentimentModel, getSentenceSentiment
+from api.jamesRNN import getPredictor, RNN_prediction
 
 def process(inputCorpus, topicNum=None, datasetChoice):
     '''
@@ -41,7 +42,10 @@ def process(inputCorpus, topicNum=None, datasetChoice):
     ### buildBestCoherenceModel is encapsulated in buildTopicModel and run whenever topicNum == None
     topicModel = buildTopicModel(corpus, topicNum)
     # Load the sentiment model using loadSentimentModel, imported from jamesSA
-    sentimentModel = loadSentimentModel(cfg['path']['safile'])
+    # sentimentModel = loadSentimentModel(cfg['path']['safile'])
+    # get model information from config file. modeltype, trainingdata for tokenizer, training data file format, feature number, datashape (used in RNN_prediction)
+    modelInfo = cfg['path'][datasetChoice]
+    sentimentmodel, tokenizer = getPredictor(modelInfo[0],modelInfo[1], modelInfo[2],modelInfo[3])
     # Produce a jamesResults object, imported from jamesClasses, containing the topic
     #   model information using getResults, imported from jamesLDA
     results = getResults(topicModel, corpus)
@@ -67,7 +71,8 @@ def process(inputCorpus, topicNum=None, datasetChoice):
             results.addSentence(sentence, sentenceTopics)
             # Use the sentiment analysis model to find the sentiment for the current
             #   sentence using getSentenceSentiment, imported from jamesSA
-            sentenceSentiment = getSentenceSentiment(sentence, sentimentModel)
+            ## sentenceSentiment = getSentenceSentiment(sentence, sentimentModel)
+            sentenceSentiment = RNN_prediction(sentimentmodel, sentence, tokenizer, modelInfo[4])
             # Add the sentence's sentiment to each topic's sentiment for the current
             #   document results docResults object, weighted by the sentence's topic
             #   distribution
