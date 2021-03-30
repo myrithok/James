@@ -203,6 +203,12 @@ def reTrainSA():
         data += read_file(file,fileformat)
     train_RNN(data, 2000, "SAmodel")
 
+def reTrainSO():
+    data = pd.DataFrame(columns=['text', 'sentiment'])
+    for file, fileformat in zip(cfg['path']['so'][1],cfg['path']['so'][2]):
+        data += read_file(file,fileformat)
+    train_RNN(data, 500, "SOmodel")
+
 def getPredictor(model_name, files, filetype, features):
     # read files for tokenizer
     data = pd.concat([read_file(file, filetype) for file in files])
@@ -213,3 +219,4 @@ def getPredictor(model_name, files, filetype, features):
 
     model = load_RNN(model_name)
     return model, tokenizer
+
