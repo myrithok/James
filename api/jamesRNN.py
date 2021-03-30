@@ -11,7 +11,40 @@ from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 # from sklearn.feature_extraction.text import TfidfTransformer
 
+# SO Generate csv dataset
+def read_folder(path, trainfolder, testfolder):
+    train = [path+trainfolder+file for file in os.listdir(path+trainfolder)]
+    test = [path+testfolder+file for file in os.listdir(path+testfolder)]
+    return train, test
 
+
+def createDataSet(files):
+    X = []
+    for file in files:
+        with open(file, encoding="utf8") as f:
+            data = f.read()
+            label = 1 if file[-5] == "Y" else 0
+            X.append([data[:500], label])  # takes a max of 500 characters
+
+    return X
+
+def generateSOdata():
+    path = "api\\trainingdata\\convote_v1.1\\data_stage_three\\"
+    trainfolder = "training_set\\"
+    testfolder = "test_set\\"
+
+    tr, te = read_folder(path, trainfolder, testfolder)
+
+    train = createDataSet(tr)
+    test = createDataSet(te)
+
+    train_data = preprocess_data(train)
+    test_data = preprocess_data(test)
+
+    comb = pd.concat([train_data,test_data])
+    comb.to_csv("api//trainingdata//convote_v1.1//SO_congressional_data.csv", index=False)
+
+# SO + SA read file
 def read_file(filename, filetype):
     if filetype == "txt":
         with open(filename, "r") as f:
@@ -175,3 +208,12 @@ def getPredictor(model_name, files, filetype, features):
 
     model = load_RNN(model_name)
     return model, tokenizer
+
+file = "api//trainingdata//convote_v1.1//SO_congressional_data.csv"
+ftype = "csv"
+features = 500
+model, tk = getPredictor("SOmodel//", [file], ftype, features)
+
+docs = ["i disagree with this"]
+ret = RNN_prediction(model,  docs, tk, 91)
+print(ret)
