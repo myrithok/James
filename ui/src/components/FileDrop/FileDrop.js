@@ -4,25 +4,59 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudDownloadAlt } from "@fortawesome/free-solid-svg-icons";
 
 const FileDrop = ({ setFiles, loading }) => {
+  const maxSize = 5242880;
   return (
     <Dropzone
       onDrop={(acceptedFiles) => setFiles(acceptedFiles)}
+      accept="text/plain"
+      minSize={1}
+      maxSize={maxSize}
       multiple
       disabled={loading}
     >
-      {({ getRootProps, getInputProps }) => (
-        <div className="drop-zone" data-testid="drop-zone" {...getRootProps()}>
+      {({ getRootProps, getInputProps, acceptedFiles, isDragReject, fileRejections}) => {
+        let fileTooLarge = false;
+        let fileTooSmall = false;
+        if (fileRejections.length > 0) {
+          let fileSize = fileRejections[0].file.size;
+          fileTooLarge = fileSize > maxSize
+          fileTooSmall = fileSize===0
+        }
+
+        return(
+          <div className="drop-zone" data-testid="drop-zone" {...getRootProps()}>
           <input {...getInputProps()} />
-          <FontAwesomeIcon
+
+            <FontAwesomeIcon
             icon={faCloudDownloadAlt}
             size="3x"
             data-testid="file-drop-icon"
           />
-          <p className="file-drop-instructions">
-            Drop files or click here to select files from your drive
-          </p>
+            {fileTooLarge && (
+                <p className="file-drop-instructions">
+                  File is too large. Maximum size is 5MB
+                </p>
+            )}
+            {fileTooSmall && (
+                <p className="file-drop-instructions">
+                  File is empty
+                </p>
+              )}
+            {isDragReject && (
+                <p className="file-drop-instructions">
+                  Please upload a plain text file (.txt)
+                </p>
+            )}
+            {!fileTooSmall && !fileTooLarge && !isDragReject && (
+                <p className="file-drop-instructions">
+                  Drop files or click here to select files from your drive
+                </p>
+            )}
+
+
         </div>
       )}
+      }
     </Dropzone>
   );
 };
