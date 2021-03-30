@@ -82,7 +82,7 @@ const App = () => {
     let formData = new FormData();
     formData.append("fileCount", files.length);
     formData.append("numTopics", numTopics);
-    formData.append("dataset", datasetChoice);
+    formData.append("datasetChoice", datasetChoice);
     files.forEach((file, index) => {
       formData.append(`file${index}`, file);
     });
