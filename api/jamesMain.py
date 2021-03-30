@@ -11,7 +11,7 @@ from api.jamesPreProcessing import preProcess, preProcessSentence
 from api.jamesSA import loadSentimentModel, getSentenceSentiment
 from api.jamesRNN import getPredictor, RNN_prediction
 
-def process(inputCorpus, topicNum=None, datasetChoice):
+def process(inputCorpus, topicNum, datasetChoice):
     '''
     Main method called by server.py to handle processing of input corpus
 

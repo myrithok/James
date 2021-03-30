@@ -56,8 +56,8 @@ def index():
                 return 'Error with selected dataset', 500
             # The process method imported from jamesMain produces results from the input corpus
             # If the number of topics was specified by the user, then the process will take in that number as an argument
-            results = process(corpus, datasetChoice) if (numTopics == "") else process(
-                corpus, topicNum=int(numTopics), datasetChoice)
+            results = process(corpus,None, datasetChoice) if (numTopics == "") else process(
+                corpus, int(numTopics), datasetChoice)
             if results == None:
                 return 'Error with attached file(s)', 500
             # Convert the results to a json object, and return it to the frontend
