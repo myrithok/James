@@ -6,6 +6,7 @@ import ResultsContainer from "./scenes/ResultsContainer/ResultsContainer";
 import ApplicationDescription from "./components/ApplicationDescription/ApplicationDescription";
 import UploadControls from "./components/UploadControls/UploadControls";
 import FileDrop from "./components/FileDrop";
+import baseURL from "./config";
 import "./App.css";
 
 /*
@@ -65,7 +66,7 @@ const App = () => {
       formData.append(`file${index}`, file);
     });
     Axios({
-      url: "http://35.183.97.235:8002/upload",
+      url: baseURL + "/upload",
       method: "POST",
       data: formData,
     })
@@ -81,7 +82,7 @@ const App = () => {
     formData.append("results", JSON.stringify(results));
     formData.append("hiddenTopics", JSON.stringify(hiddenTopics));
     Axios({
-      url: "http://35.183.97.235:8002/download",
+      url: baseURL + "/download",
       method: "POST",
       data: formData,
     }).then((response) => {
