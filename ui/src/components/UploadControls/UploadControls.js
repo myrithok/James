@@ -6,6 +6,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 const UploadControls = ({
   numTopicsInput,
+  datasetSelect,
   files,
   setFiles,
   handleSubmit,
@@ -37,6 +38,11 @@ const UploadControls = ({
             (Optional) Number of Topics:&nbsp;
           </label>
           {numTopicsInput}
+          <br />
+          <label className="datasetPrompt">
+            Sentiment Dataset:&nbsp;
+          </label>
+          {datasetSelect}
           <br />
           {files && <FilesContainer files={files} setFiles={setFiles} />}
           {/*

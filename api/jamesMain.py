@@ -10,8 +10,7 @@ from api.jamesLDA import buildBestCoherenceTopicModel, buildTopicModel, getTopic
 from api.jamesPreProcessing import preProcess, preProcessSentence
 from api.jamesSA import loadSentimentModel, getSentenceSentiment
 
-# TODO ADD MODEL TYPE ARG
-def process(inputCorpus, topicNum=None):
+def process(inputCorpus, topicNum=None, datasetChoice):
     '''
     Main method called by server.py to handle processing of input corpus
 
