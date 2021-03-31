@@ -26,9 +26,7 @@ const App = () => {
   const [numTopics, numTopicsInput] = useInput({
     type: "number",
   });
-  const [datasetChoice, datasetSelect] = useSelect({
-    type: "menuItem",
-  });
+  const [datasetChoice, datasetSelect] = useSelect({});
 
   const handleToggleHide = (topicId) => {
     if (hiddenTopics.includes(topicId)) {
@@ -39,7 +37,7 @@ const App = () => {
     }
   };
 
-  //Reusable function to handle input from user in a text box
+  //Function to handle topic number input from a text box
   function useInput({ type }) {
     const [value, setValue] = useState("");
     const input = (
@@ -53,17 +51,16 @@ const App = () => {
     );
     return [value, input];
   }
-  //Reusable function to handle input from user in a select box
-  function useSelect({ type }) {
-    const [value, setValue] = useState("");
+  //Function to handle dataset input from a select box
+  function useSelect() {
+    const [value, setValue] = useState("so");
     const select = (
       <Select
         onChange={(e) => setValue(e.target.value)}
         autoWidth={true}
         variant="standard"
-        defaultValue={"pa"}
+        defaultValue={"so"}
       >
-        <MenuItem value={"pa"}>Pro-Anti Data</MenuItem>
         <MenuItem value={"so"}>Support-Object Data</MenuItem>
         <MenuItem value={"pn"}>Positive-Negative Data</MenuItem>
       </Select>
