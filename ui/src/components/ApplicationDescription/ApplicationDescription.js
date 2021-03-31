@@ -13,12 +13,13 @@ const ApplicationDescription = () => {
       <h4>How to Use James</h4>
       <ol>
         <li>Click on the upload button to select the text(s) you would like to analyze. You can select one or more documents, but they must all be text (.txt) files. Please note that you can't upload your files one at a time; they must all be uploaded at once.</li>
-        <li>Enter the number of topics you would like the model to generate for your uploaded text(s). This must be a number between 1 and 100, and it cannot be greater than the total number of sentences contained in the input documents.</li>
+        <li>Enter the number of topics you would like the model to generate for your uploaded text(s). This must be a number between 1 and 100.</li>
         <li>Use the dropdown list to select the dataset you would like to use for the sentiment analysis model.</li>
         <li>Click Calculate! It may take several minutes for James to process your results, especially if you uploaded a large volume of text.</li>
       </ol>
       <p>
-        Please note: James was designed and trained using English text; while James will allow you to upload documents containing text in other languages, the results will certainly be unintended.
+        Please note: James was designed and trained using English text; while James will allow you to upload documents containing text in other languages, the results will certainly be unintended.<br />
+        Also, please ensure that your uploaded text is long enough for the number of selected topics; if the input is too short, it is impossible to generate a topic model.
       </p>
       <h4>Understanding the Results</h4>
       <p>
