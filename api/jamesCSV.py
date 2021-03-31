@@ -61,12 +61,13 @@ def createCsvList(results,hidden=[]):
     # Add the title for the topic section
     csvList.append(["Topics"])
     # Iterate through each topic that has not been hidden
+    csvList.append(["Topic Model Coherence", results['modelCoherence']])
     for topic in results['topics']:
         if topic["topicnum"] not in hidden:
             # Insert the topic number and coherence score
             csvList.append(["\n"])
             csvList.append(["Topic Number", topic["topicnum"]])
-            csvList.append(["Coherence", topic["coherence"]])
+            csvList.append(["Topic Coherence", topic["coherence"]])
             # Insert the topic word
             csvList.append(list(topic["topicwords"][0].keys()))
             for y in topic["topicwords"]:

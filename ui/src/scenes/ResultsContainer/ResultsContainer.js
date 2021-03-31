@@ -9,6 +9,7 @@ const ResultsContainer = ({
   sentiments,
   handleDownload,
   hiddenTopics,
+  modelCoherence,
   toggleHide,
 }) => {
   return (
@@ -37,10 +38,12 @@ const ResultsContainer = ({
           Download Results
         </Button>
       </div>
+      <br />
       <Topics
         topics={topics}
         hiddenTopics={hiddenTopics}
         toggleHide={toggleHide}
+        modelCoherence={modelCoherence}
       />
       <Sentiments sentiments={sentiments} hiddenTopics={hiddenTopics} />
       <ScrollToTop showUnder={0} duration={1000} >

@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
 from api.jamesClasses import docResults
 from api.jamesConfig import cfg
-from api.jamesLDA import buildTopicModel, getTopics, getResults
+from api.jamesLDA import buildCoherenceModel, buildTopicModel, getTopics, getResults
 from api.jamesPreProcessing import preProcess, preProcessSentence
 from api.jamesSA import getPredictor, getSentenceSentiment
 
@@ -33,14 +33,16 @@ def process(inputCorpus, topicNum, datasetChoice):
     # Input is inputCorpus object, imported from jamesClasses
     # Output is jamesCorpus object, imported from jamesClasses
     corpus = preProcess(inputCorpus)
-    # Build the topic model on the corpus using the input number of topics
-    topicModel = buildTopicModel(corpus, topicNum)
     # Load the user-selected sentiment model using getPredictor, imported from jamesSA
     modelInfo = cfg['path'][datasetChoice]
     sentimentmodel, tokenizer = getPredictor(modelInfo[0],modelInfo[1], modelInfo[2],modelInfo[3])
+    # Build the topic model on the corpus using the input number of topics
+    topicModel = buildTopicModel(corpus, topicNum)
+    # Build the coherence model for generated topic model
+    coherenceModel = buildCoherenceModel(topicModel, corpus)
     # Produce a jamesResults object, imported from jamesClasses, containing the topic
     #   model information using getResults, imported from jamesLDA
-    results = getResults(topicModel, corpus)
+    results = getResults(topicModel, coherenceModel, corpus)
     # Add the stem dictionary produced in preprocessing to the jamesResults object
     # Words are stemmed for topic modeling, but a dictionary is kept mapping each stem
     #   to a word converted to that stem, which is used to make results more readable

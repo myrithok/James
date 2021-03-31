@@ -1,5 +1,5 @@
 # Library imports
-from gensim.models import wrappers, coherencemodel
+from gensim.models import coherencemodel, ldamodel, wrappers
 import os
 import sys
 # Add James to path
@@ -40,15 +40,42 @@ def buildTopicModel(corpus, topicNum):
     # Return the topic model
     return ldaModel
 
-def getResults(topicModel, corpus):
+def buildCoherenceModel(topicModel, corpus):
+    '''
+    This method is used to construct a coherencemodel (imported from gensim.models)
+    from a generated topic model and the corpus.
+
+    Parameters
+    ----------
+            topicModel: gensim.models.ldamodel
+                    the topic model used to build the coherence model
+
+            corpus: jamesCorpus
+                    the corpus used to generate the topic model
+
+    Output
+    ------
+            gensim.models.coherencemodel
+                    a coherence model (imported from gensim.models) for the input
+                    topic model
+    '''
+    coherenceModel = coherencemodel.CoherenceModel(model=topicModel, texts=corpus.getLemmatized(),
+                                                   dictionary=corpus.dic, corpus=corpus.getBoW(),
+                                                   coherence="c_v")
+    return coherenceModel
+
+def getResults(topicModel, coherenceModel, corpus):
     '''
     This method is used to construct a jamesResults object (imported from jamesClasses)
-    containing the topic results of a given topic model and corpus
+    containing the topic results of a given topic model, coherence model, and corpus
 
     Parameters
     ----------
             topicModel: gensim.models.ldamodel
                     the topic model whose results are being returned
+
+            coherenceModel: gensim.models.coherencemodel
+                    the coherence model for the given topic model
 
             corpus: jamesCorpus
                     the corpus used to generate the input topic model as a
@@ -60,7 +87,9 @@ def getResults(topicModel, corpus):
                     a jamesResults object (imported from jamesClasses) containing
                     the topic results
     '''
-    return jamesResults(topicModel.top_topics(corpus.getBoW(),topn=cfg['topicwords']))
+    return jamesResults([topic[0] for topic in topicModel.top_topics(corpus.getBoW(),topn=cfg['topicwords'])],
+                        coherenceModel.get_coherence(),
+                        coherenceModel.get_coherence_per_topic())
 
 def getTopics(bow, topicModel):
     '''
