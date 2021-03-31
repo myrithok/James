@@ -73,10 +73,11 @@ class jamesResults:
         assert topicOutput != [], "first parameter must be nonempty"
         assert topicCoherence != [], "third parameter must be nonempty"
         for element in topicOutput:
-            assert isinstance(element, tuple), "first parameter must be list of tuples"
-            assert len(element) == 2, "first parameter must contain tuples of type (float, str)"
-            assert isinstance(element[0], float), "first parameter must contain tuples of type (float, str)"
-            assert isinstance(element[1], str), "first parameter must contain tuples of type (float, str)"
+            assert isinstance(element, list), "first parameter must be list of lists"
+            for segment in element:
+                assert len(segment) == 2, "first parameter must contain list of tuples of type (float, str)"
+                assert isinstance(segment[0], float), "first parameter must contain list of tuples of type (float, str)"
+                assert isinstance(segment[1], str), "first parameter must contain list of tuples of type (float, str)"
         for element in topicCoherence:
             assert isinstance(element, float), "third parameter must be list of floats"
         self.topicResults = []
@@ -201,10 +202,10 @@ class topicResults:
                 coherence: float
                         a float representing the coherence score for this topic
         '''
-        assert isinstance(num, int), "first parameter must be type 'int'"
-        assert isinstance(result, list), "second parameter must be type 'list'"
+        assert isinstance(num, int), "first parameter must be an int"
+        assert isinstance(result, list), "second parameter must be a list"
         assert result != [], "second parameter must be non-empty"
-        assert isinstance(num, float), "third parameter must be type 'float'"
+        assert isinstance(coherence, float), "third parameter must be a float"
         for element in result:
             assert isinstance(element, tuple), "second parameter must be a list of type tuple (float, str)"
             assert len(element) == 2, "second parameter must be a list of type tuple (float, str)"

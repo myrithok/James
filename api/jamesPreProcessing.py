@@ -45,7 +45,7 @@ def preProcess(corpus):
         #   analysis later
         doc.addSentences(separateSentences(doc.text))
         # Lemmatize the document using jamesLemmatize (found below)
-        lemmatized = jamesLemmatize(doc.text, doStem=True, doStemDic=True)
+        lemmatized = jamesLemmatize(doc.text, doStemDic=True)
         # Add the lemmatized document stem list to the corpusDoc (imported from jamesClasses),
         #   to be used to generate the document's word id bag of words
         doc.addLemmatized(lemmatized["lemmatized"])
@@ -88,13 +88,13 @@ def preProcessSentence(text, dic):
     '''
     # Lemmatize and stem the sentence using jamesLemmatize (found below),
     #   convert the stem results to a bag of word stem ids, and return it
-    return dic.doc2bow(jamesLemmatize(text, doStem=True, doStemDic=False)["lemmatized"])
+    return dic.doc2bow(jamesLemmatize(text, doStemDic=False)["lemmatized"])
 
 
-def jamesLemmatize(tokens, doStem, doStemDic):
+def jamesLemmatize(tokens, doStemDic):
     '''
-    This method is used to lemmatize and stem text for both topic modeling and sentiment analysis
-    It is used by preProcess and preProcessSentence above, as well as jamesSA
+    This method is used to lemmatize and stem text for topic modeling
+    It is used by preProcess and preProcessSentence above
 
     Parameters
     ----------
@@ -102,9 +102,6 @@ def jamesLemmatize(tokens, doStem, doStemDic):
                     the input to be lemmatized and stemmed
                     either a string that has not yet been tokenized, or a list representing an
                     already tokenized string
-
-            doStem: bool
-                    a setting for whether or not the input should also be stemmed
 
             doStemDic: bool
                     a setting for whether or not a word stem to word dictionary should be
@@ -125,9 +122,8 @@ def jamesLemmatize(tokens, doStem, doStemDic):
         stemDic = {}
     # Initialize a WordNetLemmatizer, imported from nltk.stem
     lemmatizer = WordNetLemmatizer()
-    # Initialize a SnowballStemmer in english, imported from nltk.stem, if needed
-    if doStem:
-        stemmer = SnowballStemmer('english')
+    # Initialize a SnowballStemmer in english, imported from nltk.stem
+    stemmer = SnowballStemmer('english')
     # Remove apostrophes and text following before lemmatizing
     for token in tokens:
         token = re.sub("\'[a-zA-Z0-9]*",'',token)
@@ -136,10 +132,7 @@ def jamesLemmatize(tokens, doStem, doStemDic):
         tokens = simple_preprocess(tokens)
     # Tag each word using pos_tag, imported from nltk.tag, and iterate through each token and tag
     for token, tag in pos_tag(tokens):
-        # Filter out undesired information from the token, and format it to lowercase
-        token = re.sub(
-            'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', token)
-        token = re.sub("(@[A-Za-z0-9_]+)", "", token)
+        # Format it to lowercase
         token = token.lower()
         # Check whether the token is tagged as a noun, a verb, or other, and set pos appropriately
         if tag.startswith('NN'):
@@ -153,15 +146,14 @@ def jamesLemmatize(tokens, doStem, doStemDic):
         if token not in STOPWORDS and token not in string.punctuation and len(token) >= cfg['mintokenlen']:
             # Lemmatize the token using WordNetLemmatizer
             lemma = lemmatizer.lemmatize(token, pos)
-            # Stem the token using the SnowballStemmer, if needed
-            if doStem:
-                lemma = stemmer.stem(lemma)
-                # Add the the stem to the stem dictionary as a key with a value of the lemma which produced
-                #   the stem if the stem is not already in the stem dictionary, and if a stem dictionary
-                #   is needed
-                if doStemDic:
-                    if lemma not in stemDic:
-                        stemDic[lemma] = token
+            # Stem the token using the SnowballStemmer
+            lemma = stemmer.stem(lemma)
+            # Add the the stem to the stem dictionary as a key with a value of the lemma which produced
+            #   the stem if the stem is not already in the stem dictionary, and if a stem dictionary
+            #   is needed
+            if doStemDic:
+                if lemma not in stemDic:
+                    stemDic[lemma] = token
             # Add the lemma to the lemmatized list
             lemmatized.append(lemma)
 
@@ -192,6 +184,15 @@ def separateSentences(text):
     text = text.replace(".", ".\n")
     text = text.replace("!", "!\n")
     text = text.replace("?", "?\n")
+    # Arrange newlines around quotation marks
+    text = text.replace('"', '"\n')
+    text = text.replace('.\n"', '."')
+    text = text.replace('"\n.', '".')
+    text = text.replace('!\n"', '!"')
+    text = text.replace('"\n!', '"!')
+    text = text.replace('?\n"', '?"')
+    text = text.replace('"\n?', '"?')
+    text = text.replace('\n"\n', '\n"')
     # Split the text into a list of strings on every newline
     # This should include newlines in the original text, as well as newlines
     #   that were added after every period, exclamation point, and question mark
