@@ -34,7 +34,7 @@ def process(inputCorpus, topicNum, datasetChoice):
     # Output is jamesCorpus object, imported from jamesClasses
     corpus = preProcess(inputCorpus)
     # Raise an error if the input is too short
-    assert len(corpus.dic) < topicNum, "Input is too short for number of selected topics"
+    assert len(corpus.dic) > topicNum, "Input is too short for number of selected topics"
     # Load the user-selected sentiment model using getPredictor, imported from jamesSA
     modelInfo = cfg['path'][datasetChoice]
     sentimentmodel, tokenizer = getPredictor(modelInfo[0],modelInfo[1], modelInfo[2],modelInfo[3])
