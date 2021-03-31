@@ -8,6 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from api import jamesMain
 # Other required project imports
 from api import jamesClasses
+from api.jamesConfig import cfg
 
 # Method for loading and constructing a test corpus from a file in testdata
 def loadTestCorpus():
@@ -35,11 +36,12 @@ class TestJamesMain_process(unittest.TestCase):
             self.assertIsInstance(topic['topicnum'],int)
             self.assertIsInstance(topic['coherence'],str)
             self.assertIsInstance(topic['topicwords'],list)
+            self.assertLessEqual(len(topic['topicwords']),cfg['topicwords'])
             for word in topic['topicwords']:
                 self.assertIsInstance(word['word'],str)
                 self.assertIsInstance(word['weight'],str)
             self.assertIsInstance(topic['examplesentences'],list)
-            self.assertLessEqual(len(topic['examplesentences']),3)
+            self.assertLessEqual(len(topic['examplesentences']),cfg['exsnum'])
             for sentence in topic['examplesentences']:
                 self.assertIsInstance(sentence['sentence'],str)
                 self.assertIsInstance(sentence['weight'],str)

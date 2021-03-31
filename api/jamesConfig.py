@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 cfg = {'topicwords':20,
         'mintokenlen':1,
-        'exsnum':3,
+        'exsnum':5,
         'jdkversion':'15',
         'malletsettings':{'gamma_threshold':0.001,
                           'iterations':50,
