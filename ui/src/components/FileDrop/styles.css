@@ -1,0 +1,10 @@
+.errorText {
+    padding-top: 5%;
+    color: red;
+    font-size: medium;
+}
+
+.infoText {
+    padding-top: 5%;
+    font-size: medium;
+}
