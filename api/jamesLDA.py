@@ -88,8 +88,8 @@ def getResults(topicModel, coherenceModel, corpus):
                     the topic results
     '''
     return jamesResults([topic[0] for topic in topicModel.top_topics(corpus.getBoW(),topn=cfg['topicwords'])],
-                        coherenceModel.get_coherence(),
-                        coherenceModel.get_coherence_per_topic())
+                        float(coherenceModel.get_coherence()),
+                        [float(coherence) for coherence in coherenceModel.get_coherence_per_topic()])
 
 def getTopics(bow, topicModel):
     '''
