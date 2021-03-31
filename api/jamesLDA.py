@@ -10,7 +10,7 @@ from api.jamesConfig import cfg
 
 def buildTopicModel(corpus, topicNum):
     '''
-    This method is used to build a gensim topic model of the given number of
+    This method is used to build a gensim topic model with the given number of
     topics for a given corpus. 
 
     Parameters
@@ -27,13 +27,13 @@ def buildTopicModel(corpus, topicNum):
             gensim.models.ldamodel
                     the topic model generated from the input corpus
     '''
-    #Add the path to mallet, imported from jamesConfig, to the environment
+    # Add the path to mallet, imported from jamesConfig, to the environment
     os.environ['MALLET_HOME'] = cfg['path']['malletpath']
-    # Build the topic model for the given number of topics using mallet, imported
-    #    from the gensim library 
+    # Build the topic model for the given number of topics using mallet, which
+    #   is built locally, and a mallet wrapper imported from gensim.models 
     malletModel = wrappers.LdaMallet(cfg['path']['malletfile'], corpus=corpus.getBoW(), num_topics=topicNum, id2word=corpus.dic,
-                                       random_seed=1)
-    # convert the mallet model model to an ldaModel
+                                       random_seed=cfg['malletsettings']['random_seed'])
+    # Convert the mallet model to an ldamodel
     ldaModel = wrappers.ldamallet.malletmodel2ldamodel(malletModel,
                                                        gamma_threshold=cfg['malletsettings']['gamma_threshold'],
                                                        iterations=cfg['malletsettings']['iterations'])
@@ -59,10 +59,9 @@ def buildCoherenceModel(topicModel, corpus):
                     a coherence model (imported from gensim.models) for the input
                     topic model
     '''
-    coherenceModel = coherencemodel.CoherenceModel(model=topicModel, texts=corpus.getLemmatized(),
+    return coherencemodel.CoherenceModel(model=topicModel, texts=corpus.getLemmatized(),
                                                    dictionary=corpus.dic, corpus=corpus.getBoW(),
-                                                   coherence="c_v")
-    return coherenceModel
+                                                   coherence=cfg['coherencesettings']['coherence'])
 
 def getResults(topicModel, coherenceModel, corpus):
     '''
