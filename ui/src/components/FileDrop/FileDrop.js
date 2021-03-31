@@ -2,6 +2,7 @@ import React from "react";
 import Dropzone from "react-dropzone";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudDownloadAlt } from "@fortawesome/free-solid-svg-icons";
+import "./styles.css";
 
 const FileDrop = ({ setFiles, loading }) => {
   const maxSize = 5242880;
@@ -17,10 +18,12 @@ const FileDrop = ({ setFiles, loading }) => {
       {({ getRootProps, getInputProps, acceptedFiles, isDragReject, fileRejections}) => {
         let fileTooLarge = false;
         let fileTooSmall = false;
+        let fileTypeInvalid = false;
         if (fileRejections.length > 0) {
           let fileSize = fileRejections[0].file.size;
           fileTooLarge = fileSize > maxSize
           fileTooSmall = fileSize===0
+          fileTypeInvalid = !fileTooLarge && !fileTooSmall
         }
 
         return(
@@ -33,22 +36,22 @@ const FileDrop = ({ setFiles, loading }) => {
             data-testid="file-drop-icon"
           />
             {fileTooLarge && (
-                <p className="file-drop-instructions">
+                <p className="errorText">
                   File is too large. Maximum size is 5MB
                 </p>
             )}
             {fileTooSmall && (
-                <p className="file-drop-instructions">
+                <p className="errorText">
                   File is empty
                 </p>
               )}
-            {isDragReject && (
-                <p className="file-drop-instructions">
+            {(fileTypeInvalid || isDragReject) && (
+                <p className="errorText">
                   Please upload a plain text file (.txt)
                 </p>
             )}
-            {!fileTooSmall && !fileTooLarge && !isDragReject && (
-                <p className="file-drop-instructions">
+            {!fileTooSmall && !fileTooLarge && !fileTypeInvalid && !isDragReject && (
+                <p className="infoText">
                   Drop files or click here to select files from your drive
                 </p>
             )}

@@ -8,7 +8,7 @@ import UploadControls from "./components/UploadControls/UploadControls";
 import FileDrop from "./components/FileDrop";
 import baseURL from "./config";
 import "./App.css";
-
+import jameslogo from "./images/jameslogo.png"
 /*
   App contains the code for the main page of the application, using the custom component UploadedFile
   Using React Hooks to manage state:
@@ -110,7 +110,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1>James</h1>
+      <img className="james-logo" src={jameslogo} alt="James Logo" />
       <div className="main-content">
         {/*
           Dropzone is used to allow the user to "drop" text files into the area, or select them from their drive

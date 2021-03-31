@@ -48,7 +48,7 @@ h1 {
 }
 
 .controls-container {
-  width: 40%;
+  width: 20%;
   height: auto;
   background-color: white;
   color: #282c34;
@@ -63,7 +63,7 @@ h1 {
 }
 
 .description-container {
-  width: 40%;
+  width: 100%;
   background-color: white;
   color: #282c34;
   padding: 0.5rem 2.5rem 2rem;
@@ -73,8 +73,73 @@ h1 {
   font-size:1.2rem;
 }
 
-.sentiment-formula {
+.homepage-titles{
+  font-size: 3rem;
+}
+
+.homepage-desc{
+  width: 100%;
+}
+
+.welcome-image{
   width: 80%;
+}
+
+.howto-note{
+  margin-top: 3rem;
+}
+
+.howto-card{
+  height: 100%;
+}
+.howto-card-media{
+  width: 20%;
+  height: 140;
+}
+
+
+.welcome-desc, .howto-desc, .understand-desc,.how-desc,.authors-desc,.extra-desc{
+  width: 50%;
+  margin-top: 3rem;
+  margin-bottom: 8rem;
+}
+
+.how-background{
+  background-color: white;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+}
+
+.how-text{
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+.howto-background{
+  background-color:white;
+}
+
+.extras-background{
+  background-color: white;
+}
+
+.authors-background{
+  background-color: #2493fa;
+  color: white;
+}
+
+
+.sentiment-formula {
+  width: 70%;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.james-logo{
+  width: 30%;
+  margin-bottom: 0px;
+  margin-top: 4rem;
 }
 
 .results-container {
