@@ -27,42 +27,18 @@ def buildTopicModel(corpus, topicNum):
             gensim.models.ldamodel
                     the topic model generated from the input corpus
     '''
-    # Build a mallet model with that many topcis
-    ldaMallet = buildMalletModel(corpus, topicNum)
-    # convert the ldaMallet model to an ldaModel
-    ldaModel = wrappers.ldamallet.malletmodel2ldamodel(ldaMallet,
+    #Add the path to mallet, imported from jamesConfig, to the environment
+    os.environ['MALLET_HOME'] = cfg['path']['malletpath']
+    # Build the topic model for the given number of topics using mallet, imported
+    #    from the gensim library 
+    malletModel = wrappers.LdaMallet(cfg['path']['malletfile'], corpus=corpus.getBoW(), num_topics=topicNum, id2word=corpus.dic,
+                                       random_seed=1)
+    # convert the mallet model model to an ldaModel
+    ldaModel = wrappers.ldamallet.malletmodel2ldamodel(malletModel,
                                                        gamma_threshold=cfg['malletsettings']['gamma_threshold'],
                                                        iterations=cfg['malletsettings']['iterations'])
     # Return the topic model
     return ldaModel
-
-def buildMalletModel(corpus, topicNum):
-    '''
-    This method is used to build a mallet lda model.
-    It is called by buildTopicModel.
-
-    Parameters
-    ----------
-            corpus: jamesCorpus
-                    the corpus to be modeled, as a jamesCorpus
-                    object (imported from jamesClasses)
-
-            topicNum: int
-                    the number of topics to generate
-
-    Output
-    ------
-            gensim.models.wrappers.LdaMallet
-                    the topic model generated from the input corpus
-    '''
-    #Add the path to mallet, imported from jamesConfig, to the environment
-    os.environ['MALLET_HOME'] = cfg['path']['malletpath']
-    # Build the topic model for the given number of topics using mallet, importedd
-    #    from the gensim library 
-    malletModel = wrappers.LdaMallet(cfg['path']['malletfile'], corpus=corpus.getBoW(), num_topics=topicNum, id2word=corpus.dic,
-                                       random_seed=1)
-    # Return the constructed mallet model
-    return malletModel
 
 def getResults(topicModel, corpus):
     '''
