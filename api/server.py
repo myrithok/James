@@ -11,6 +11,7 @@ from api.jamesClasses import inputCorpus
 from api.jamesConfig import cfg
 from api.jamesCSV import makeCSV
 from api.jamesMain import process
+from api.jamesPreProcessing import separateSentences
 
 # Flask backend setup
 app = Flask(__name__)
@@ -24,6 +25,8 @@ def index():
         if request.method == 'POST':
             # Initialize an empty inputCorpus object, imported from jamesClasses
             corpus = inputCorpus()
+            # Initialize sentence count
+            sentenceCount = 0
             # Iterate through each file that should be uploaded
             for x in range(int(request.form["fileCount"])):
                 # Files should be named 'file1', 'file2', 'file3', etc.
@@ -47,11 +50,16 @@ def index():
                 #   and add these to the inputCorpus object
                 title = request.files.get(file).filename.split(".")[0]
                 corpus.addDoc(title, contents)
+                # Add the sentence count to the running total
+                sentenceCount += len(separateSentences(contents))
             # The number of topics is taken from the request
             try:
                 numTopics = int(request.form["numTopics"])
             except:
                 return "Error with number of topics", 500
+            # The topic number cannot be higher than the total number of sentences
+            if numTopics > sentenceCount:
+                return "Topic number greater than sentence count", 500
             # The dataset selected for sentiment analysis is taken from the request
             try:
                 datasetChoice = request.form["datasetChoice"]
