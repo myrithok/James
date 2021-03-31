@@ -19,22 +19,18 @@ If you would like to report a software bug, make a suggestion on how we can impr
 
 ### Usage
 
-- from the root, navigate to the the `ui` directory with:
-
-```code
-cd ui
-```
+From the root:
 
 - install dependencies with:
 
 ```code
-npm i
+npm i --prefix ui
 ```
 
 - start ui wth:
 
 ```code
-npm start
+npm start --prefix ui
 ```
 
 ## Back End
