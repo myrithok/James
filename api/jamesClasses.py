@@ -209,7 +209,8 @@ class topicResults:
         for element in result:
             assert isinstance(element, tuple), "second parameter must be a list of type tuple (float, str)"
             assert len(element) == 2, "second parameter must be a list of type tuple (float, str)"
-            assert isinstance(element[0], float), "first parameter of tuple in list must be type float"
+            assert isinstance(element[0], float), "first parameter of tuple in list must be a float"
+            assert element[0] >= 0, "first parameter of tuple in list must be positive"
             assert isinstance(element[1], str), "second parameter of tuple in list must be type 'str'"
         self.topicNum = num
         self.coherence = coherence
@@ -230,6 +231,7 @@ class topicResults:
         '''
         assert isinstance(sentence, str), "sentence must be a string"
         assert isinstance(weight, float), "weight must be a float"
+        assert weight >= 0, "weight must be positive"
         if len(self.exampleSentences) < cfg['exsnum']:
             pass
         elif self.exampleSentences[-1].weight < weight:
@@ -295,6 +297,7 @@ class topicWord:
         '''
         assert isinstance(word, tuple), "parameter must be type 'tuple'"
         assert isinstance(word[0], float), "first index of tuple parameter must be type 'float'"
+        assert word[0] >= 0, "first index of tuple parameter must be positive"
         assert isinstance(word[1], str), "second index of tuple parameter must be type 'str'"
         self.word = word[1]
         self.weight = word[0]
@@ -350,8 +353,9 @@ class exampleSentence:
                 the weight of this sentence towards the current topic
 
         '''
-        assert isinstance(sentence, str), "sentence parameter must be type 'str'"
-        assert isinstance(weight, float), "weight parameter must be type 'float'"
+        assert isinstance(sentence, str), "sentence parameter must be a str"
+        assert isinstance(weight, float), "weight parameter must be a float"
+        assert weight >= 0, "weight parameter must be positive"
         self.sentence = sentence
         self.weight = weight
 
@@ -439,6 +443,7 @@ class docResults:
         assert isinstance(weight, float), "second parameter must be type 'float'"
         assert weight >= 0, "second parameter must be non-negative"
         assert isinstance(sentiment, float), "third parameter must be type 'float'"
+        assert sentiment >= 0, "third parameter must be type non-negative"
         assert num in range(0, len(self.docTopics))
         self.docTopics[num-1].addSentiment(weight, sentiment)
 
@@ -532,6 +537,7 @@ class docTopic:
         assert isinstance(weight, float), "first parameter must type float"
         assert weight >= 0, "first parameter must be non-negative"
         assert isinstance(sentiment, float), "second parameter must be type float"
+        assert sentiment >= 0, "second parameter must be non-negative"
         self.sentimentTotal += sentiment * weight
         self.sentimentWeight += weight
 

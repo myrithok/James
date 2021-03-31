@@ -77,8 +77,8 @@ def index():
         if request.method == 'GET':
             return "No files received", 200
     # If processing files fails, return error result
-    except:
-        return "Error processing attached files", 500
+    except Exception as e:
+        return "Error processing attached files: " + str(e), 500
 
 # POST request handling for downloading results
 @app.route('/download', methods=['POST'])
