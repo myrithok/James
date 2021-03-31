@@ -45,7 +45,7 @@ const Topic = ({ data, toggleHide, hiddenTopics }) => {
         <div
           className="topic-coherence"
           data-testid={`topic-coherence-${topicnum}`}
-        >{`Coherence: ${coherence}`}</div>
+        >{`Topic Coherence = ${coherence}`}</div>
       </div>
       <div className="words-grid" data-testid={`words-grid-${topicnum}`}>
         {topicwords.map((word, index) => (

@@ -1,5 +1,5 @@
 # Library imports
-from gensim.models import wrappers, coherencemodel
+from gensim.models import coherencemodel, ldamodel, wrappers
 import os
 import sys
 # Add James to path
@@ -27,52 +27,55 @@ def buildTopicModel(corpus, topicNum):
             gensim.models.ldamodel
                     the topic model generated from the input corpus
     '''
-    # Build a mallet model with that many topcis
-    ldaMallet = buildMalletModel(corpus, topicNum)
-    # convert the ldaMallet model to an ldaModel
-    ldaModel = wrappers.ldamallet.malletmodel2ldamodel(ldaMallet,
+    #Add the path to mallet, imported from jamesConfig, to the environment
+    os.environ['MALLET_HOME'] = cfg['path']['malletpath']
+    # Build the topic model for the given number of topics using mallet, imported
+    #    from the gensim library 
+    malletModel = wrappers.LdaMallet(cfg['path']['malletfile'], corpus=corpus.getBoW(), num_topics=topicNum, id2word=corpus.dic,
+                                       random_seed=1)
+    # convert the mallet model model to an ldaModel
+    ldaModel = wrappers.ldamallet.malletmodel2ldamodel(malletModel,
                                                        gamma_threshold=cfg['malletsettings']['gamma_threshold'],
                                                        iterations=cfg['malletsettings']['iterations'])
     # Return the topic model
     return ldaModel
 
-def buildMalletModel(corpus, topicNum):
+def buildCoherenceModel(topicModel, corpus):
     '''
-    This method is used to build a mallet lda model.
-    It is called by buildTopicModel.
+    This method is used to construct a coherencemodel (imported from gensim.models)
+    from a generated topic model and the corpus.
 
     Parameters
     ----------
-            corpus: jamesCorpus
-                    the corpus to be modeled, as a jamesCorpus
-                    object (imported from jamesClasses)
+            topicModel: gensim.models.ldamodel
+                    the topic model used to build the coherence model
 
-            topicNum: int
-                    the number of topics to generate
+            corpus: jamesCorpus
+                    the corpus used to generate the topic model
 
     Output
     ------
-            gensim.models.wrappers.LdaMallet
-                    the topic model generated from the input corpus
+            gensim.models.coherencemodel
+                    a coherence model (imported from gensim.models) for the input
+                    topic model
     '''
-    #Add the path to mallet, imported from jamesConfig, to the environment
-    os.environ['MALLET_HOME'] = cfg['path']['malletpath']
-    # Build the topic model for the given number of topics using mallet, importedd
-    #    from the gensim library 
-    malletModel = wrappers.LdaMallet(cfg['path']['malletfile'], corpus=corpus.getBoW(), num_topics=topicNum, id2word=corpus.dic,
-                                       random_seed=1)
-    # Return the constructed mallet model
-    return malletModel
+    coherenceModel = coherencemodel.CoherenceModel(model=topicModel, texts=corpus.getLemmatized(),
+                                                   dictionary=corpus.dic, corpus=corpus.getBoW(),
+                                                   coherence="c_v")
+    return coherenceModel
 
-def getResults(topicModel, corpus):
+def getResults(topicModel, coherenceModel, corpus):
     '''
     This method is used to construct a jamesResults object (imported from jamesClasses)
-    containing the topic results of a given topic model and corpus
+    containing the topic results of a given topic model, coherence model, and corpus
 
     Parameters
     ----------
             topicModel: gensim.models.ldamodel
                     the topic model whose results are being returned
+
+            coherenceModel: gensim.models.coherencemodel
+                    the coherence model for the given topic model
 
             corpus: jamesCorpus
                     the corpus used to generate the input topic model as a
@@ -84,7 +87,9 @@ def getResults(topicModel, corpus):
                     a jamesResults object (imported from jamesClasses) containing
                     the topic results
     '''
-    return jamesResults(topicModel.top_topics(corpus.getBoW(),topn=cfg['topicwords']))
+    return jamesResults([topic[0] for topic in topicModel.top_topics(corpus.getBoW(),topn=cfg['topicwords'])],
+                        coherenceModel.get_coherence(),
+                        coherenceModel.get_coherence_per_topic())
 
 def getTopics(bow, topicModel):
     '''

@@ -127,6 +127,7 @@ const App = () => {
           sentiments={results.sentiments}
           handleDownload={handleDownload}
           hiddenTopics={hiddenTopics}
+          modelCoherence={results.modelCoherence}
           toggleHide={handleToggleHide}
         />
       )}

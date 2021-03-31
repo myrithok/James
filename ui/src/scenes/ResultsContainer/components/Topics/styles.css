@@ -6,8 +6,8 @@
 }
 
 .topic-title {
-  font-size: 40px;
-  margin: 0 0 1rem;
+  font-size: 30px;
+  margin: 0 0 0rem;
 }
 
 .topic-section {
@@ -21,6 +21,12 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+
+.model-coherence {
+  margin: 1rem 0;
+  font-size: 20px;
+  font-style: italic;
 }
 
 .topic-sub-heading {
