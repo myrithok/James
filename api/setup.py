@@ -5,7 +5,6 @@
 # Library imports
 import git
 import jdk
-import nltk
 import numpy as np
 import os
 import platform
@@ -16,30 +15,12 @@ import time
 # Add James to path
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
-from api.jamesSA import saveSentimentModel
+from api.jamesConfig import cfg
 # The setup method performs all necessary setup
 
 
 def setup():
     print("Beginning setup...")
-    # Set a seed, and load everything necessary from nltk
-    print("Downloading nltk data...")
-    np.random.seed(2018)
-    nltk.download('wordnet')
-    nltk.download('twitter_samples')
-    nltk.download('punkt')
-    nltk.download('averaged_perceptron_tagger')
-    # This import must be after twitter_samples are downloaded, as they are
-    #    loaded into the cfg object
-    from api.jamesConfig import cfg
-    # Create the model folder if it does not already exist
-    if not os.path.exists(cfg['path']['sapath']):
-        print("Creating model folder...")
-        os.mkdir(cfg['path']['sapath'])
-    # Build the sentiment model and save it, overwriting any existing model
-    #    Imported from jamesSA
-    print("Generating sentiment model...")
-    saveSentimentModel(cfg['path']['safile'], cfg['satraining'])
     # If the mallet folder does not already exist, perform first time setup
     if os.path.exists(cfg['path']['malletpath']):
         # Clean up pre-existing mallet built
@@ -100,7 +81,6 @@ def setup():
     print("Cleaning up temp folder...")
     shutil.rmtree(cfg['path']['tmp'])
     print("Setup complete")
-
 
 # Run setup
 if __name__ == '__main__':
