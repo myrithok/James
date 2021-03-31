@@ -9,9 +9,9 @@ def makeCSV(results,hidden=[]):
 
     Parameters
     ----------
-            results: json
+            results: dict
                     a result set from running james as a
-                    json object
+                    json dictionary
 
             hidden: list (optional)
                     a list of topic numbers to be hidden from
@@ -24,7 +24,7 @@ def makeCSV(results,hidden=[]):
     '''
     # Create a 2-dimensional list from the result set using
     #   createCsvList, found below
-    csvList = createCsvList(results,hidden)
+    csvList = createCSVList(results,hidden)
     # Convert the csv list into a csv
     sheet = pe.Sheet(csvList)
     i = io.StringIO()
@@ -33,16 +33,16 @@ def makeCSV(results,hidden=[]):
     output = i.getvalue()
     return output
 
-def createCsvList(results,hidden=[]):
+def createCSVList(results,hidden=[]):
     '''
     Method called by makeCSV, above, to convert a result set
     into a 2-dimensional list that can be inserted  into a csv
 
     Parameters
     ----------
-            results: json
+            results: dict
                     a result set from running james as a
-                    json object
+                    json dictionary
 
             hidden: list (optional)
                     a list of topic numbers to be hidden from

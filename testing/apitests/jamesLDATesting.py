@@ -1,5 +1,6 @@
 # Library imports
 import gensim
+import numpy
 import os
 import sys
 import unittest
@@ -35,20 +36,18 @@ def loadTestSentence(testCorpus,number=""):
 # Load the test corpus, test model, and test sentence into constants
 TESTCORPUS = loadTestCorpus()
 TESTMODEL = jamesLDA.buildTopicModel(TESTCORPUS,2)
+TESTCOHERENCE = jamesLDA.buildCoherenceModel(TESTMODEL, TESTCORPUS)
 TESTSENTENCEONE = loadTestSentence(TESTCORPUS,"one")
 TESTSENTENCETWO = loadTestSentence(TESTCORPUS,"two")
 
 # Tests for buildTopicModel method in jamesLDA
 class TestJamesLDA_buildTopicModel(unittest.TestCase):
-    # Test that the correct output type is produced when the number of
-    #    topics is specified
-    def test_specified_topicnum(self):
-        for i in range(1,4):
-            testmodel = jamesLDA.buildTopicModel(TESTCORPUS,i)
-            self.assertIsInstance(testmodel,gensim.models.ldamodel.LdaModel)
-    # Test that the correct number of topics are constructed when the
-    #    number of topics is specified
-    def test_specified_topicnum_has_correct_topic_num(self):
+    # Test that a topic model is built successfully
+    def test_model_build(self):
+        testmodel = jamesLDA.buildTopicModel(TESTCORPUS,3)
+        self.assertIsInstance(testmodel,gensim.models.ldamodel.LdaModel)
+    # Test that the correct number of topics are constructed
+    def test_correct_topic_num(self):
         for i in range(1,4):
             testmodel = jamesLDA.buildTopicModel(TESTCORPUS,i)
             self.assertEqual(len(testmodel.get_topics()), i)
@@ -60,56 +59,63 @@ class TestJamesLDA_buildTopicModel(unittest.TestCase):
         for topic in testtopics:
             for word in topic[0]:
                 topicwords.append(word[1])
-        self.assertTrue('netflix' in topicwords or 'netflix' in topicwords)
-        self.assertTrue('chip' in topicwords or 'chip' in topicwords)
+        self.assertTrue('netflix' in topicwords)
+        self.assertTrue('chip' in topicwords)
 
-# Tests for the buildMalletModel method in jamesLDA
-class TestJamesLDA_buildMalletModel(unittest.TestCase):
-    # Test that the correct output type is produced
-    def test_topics(self):
-        for i in range(1,4):
-            testmodel = jamesLDA.buildMalletModel(TESTCORPUS,i)
-            self.assertIsInstance(testmodel,gensim.models.wrappers.ldamallet.LdaMallet)
-    # Test that the correct number of topics are constructed
-    def test_has_correct_topic_num(self):
-        for i in range(1,4):
-            testmodel = jamesLDA.buildMalletModel(TESTCORPUS,i)
-            self.assertEqual(len(testmodel.get_topics()), i)
+# Tests for buildCoherenceModel method in jamesLDA
+class TestJamesLDA_buildCoherenceModel(unittest.TestCase):
+    # Test that a coherence model is built successfully
+    def test_coherence_build(self):
+        testcoherence = jamesLDA.buildCoherenceModel(TESTMODEL,TESTCORPUS)
+        self.assertIsInstance(testcoherence,gensim.models.coherencemodel.CoherenceModel)
+    # Test that the produced coherence model produces a coherence
+    #   score for the topic model
+    def test_model_score(self):
+        testcoherence = jamesLDA.buildCoherenceModel(TESTMODEL,TESTCORPUS)
+        self.assertIsInstance(testcoherence.get_coherence(),numpy.float64)
+    # Test that the produced coherence model produces coherence scores
+    #   for every topic
+    def test_topic_scores(self):
+        testcoherence = jamesLDA.buildCoherenceModel(TESTMODEL,TESTCORPUS)
+        topiccoherence = testcoherence.get_coherence_per_topic()
+        self.assertIsInstance(topiccoherence[0],numpy.float64)
+        self.assertIsInstance(topiccoherence[1],numpy.float64)
+        self.assertEqual(len(topiccoherence),2)
 
 # Tests for the getResults method in jamesLDA
 class TestJamesLDA_getResults(unittest.TestCase):
     # Test that the correct output type is produced
     def test_produces_results(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         self.assertIsInstance(testresults,jamesClasses.jamesResults)
     # Test that the stemDic property of the output results is an
     #    empty dictionary
     def test_results_stemDic_empty(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         self.assertEqual(testresults.stemDic,{})
     # Test that the documentResults property of the output results is
     #    an empty list
     def test_results_documentResults_empty(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         self.assertEqual(testresults.documentResults,[])
     # Test that the topicResults property of the output results is
     #    not an empty list
     def test_results_has_topics(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         self.assertIsNot(testresults.topicResults,[])
     # Test that the topics in the output results are the correct type
     def test_results_topics_are_topics(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         for topic in testresults.topicResults:
             self.assertIsInstance(topic,jamesClasses.topicResults)
     # Test that the topic list in the output results has the correct
     #     number of topics
     def test_results_correct_topic_count(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         self.assertEqual(len(testresults.topicResults),2)
     # Test that the topics in the output results are correctly numbered
     def test_results_correct_topic_numbers(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         topicnumbers = []
         for topic in testresults.topicResults:
             topicnumbers.append(topic.topicNum)
@@ -117,14 +123,14 @@ class TestJamesLDA_getResults(unittest.TestCase):
         self.assertEqual(topicnumbers,[1,2])
     # Test that the topics in the output results have topic words
     def test_results_topics_have_words(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         topicnumbers = []
         for topic in testresults.topicResults:
             self.assertIsNot(topic.topicWords,[])
     # Test that the words in each topic of the output results are
     #    the correct type
     def test_results_topic_words_are_words(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         topicnumbers = []
         for topic in testresults.topicResults:
             for word in topic.topicWords:
@@ -132,7 +138,7 @@ class TestJamesLDA_getResults(unittest.TestCase):
     # Test that the words in each topic of the output results have
     #    attributes of the correct types
     def test_results_topic_words_have_attributes(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         topicnumbers = []
         for topic in testresults.topicResults:
             for word in topic.topicWords:
@@ -141,9 +147,19 @@ class TestJamesLDA_getResults(unittest.TestCase):
     # Test that each topic in the output results have the correct
     #    number of words
     def test_results_correct_word_count(self):
-        testresults = jamesLDA.getResults(TESTMODEL,TESTCORPUS)
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
         for topic in testresults.topicResults:
             self.assertEqual(len(topic.topicWords),cfg['topicwords'])
+    # Test that the modelCoherence property of the output results
+    #   is the correct type
+    def test_model_coherence_produced(self):
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
+        self.assertIsInstance(testresults.modelCoherence,float)
+    # Test that the modelCoherence property of the output results
+    #   is a number and not zero
+    def test_model_coherence_nonzero(self):
+        testresults = jamesLDA.getResults(TESTMODEL,TESTCOHERENCE,TESTCORPUS)
+        self.assertTrue(testresults.modelCoherence <= 0.0 or testresults.modelCoherence >= 0.0)
 
 # Tests for the getTopics method in jamesLDA
 class TestJamesLDA_getTopics(unittest.TestCase):

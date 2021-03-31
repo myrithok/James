@@ -4,9 +4,9 @@ import sys
 # Add James to path
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # Project imports
-from api.jamesClasses import docResults
+from api.jamesClasses import docResults, jamesResults
 from api.jamesConfig import cfg
-from api.jamesLDA import buildCoherenceModel, buildTopicModel, getTopics, getResults
+from api.jamesLDA import buildCoherenceModel, buildTopicModel, getResults, getTopics
 from api.jamesPreProcessing import preProcess, preProcessSentence
 from api.jamesSA import getPredictor, getSentenceSentiment
 
@@ -33,7 +33,7 @@ def process(inputCorpus, topicNum, datasetChoice):
     # Input is inputCorpus object, imported from jamesClasses
     # Output is jamesCorpus object, imported from jamesClasses
     corpus = preProcess(inputCorpus)
-    # Raise an error if the input is too short
+    # Raise an error if the input text is too short for the number of topics
     assert len(corpus.dic) > topicNum, "Input is too short for number of selected topics"
     # Load the user-selected sentiment model using getPredictor, imported from jamesSA
     modelInfo = cfg['path'][datasetChoice]
