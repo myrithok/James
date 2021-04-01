@@ -72,15 +72,29 @@ class TestJamesLDA_buildCoherenceModel(unittest.TestCase):
     #   score for the topic model
     def test_model_score(self):
         testcoherence = jamesLDA.buildCoherenceModel(TESTMODEL,TESTCORPUS)
-        self.assertIsInstance(testcoherence.get_coherence(),numpy.float64)
+        modelcoherence = testcoherence.get_coherence()
+        self.assertIsInstance(modelcoherence,numpy.float64)
+        self.assertGreater(modelcoherence,0)
+        self.assertLess(modelcoherence,1)
     # Test that the produced coherence model produces coherence scores
     #   for every topic
     def test_topic_scores(self):
         testcoherence = jamesLDA.buildCoherenceModel(TESTMODEL,TESTCORPUS)
         topiccoherence = testcoherence.get_coherence_per_topic()
         self.assertIsInstance(topiccoherence[0],numpy.float64)
+        self.assertGreater(topiccoherence[0],0)
+        self.assertLess(topiccoherence[0],1)
         self.assertIsInstance(topiccoherence[1],numpy.float64)
+        self.assertGreater(topiccoherence[1],0)
+        self.assertLess(topiccoherence[1],1)
         self.assertEqual(len(topiccoherence),2)
+    # Test that the produced model coherence score is the average of
+    #   the topic coherence scores
+    def test_model_is_average(self):
+        testcoherence = jamesLDA.buildCoherenceModel(TESTMODEL,TESTCORPUS)
+        modelcoherence = testcoherence.get_coherence()
+        topiccoherence = testcoherence.get_coherence_per_topic()
+        self.assertEqual(modelcoherence,sum(topiccoherence) / len(topiccoherence))
 
 # Tests for the getResults method in jamesLDA
 class TestJamesLDA_getResults(unittest.TestCase):

@@ -59,20 +59,24 @@ def process(inputCorpus, topicNum, datasetChoice):
         for sentence in doc.sentences:
             # Preprocess the sentence for topic modeling
             processedSentence = preProcessSentence(sentence, corpus.dic)
-            # Use the constructed topic model to find the topic distribution for the
-            #   current sentence using getTopics, imported from jamesLDA
-            sentenceTopics = getTopics(processedSentence, topicModel)
-            # Check to see if this sentence would be a good example sentence for any
-            #    topic, and add this sentence to the topic if so
-            results.addSentence(sentence, sentenceTopics)
-            # Use the sentiment analysis model to find the sentiment for the current
-            #   sentence using getSentenceSentiment, imported from jamesSA
-            sentenceSentiment = getSentenceSentiment(sentimentmodel, [sentence], tokenizer, modelInfo[4])
-            # Add the sentence's sentiment to each topic's sentiment for the current
-            #   document results docResults object, weighted by the sentence's topic
-            #   distribution
-            for topic in sentenceTopics:
-                docResult.addSentiment(topic[0], topic[1], sentenceSentiment)
+            # Skip any sentence that has no words in the bag of words after preprocessing
+            if len(processedSentence) > 0:
+                # Use the constructed topic model to find the topic distribution for the
+                #   current sentence using getTopics, imported from jamesLDA
+                sentenceTopics = getTopics(processedSentence, topicModel)
+                # Skip over any sentence that cannot be matched to any topic
+                if len(sentenceTopics) > 0:
+                    # Check to see if this sentence would be a good example sentence for any
+                    #    topic, and add this sentence to the topic if so
+                    results.addSentence(sentence, sentenceTopics)
+                    # Use the sentiment analysis model to find the sentiment for the current
+                    #   sentence using getSentenceSentiment, imported from jamesSA
+                    sentenceSentiment = getSentenceSentiment(sentimentmodel, [sentence], tokenizer, modelInfo[4])
+                    # Add the sentence's sentiment to each topic's sentiment for the current
+                    #   document results docResults object, weighted by the sentence's topic
+                    #   distribution
+                    for topic in sentenceTopics:
+                        docResult.addSentiment(topic[0], topic[1], sentenceSentiment)
         # Calculate the average sentiment for each topic in the current document
         docResult.averageSentiments()
         # Add the docResults object to the jamesResults result set

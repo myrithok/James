@@ -95,8 +95,7 @@ const App = () => {
       })
       .catch((error) => {
         setErrorResponse(error);
-        console.log(error)
-
+        console.log(error);
       });
   }, [files, numTopics, datasetChoice, errorResponse]);
 
@@ -140,7 +139,7 @@ const App = () => {
       )}
       {!results && errorResponse &&
         <div className="controls-container">
-          <p>An error occurred while processing your file. Please try again.</p>
+          <p>An error occurred while processing your file. Please check the instructions, and try again.</p>
           <br/>
           <Button
               variant="contained"
