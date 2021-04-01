@@ -61,7 +61,7 @@ def buildCoherenceModel(topicModel, corpus):
     '''
     return coherencemodel.CoherenceModel(model=topicModel, texts=corpus.getLemmatized(),
                                                    dictionary=corpus.dic, corpus=corpus.getBoW(),
-                                                   coherence=cfg['coherencesettings']['coherence'])
+                                                   coherence=cfg['coherencetype'])
 
 def getResults(topicModel, coherenceModel, corpus):
     '''
