@@ -7,4 +7,3 @@ api/tmp/
 __pycache__/
 testing/testdata/generated/*
 !testing/testdata/generated/.gitkeep
-testing/testdata/rubbish.txt
