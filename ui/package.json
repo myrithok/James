@@ -1,6 +1,6 @@
 {
-  "name": "capstone",
-  "version": "0.1.0",
+  "name": "James",
+  "version": "1.0.0",
   "description": "A topic modelling and sentiment analysis machine learning tool for the digital humanities. MIT",
   "keywords": "Digital Humanities, DH, Machine Learning, ML, Natural Language Processing, NLP, Topic Modelling, Latent Dirichlet Allocation, LDA, Sentiment Analysis, SA, James, McMaster University, MIT",
   "private": true,
