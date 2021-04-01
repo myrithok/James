@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import Axios from "axios";
 import FileDownload from "js-file-download";
-import { Input, Select, MenuItem } from "@material-ui/core";
+import {Input, Select, MenuItem, Button} from "@material-ui/core";
 import ResultsContainer from "./scenes/ResultsContainer/ResultsContainer";
 import ApplicationDescription from "./components/ApplicationDescription/ApplicationDescription";
 import UploadControls from "./components/UploadControls/UploadControls";
@@ -27,6 +27,7 @@ const App = () => {
     type: "number",
   });
   const [datasetChoice, datasetSelect] = useSelect({});
+  const [errorResponse, setErrorResponse] = useState();
 
   const handleToggleHide = (topicId) => {
     if (hiddenTopics.includes(topicId)) {
@@ -92,8 +93,12 @@ const App = () => {
         setResults(response.data);
         setLoading(true);
       })
-      .catch((error) => console.log(error));
-  }, [files, numTopics, datasetChoice]);
+      .catch((error) => {
+        setErrorResponse(error);
+        console.log(error)
+
+      });
+  }, [files, numTopics, datasetChoice, errorResponse]);
 
   const handleDownload = useCallback(() => {
     let formData = new FormData();
@@ -117,7 +122,9 @@ const App = () => {
           Once received, the files are added to the state variable "files"
         */}
         {!results && <FileDrop setFiles={setFiles} loading={loading} />}
+
       </div>
+
       {/*
         Results are outputted here in JSON, once received
       */}
@@ -131,7 +138,22 @@ const App = () => {
           toggleHide={handleToggleHide}
         />
       )}
-      {!results && (
+      {!results && errorResponse &&
+        <div className="controls-container">
+          <p>An error occurred while processing your file. Please try again.</p>
+          <br/>
+          <Button
+              variant="contained"
+              color="primary"
+              onClick={() => window.location.reload(false)}
+              className="results-reset-btn"
+              data-testid="results-reset-btn"
+          >
+            Reset
+          </Button>
+        </div>
+      }
+      {!results && !errorResponse && (
         <UploadControls
           numTopicsInput={numTopicsInput}
           numTopics={numTopics}
