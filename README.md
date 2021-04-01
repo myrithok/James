@@ -21,14 +21,25 @@ If you would like to report a software bug, make a suggestion on how we can impr
 
 From the root:
 
+- move into the ui folder with:
+
+```code
+cd ui
+```
+
 - install dependencies with:
 
 ```code
-npm i --prefix ui
+npm i
 ```
 
 - start ui wth:
 
+```code
+npm start
+```
+
+- ui can also be started from root with:
 ```code
 npm start --prefix ui
 ```
@@ -42,6 +53,8 @@ npm start --prefix ui
 - python3
 - pip3
 - java
+- git
+
 ### Usage
 
 From the root:
@@ -52,7 +65,7 @@ From the root:
 pip3 install -r api/requirements.txt
 ```
 
-- Run run setup with:
+- Run setup with:
 
 ```code
 python3 api/setup.py
