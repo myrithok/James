@@ -6,13 +6,15 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # This file is meant to gather hard-coded names or values, as well as file paths, in one place
 
-cfg = {'topicwords':20,
-        'mintokenlen':1,
+cfg = {'topicmax':200,
+        'topicwords':20,
         'exsnum':5,
+        'mintokenlen':1,
         'jdkversion':'15',
         'malletsettings':{'gamma_threshold':0.001,
                           'iterations':50,
-                          'random_seed':1},
+                          'random_seed':1,
+                          'minimum_probability'=0.0},
         'coherencesettings':{'coherence':'c_v'},
         'repo':{'mallet':'https://github.com/mimno/Mallet.git',
                 'ant':'https://gitbox.apache.org/repos/asf/ant.git'},
