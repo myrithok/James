@@ -94,7 +94,7 @@ const App = () => {
         setLoading(true);
       })
       .catch((error) => {
-        setErrorResponse(true);
+        setErrorResponse(error);
         console.log(error)
 
       });
@@ -122,22 +122,9 @@ const App = () => {
           Once received, the files are added to the state variable "files"
         */}
         {!results && <FileDrop setFiles={setFiles} loading={loading} />}
-        {!results && errorResponse &&
-          <div>
-            <p>An error occurred while processing your file. Please try again with a different file.</p>
-            
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => window.location.reload(false)}
-                className="results-reset-btn"
-                data-testid="results-reset-btn"
-            >
-              Reset
-            </Button>
-          </div>
-        }
+
       </div>
+
       {/*
         Results are outputted here in JSON, once received
       */}
@@ -151,7 +138,22 @@ const App = () => {
           toggleHide={handleToggleHide}
         />
       )}
-      {!results && (
+      {!results && errorResponse &&
+        <div className="controls-container">
+          <p>An error occurred while processing your file. Please try again.</p>
+          <br/>
+          <Button
+              variant="contained"
+              color="primary"
+              onClick={() => window.location.reload(false)}
+              className="results-reset-btn"
+              data-testid="results-reset-btn"
+          >
+            Reset
+          </Button>
+        </div>
+      }
+      {!results && !errorResponse && (
         <UploadControls
           numTopicsInput={numTopicsInput}
           numTopics={numTopics}
