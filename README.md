@@ -8,6 +8,14 @@ This project combines LDA topic modelling and sentiment analysis to analyze the 
 
 If you would like to report a software bug, make a suggestion on how we can improve the app, or have any other requests, feel free to create an issue on the James github under the Issues tab.
 
+## Running James Locally
+
+If you want to run James on your local machine, checkout the dev branch with:
+
+```code
+git checkout dev
+```
+
 ## Front End
 
 - Written in JavaScript with React
