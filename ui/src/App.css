@@ -66,69 +66,71 @@ h1 {
   width: 100%;
   background-color: white;
   color: #282c34;
-  padding: 0.5rem 2.5rem 2rem;
   margin: 0.5rem 2.5rem;
   border-radius: 0.4rem;
   text-align: left;
-  font-size:1.2rem;
+  font-size: 1.2rem;
 }
 
-.homepage-titles{
+.homepage-titles {
   font-size: 3rem;
 }
 
-.homepage-desc{
+.homepage-desc {
   width: 100%;
 }
 
-.welcome-image{
+.welcome-image {
   width: 80%;
 }
 
-.howto-note{
+.howto-note {
   margin-top: 3rem;
 }
 
-.howto-card{
+.howto-card {
   height: 100%;
 }
-.howto-card-media{
+.howto-card-media {
   width: 20%;
   height: 140;
 }
 
-
-.welcome-desc, .howto-desc, .understand-desc,.how-desc,.authors-desc,.extra-desc{
+.welcome-desc,
+.howto-desc,
+.understand-desc,
+.how-desc,
+.authors-desc,
+.extra-desc {
   width: 50%;
   margin-top: 3rem;
   margin-bottom: 8rem;
 }
 
-.how-background{
+.how-background {
   background-color: white;
   justify-items: center;
   align-items: center;
   width: 100%;
 }
 
-.how-text{
+.how-text {
   margin-bottom: 2rem;
   margin-top: 1rem;
 }
 
-.howto-background{
-  background-color:white;
-}
-
-.extras-background{
+.howto-background {
   background-color: white;
 }
 
-.authors-background{
+.extras-background {
+  background-color: white;
+}
+
+.authors-background {
   background-color: #2493fa;
   color: white;
 }
-
 
 .sentiment-formula {
   width: 70%;
@@ -136,7 +138,7 @@ h1 {
   margin-bottom: 2rem;
 }
 
-.james-logo{
+.james-logo {
   width: 30%;
   margin-bottom: 0px;
   margin-top: 4rem;
