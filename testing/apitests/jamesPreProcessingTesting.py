@@ -69,11 +69,8 @@ class TestPreProcessingMethods(unittest.TestCase):
 
     def test_jamesLemmatize(self):
         # Lemmatize and stem text
-        x = jamesLemmatize("This is a test case", True, False)
-        # print(x)
+        x = jamesLemmatize("This is a test case", False)
         self.assertEqual(x["lemmatized"], ['test', 'case'])
-        y = jamesLemmatize("This is a test case", False, False)
-        self.assertEqual(y["lemmatized"], ['test', 'case'])
 
     def test_separateSentences(self):
         # Converts a document to a list of sentences
