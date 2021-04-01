@@ -1,13 +1,12 @@
-
-
 # Library imports
+import gensim
 import os
 import sys
+import unittest
 # Add James to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+# Import the file to be tested
 from api.jamesClasses import *
-
-import unittest
 
 class TestjamesClasses1(unittest.TestCase):
 
@@ -110,26 +109,27 @@ class TestjamesClasses1(unittest.TestCase):
         self.assertEqual(self.corpusDoc1.sentences, self.numbers)
 
         # jamesCorpus
-        # jamesCorpus parameters are a list, a dictionary, and a dictionary
-        self.assertRaises(AssertionError, jamesCorpus, "str", {}, {})
-        self.assertRaises(AssertionError, jamesCorpus, [], {}, 1)
+        # jamesCorpus parameters are a list, a gensim.corpora.Dictionary, and a dictionary
+        self.gensimCorporaDictionary = gensim.corpora.Dictionary()
+        self.assertRaises(AssertionError, jamesCorpus, "str", self.gensimCorporaDictionary, {})
+        self.assertRaises(AssertionError, jamesCorpus, [], self.gensimCorporaDictionary, 1)
         self.assertRaises(AssertionError, jamesCorpus,  -12,  0.0005, {})
         self.assertRaises(AssertionError, jamesCorpus, [], [], [])
         self.assertRaises(AssertionError, jamesCorpus, {}, {}, {})
         # initialize jamesCorpus1 with parameters empty list, empty dict, empty dict
-        self.jamesCorpus1 = jamesCorpus([], {}, {})
+        self.jamesCorpus1 = jamesCorpus([], self.gensimCorporaDictionary, {})
         # jamesCorpus1 variables docs, dic, and stemDic are empty lists
         # the methods getBoW() and getLemmatized() return empty lists because the docs variable is empty list
         self.assertEqual(self.jamesCorpus1.docs, [])
-        self.assertEqual(self.jamesCorpus1.dic, {})
+        self.assertEqual(self.jamesCorpus1.dic, self.gensimCorporaDictionary)
         self.assertEqual(self.jamesCorpus1.stemDic, {})
         self.assertEqual(self.jamesCorpus1.getBoW(), [])
         self.assertEqual(self.jamesCorpus1.getLemmatized(), [])
         # store a list of the corpusDoc objects
         self.listOfcorpusDocs = [self.corpusDoc1, self.corpusDoc2]
         # initialize jamesCorpus2 with the list above, and a dictionary
-        self.dictionary = {'x': 1, 'y':2}
-        self.jamesCorpus2 = jamesCorpus(self.listOfcorpusDocs, self.dictionary, self.dictionary)
+        self.dictionary = {}
+        self.jamesCorpus2 = jamesCorpus(self.listOfcorpusDocs, self.gensimCorporaDictionary, self.dictionary)
         # jamesCorpus2 docs variable was initialized with corpusDocs
         self.assertEqual(self.jamesCorpus2.docs, self.listOfcorpusDocs)
         # the docs variable has two corpusDocs objects. The titles and texts for both are correct
@@ -314,28 +314,29 @@ class TestjamesClasses3(unittest.TestCase):
         # the dictionary input parameter must have an entry for the stem word of a topicWord object
         self.assertRaises(AssertionError, self.topicWord1.output, self.dict2)
         # the method returns a dictionary as output
-        self.topicWord1output1 = {"word": self.dict1[self.topicWord1.word], "weight": str(self.topicWord1.weight)}
+        self.topicWord1output1 = {"word": self.dict1[self.topicWord1.word], "stem": self.topicWord1.word, "weight": str(self.topicWord1.weight)}
         self.assertEqual(self.topicWord1.output(self.dict1), self.topicWord1output1)
 
 
         # topicResults
-        # topicResult objects initialize with a topic number, type int, and a result, of type tuple
-        # result tuple must be of type (list, float), inner list must be of type tuple of form (float, string)
-        self.assertRaises(AssertionError, topicResults, 1, ())
-        self.assertRaises(AssertionError, topicResults, 1, [])
-        self.assertRaises(AssertionError, topicResults, 1, "str")
-        self.assertRaises(AssertionError, topicResults, 1, ([], 5.6))
-        self.assertRaises(AssertionError, topicResults, 1, ([(1.5, 1.5)], 5.6))
-        self.assertRaises(AssertionError, topicResults, 1, ([("str", "str")], 5.6))
-        self.assertRaises(AssertionError, topicResults, 1, ([(1.5, "str")], {}))
-        self.assertRaises(AssertionError, topicResults, 1, ([(1.5, "str")], []))
-        self.assertRaises(AssertionError, topicResults, 1, ([(1.5, "str")], "str"))
+        # topicResult objects initialize with a topic number, type int, a result of type list, 
+        # and a coherence of type float
+        # result list elements must be of type tuple of form (float, string)
+        self.assertRaises(AssertionError, topicResults, 1, (), 0.0)
+        self.assertRaises(AssertionError, topicResults, 1, [], 0.0)
+        self.assertRaises(AssertionError, topicResults, 1, "str", 0.0)
+        self.assertRaises(AssertionError, topicResults, 1, ([], 5.6), 0.0)
+        self.assertRaises(AssertionError, topicResults, 1, ([(1.5, 1.5)], 5.6), 0.0)
+        self.assertRaises(AssertionError, topicResults, 1, ([("str", "str")], 5.6), 0.0)
+        self.assertRaises(AssertionError, topicResults, 1, ([(1.5, "str")], {}), 0.0)
+        self.assertRaises(AssertionError, topicResults, 1, ([(1.5, "str")], []), 0.0)
+        self.assertRaises(AssertionError, topicResults, 1, ([(1.5, "str")], "str"), 0.0)
         # store a topic number, coherence score and results object
         self.topicNum = 1
         self.coherenceScore1 = 0.678
-        self.results1 = ([self.tuple1, self.tuple2], self.coherenceScore1)
+        self.results1 = [self.tuple1, self.tuple2]
         # create the topicResults object with above parameters
-        self.topicResults1 = topicResults(self.topicNum, self.results1)
+        self.topicResults1 = topicResults(self.topicNum, self.results1, self.coherenceScore1)
         # the topicResult1.output method takes a dictionary parameter and returns a dictionary
         # with keys "topicnum", "coherence", and topicwords.
         self.wordsOut = [self.topicWord1.output(self.dict1), self.topicWord2.output(self.dict1)]
@@ -348,26 +349,31 @@ class TestjamesClasses3(unittest.TestCase):
         self.assertRaises(AssertionError, self.topicResults1.output, self.dict2)
 
         # jamesResults
-        # jamesResults objects are initialized with parameter type: list of (list of (float, str), float)
+        # jamesResults objects are initialized with topicOutput, a list of list of (float, str)
         # which defines the results of the top topics of an LDA model,
-        # including words, word weights, and coherence scores to define the topics
-        self.assertRaises(AssertionError, jamesResults, {})
-        self.assertRaises(AssertionError, jamesResults, -5)
-        self.assertRaises(AssertionError, jamesResults, "str")
-        self.assertRaises(AssertionError, jamesResults, [])
-        self.assertRaises(AssertionError, jamesResults, [([("str", 0.5)], 5.5)])
-        self.assertRaises(AssertionError, jamesResults, [([(0.5, 0.5)], 5.5)])
-        self.assertRaises(AssertionError, jamesResults, [([(0.5, "str")], "str")])
-        self.assertRaises(AssertionError, jamesResults, [([(0.5, "str")], [])])
+        # including words and word weights; modelCoherence, a float which represents the coherence
+        # score for the topic model, and topicCoherence, a list of floats, which contains the
+        # coherence score for each topic
+        self.assertRaises(AssertionError, jamesResults, {}, 0.0, {})
+        self.assertRaises(AssertionError, jamesResults, -5, 0.0, [])
+        self.assertRaises(AssertionError, jamesResults, "str", 0.0, [])
+        self.assertRaises(AssertionError, jamesResults, [], 0.0, [])
+        self.assertRaises(AssertionError, jamesResults, [([("str", 0.5)], 5.5)], 0.0, [])
+        self.assertRaises(AssertionError, jamesResults, [([(0.5, 0.5)], 5.5)], 0.0, [])
+        self.assertRaises(AssertionError, jamesResults, [([(0.5, "str")], "str")], 0.0, [])
+        self.assertRaises(AssertionError, jamesResults, [([(0.5, "str")], [])], 0.0, [])
+        self.assertRaises(AssertionError, jamesResults, [(0.5, "str")], "str", [])
+        self.assertRaises(AssertionError, jamesResults, [(0.5, "str")], 0.0, {})
         # store float, string, and list, values to build input to jamesResults object
-        self.float1 = 5.5
+        self.float1 = 0.5
         self.float2 = 0.987
         self.string1 = "stem1"
         self.string2 = "stem2"
         self.list1 = [(self.float1, self.string1), (self.float1, self.string2)]
-        self.list2 = [(self.list1, self.float2)]
+        self.list2 = [self.list1]
+        self.list3 = [self.float1, self.float2]
         # build object
-        self.jamesResults1 = jamesResults(self.list2)
+        self.jamesResults1 = jamesResults(self.list2,self.float1,self.list3)
         # the addDocResults method stores a docResults object to an internal variable of jamesResults objects
         self.assertRaises(AssertionError, self.jamesResults1.addDocResults, {})
         self.assertRaises(AssertionError, self.jamesResults1.addDocResults, "str")
@@ -398,14 +404,14 @@ class TestjamesClasses3(unittest.TestCase):
         # the jamesResults1 object was initialized with a one topic LDA result (self.list2)
         # that one topic is stored in a topicResults object as topic 1
         # so we store our expected results
-        self.topicResults2 = topicResults(1, self.list2[0])
+        self.topicResults2 = topicResults(1, self.list2[0], 0.5)
         # we also added a docResults to the jamesResult1 object with parameters (self.docResults1)
         # each value in the dictionary of results is a list, one for topic results, one for document results
         # we store them
         self.topicsOut = [self.topicResults2.output(self.dict1)]
         self.documentsOut = [self.docResults1.output()]
         # we store the expected result of the output() method
-        self.jamesResults1output1 = {"topics": self.topicsOut, "sentiments": self.documentsOut}
+        self.jamesResults1output1 = {"topics": self.topicsOut, "sentiments": self.documentsOut, "modelCoherence": self.float1}
         # lastly we check
         self.assertEqual(self.jamesResults1.output(), self.jamesResults1output1)
 

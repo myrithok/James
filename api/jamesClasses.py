@@ -1,4 +1,5 @@
 # Library imports
+import gensim
 import os
 import sys
 # Project imports
@@ -69,6 +70,7 @@ class jamesResults:
         '''
         assert isinstance(topicOutput, list), "first parameter must be a list"
         assert isinstance(modelCoherence, float), "second parameter must be a float"
+        assert 0 < modelCoherence < 1, "second parameter must be between 0 and 1"
         assert isinstance(topicCoherence, list), "third parameter must be a list"
         assert topicOutput != [], "first parameter must be nonempty"
         assert topicCoherence != [], "third parameter must be nonempty"
@@ -206,12 +208,7 @@ class topicResults:
         assert isinstance(result, list), "second parameter must be a list"
         assert result != [], "second parameter must be non-empty"
         assert isinstance(coherence, float), "third parameter must be a float"
-        for element in result:
-            assert isinstance(element, tuple), "second parameter must be a list of type tuple (float, str)"
-            assert len(element) == 2, "second parameter must be a list of type tuple (float, str)"
-            assert isinstance(element[0], float), "first parameter of tuple in list must be a float"
-            assert element[0] >= 0, "first parameter of tuple in list must be positive"
-            assert isinstance(element[1], str), "second parameter of tuple in list must be type 'str'"
+        assert 0 < coherence < 1, "third parameter must be between 0 and 1"
         self.topicNum = num
         self.coherence = coherence
         self.topicWords = []
@@ -297,10 +294,12 @@ class topicWord:
         '''
         assert isinstance(word, tuple), "parameter must be type 'tuple'"
         assert isinstance(word[0], float), "first index of tuple parameter must be type 'float'"
-        assert word[0] >= 0, "first index of tuple parameter must be positive"
         assert isinstance(word[1], str), "second index of tuple parameter must be type 'str'"
         self.word = word[1]
-        self.weight = word[0]
+        if word[0] >= 0:
+            self.weight = word[0]
+        else:
+            self.weight = 0.0
 
     def output(self, stemDic):
         '''
@@ -637,7 +636,7 @@ class jamesCorpus:
                         where the keys and values are strings
         '''
         assert isinstance(docs, list), "first parameter must be of type 'list'"
-        # dic is a gensim Dictionary
+        assert isinstance(dic, gensim.corpora.Dictionary), "second parameter must be of type 'dict'"
         assert isinstance(stemDic, dict), "third parameter must be of type 'dict'"
 
         self.docs = docs

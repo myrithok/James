@@ -110,4 +110,4 @@ def getTopics(bow, topicModel):
                     the topic distribution as a list of (topic number, weight) pairs, where
                     the topic number is an integer, and the weight is a float
     '''
-    return topicModel.get_document_topics(bow, 0.0)
+    return topicModel.get_document_topics(bow, minimum_probability=cfg['malletsettings']['minimum_probability'])

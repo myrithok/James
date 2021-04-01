@@ -57,6 +57,9 @@ def index():
                 numTopics = int(request.form["numTopics"])
             except:
                 return "Error with number of topics", 500
+            # The topic number cannot be higher than the topic max
+            if numTopics > cfg['topicmax']:
+                return "Topic number greater than topic max " + str(cfg['topicmax']), 500
             # The topic number cannot be higher than the total number of sentences
             if numTopics > sentenceCount:
                 return "Topic number greater than sentence count", 500

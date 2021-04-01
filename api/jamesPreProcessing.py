@@ -111,7 +111,7 @@ def jamesLemmatize(tokens, doStemDic):
     ------
             dict
                     a dictionary containing the results of lemmatization
-                    if doStem and doStemDic are both true, the dictionary will have two keys:
+                    if doStemDic is true, the dictionary will have two keys:
                     "lemmatized" which has a list representing the lemmatized input as a value,
                     and "stemDic" which has the word stem to word dictionary as a value
                     otherwise, the dictionary will have only have the lemmatized key and value
@@ -126,7 +126,7 @@ def jamesLemmatize(tokens, doStemDic):
     stemmer = SnowballStemmer('english')
     # Remove apostrophes and text following before lemmatizing
     for token in tokens:
-        token = re.sub("\'[a-zA-Z0-9]*",'',token)
+        token = re.sub("\'[a-zA-Z]*",'',token)
     # Tokenize the text using simple_preprocess, imported from gensim.utils, if needed
     if type(tokens) == str:
         tokens = simple_preprocess(tokens)
