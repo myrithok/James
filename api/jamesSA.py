@@ -319,7 +319,7 @@ Parameters
         tokenizer: tf.keras.preprocessing.text.Tokenizer
             tokenizer that was trained on the same data as the RNN model
         datashape:
-            the maximum number of features that the tokenizer was trained on
+            the shape of the data after the model was trained. For the current model, datashape = 55 for SA, 91 for SO
 
 Output
 ------
@@ -344,7 +344,7 @@ Parameters
         tokenizer: tf.keras.preprocessing.text.Tokenizer
             tokenizer that was trained on the same data as the RNN model
         datashape:
-            the maximum number of features that the tokenizer was trained on
+            the shape of the data after the model was trained. For the current model, datashape = 55 for SA, 91 for SO
 
 Output
 ------
@@ -377,6 +377,7 @@ Parameters
         
         modelName: String
             the name of the seniment analysis model. The name will determine the save location and model name for future referencing.
+            The name should be either SAmodel or SOmodel
 
 
 Output
@@ -388,6 +389,7 @@ Output
 '''
 def reTrainModel(modelType, features, modelName):
     data = pd.DataFrame(columns=['text', 'sentiment'])
+    # modeltype is "pn" for positive negative sentiment and "so" for support oppose
     fileinfo = cfg['path'][modelType]
     files = fileinfo[1]
     filetype = fileinfo[2]
