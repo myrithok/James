@@ -1,4 +1,5 @@
 # Library imports
+import gensim
 import os
 import sys
 # Project imports
@@ -635,7 +636,7 @@ class jamesCorpus:
                         where the keys and values are strings
         '''
         assert isinstance(docs, list), "first parameter must be of type 'list'"
-        # dic is a gensim Dictionary
+        assert isinstance(dic, gensim.corpora.Dictionary), "second parameter must be of type 'dict'"
         assert isinstance(stemDic, dict), "third parameter must be of type 'dict'"
 
         self.docs = docs
