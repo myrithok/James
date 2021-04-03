@@ -5,6 +5,7 @@
 # Library imports
 import git
 import jdk
+import nltk
 import numpy as np
 import os
 import platform
@@ -26,6 +27,10 @@ def setup():
         # Clean up pre-existing mallet built
         print("Cleaning up old mallet build...")
         shutil.rmtree(cfg['path']['malletpath'])
+    # Download required nltk data
+    print("Downloading nltk data...")
+    nltk.download('averaged_perceptron_tagger')
+    nltk.download('wordnet')
     # Clone the latest mallet repo
     print("Cloning mallet repo...")
     git.Git(cfg['path']['api']).clone(cfg['repo']['mallet'])
