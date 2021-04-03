@@ -216,11 +216,11 @@ const ApplicationDescription = () => {
               and example sentences. <br />
               First, you'll see a collection of the top words that the topic
               model has identified as belonging to this topic. The topic model
-              actually uses word stems to generate each topic (covered in more
-              detail below!), but to make the results easier to understand, we
-              provide both an example of a word from the text that produced each
-              stem along with the stem itself. Each word is also given a weight,
-              which represents how important that word is for the given topic.
+              actually uses word stems to generate each topic, but to make the 
+              results easier to understand, we provide both an example of a word 
+              from the text that produced each stem along with the stem itself. 
+              Each word is also given a weight, which represents how important 
+              that word is for the given topic.
               <br />
               Finally, each topic will have up to 5 example sentences from your
               input text that had the highest weight towards that topic, along
@@ -231,7 +231,13 @@ const ApplicationDescription = () => {
               you'll see a list of documents, and for each document a list of
               topics. For each topic, the list will show the topic number, that
               topic's weight in the given document, and the document's sentiment
-              towards that topic.
+              towards that topic. Both of these values will be numbers between 0 
+              and 1. The topic weight represents the presence of that topic in the 
+              given document, so the topic weight of all topics will sum to 1. The 
+              meaning of the sentiment value depends on your chosen sentiment model: 
+              if you chose Support-Oppose, 1 represents support and 0 represents 
+              oppose. Likewise, if you chose Positive-Negative, 1 represents 
+              positive, and 0 represents negative.
               <br /> <br />
               Please note: Once you leave this page, your results will be lost.
               Be sure to download your results if you want to refer to them
