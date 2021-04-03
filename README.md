@@ -73,7 +73,7 @@ From the root:
 pip3 install -r api/requirements.txt
 ```
 
-- Run setup with:
+- run setup with:
 
 ```code
 python3 api/setup.py
@@ -83,4 +83,10 @@ python3 api/setup.py
 
 ```code
 python3 api/server.py
+```
+
+If you're encountering errors running the backend, try running the following commands:
+
+```
+python3 -c "import nltk;nltk.download('averaged_perceptron_tagger');nltk.download('wordnet')"
 ```
