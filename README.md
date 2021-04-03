@@ -76,6 +76,7 @@ pip3 install -r api/requirements.txt
 - Run setup with:
 
 ```code
+python3 -c "import nltk;nltk.download('averaged_perceptron_tagger')"
 python3 api/setup.py
 ```
 
