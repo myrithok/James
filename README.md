@@ -84,9 +84,3 @@ python3 api/setup.py
 ```code
 python3 api/server.py
 ```
-
-If you're encountering errors running the backend, try running the following commands:
-
-```
-python3 -c "import nltk;nltk.download('averaged_perceptron_tagger');nltk.download('wordnet')"
-```
