@@ -73,7 +73,7 @@ From the root:
 pip3 install -r api/requirements.txt
 ```
 
-- Run setup with:
+- run setup with:
 
 ```code
 python3 api/setup.py
